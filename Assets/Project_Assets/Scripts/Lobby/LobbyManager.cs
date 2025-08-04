@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Project_Assets.Scripts.Authentication;
 using Project_Assets.Scripts.Events;
 using Project_Assets.Scripts.Framework_TempName;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
@@ -23,12 +24,17 @@ namespace Project_Assets.Scripts.Lobby
         public event Action<LobbyEventArgs> OnPlayerLeftLobbyAsync;
         public event Action<LobbyEventArgs> OnPlayerJoinedLobbyAsync;
         public event Action<LobbyEventArgs> OnJoinedLobbyUpdate;
+        public event Action<LobbyEventArgs> OnSettingsUpdate;
         public event Action<LobbyListChangedEventArgs> OnLobbyListChanged;
 
         private readonly LobbyEventCallbacks m_EventCallbacks = new();
         
         private static StatusReport s_statusReport;
         private static LobbiesStatusReport s_lobbiesStatusReport;
+        
+        private PlayerAuthentication m_PlayerAuthentication;
+        
+        private CreateLobbySettings m_CreateLobbySettings;
 
         public void UpdateActiveLobby(Unity.Services.Lobbies.Models.Lobby lobby)
         {
@@ -43,7 +49,6 @@ namespace Project_Assets.Scripts.Lobby
         private void LobbyUpdate(ILobbyChanges obj)
         {
             if (ActiveLobby == null) return;
-            // Debug.Log("LobbyUpdate".Color("cyan"));
         }
 
         // Testing
@@ -59,6 +64,11 @@ namespace Project_Assets.Scripts.Lobby
             poller.OnShouldBeenKicked += PollerOnOnShouldBeenKicked;
         }
 
+        private void Start()
+        {
+            ServiceLocator.Global.Get(out m_PlayerAuthentication);
+        }
+
         private void PollerOnOnShouldBeenKicked(LobbyEventArgs obj)
         {
             OnPlayerLeftLobbyAsync?.Invoke(obj);
@@ -67,7 +77,7 @@ namespace Project_Assets.Scripts.Lobby
 
         public async Task<StatusReport> CreateLobbyAsync(CreateLobbySettings settings)
         {
-            var player = CreateLocalPlayer();
+            var player = m_PlayerAuthentication.Player;
 
             var lobbyOptions = new CreateLobbyOptions
             {
@@ -154,7 +164,7 @@ namespace Project_Assets.Scripts.Lobby
         {
             try
             {
-                var player = CreateLocalPlayer();
+                var player = m_PlayerAuthentication.Player;
 
                 var joinOptions = new JoinLobbyByCodeOptions
                 {
@@ -181,7 +191,7 @@ namespace Project_Assets.Scripts.Lobby
         {
             try
             {
-                var player = CreateLocalPlayer();
+                var player = m_PlayerAuthentication.Player;
 
                 var joinOptions = new JoinLobbyByIdOptions
                 {
@@ -193,6 +203,7 @@ namespace Project_Assets.Scripts.Lobby
 
                 OnPlayerJoinedLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
+                OnSettingsUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
 
                 s_statusReport.MakeReport(true, $"Joined lobby by ID: {ActiveLobby.Id}");
             }
@@ -247,30 +258,7 @@ namespace Project_Assets.Scripts.Lobby
                 Debug.Log($"Name: {player.Data[KeyConstants.k_PlayerName].Value} Id: {player.Data[KeyConstants.k_PlayerId].Value}");
             }
         }
-
-        /// <summary>
-        /// Returns a Player object with metadata.
-        /// Can't get Data if visibility is lower than public 
-        /// </summary>
-        private Player CreateLocalPlayer()
-        {
-            return new Player
-            {
-                Data = new Dictionary<string, PlayerDataObject>
-                {
-                    {
-                        KeyConstants.k_PlayerName, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public,
-                            AuthenticationService.Instance.Profile)
-                    },
-
-                    {
-                        KeyConstants.k_PlayerId, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public,
-                            AuthenticationService.Instance.PlayerId)
-                    }
-                }
-            };
-        }
-
+        
         public async Task<LobbiesStatusReport> GetAllActiveLobbiesAsync()
         {
             try

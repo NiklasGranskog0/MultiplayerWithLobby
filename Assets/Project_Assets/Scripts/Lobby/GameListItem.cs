@@ -26,7 +26,7 @@ namespace Project_Assets.Scripts.Lobby
             joinButton.onClick.AddListener(JoinThisGame);
         }
 
-        // TEMP
+        // TEMP Should not join game when clicking list item, should update text input
         private async void JoinThisGame()
         {
             var report = await m_LobbyManager.JoinLobbyByIdAsync(m_Lobby.Id);
@@ -38,9 +38,9 @@ namespace Project_Assets.Scripts.Lobby
             m_Lobby = lobby;
 
             gameName.text = lobby.Data[KeyConstants.k_GameName].Value;
-            maxPlayers.text = lobby.Data[KeyConstants.k_MaxPlayers].Value;
-            gameMode.text = lobby.Data[KeyConstants.k_GameMode].Value;
-            gameSpeed.text = lobby.Data[KeyConstants.k_GameSpeed].Value;
+            // maxPlayers.text = lobby.Data[KeyConstants.k_MaxPlayers].Value;
+            // gameMode.text = lobby.Data[KeyConstants.k_GameMode].Value;
+            // gameSpeed.text = lobby.Data[KeyConstants.k_GameSpeed].Value;
             
             // TODO: Set info in side panel
         }

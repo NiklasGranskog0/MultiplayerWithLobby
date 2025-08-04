@@ -26,11 +26,11 @@ namespace Project_Assets.Scripts.Structs
         {
             Data = new Dictionary<string, DataObject>
             {
-                {KeyConstants.k_GameMode, new DataObject(GameMode.visibilityOptions, GameMode.mode.ToString())},
+                {KeyConstants.k_GameMode, new DataObject(GameMode.visibilityOptions, GameMode.mode.GameModeToString())},
                 {KeyConstants.k_Map, new DataObject(Map.visibilityOptions, Map.map.ToString())},
                 {KeyConstants.k_MaxPlayers, new DataObject(MaxPlayers.visibilityOptions, MaxPlayers.max.ToString())},
                 {KeyConstants.k_GameName, new DataObject(GameName.visibilityOptions, GameName.name)},
-                {KeyConstants.k_GameSpeed, new DataObject(GameSpeed.visibilityOptions, GameSpeed.speed.ToString())},
+                {KeyConstants.k_GameSpeed, new DataObject(GameSpeed.visibilityOptions, GameSpeed.speed.GameSpeedToString())},
             };
         }
     }

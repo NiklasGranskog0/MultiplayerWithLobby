@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Project_Assets.Scripts.Structs;
 
 namespace Project_Assets.Scripts.Events
 {

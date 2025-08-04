@@ -88,6 +88,7 @@ namespace Project_Assets.Scripts.Lobby
             m_LobbyManager.OnJoinedLobbyUpdate += OnJoinedLobbyUpdate;
             m_LobbyManager.OnLobbyListChanged += OnLobbyListChanged;
             m_LobbyManager.OnCreateLobbyAsync += OnCreateLobbyAsync;
+            m_LobbyManager.OnSettingsUpdate += OnUpdateLobbyInfo;
 
             OnRefreshLobbies();
         }
@@ -97,7 +98,7 @@ namespace Project_Assets.Scripts.Lobby
             var settings = new CreateLobbySettings
             {
                 IsLocked = false,
-                IsPrivate = false,
+                IsPrivate = visibilityDropdown.value == 1,
                 
                 GameMode = ((GameMode)GameModeIndex, DataObject.VisibilityOptions.Public),
                 Map = (Map.Forest, DataObject.VisibilityOptions.Public),
@@ -157,7 +158,7 @@ namespace Project_Assets.Scripts.Lobby
         private void OnPlayerLeftLobbyAsync(LobbyEventArgs obj)
         {
             SwitchPanel(LobbyPanel.Games);
-            Debug.Log($"Player Left Lobby {obj.Lobby.Id}");
+            Debug.Log($"Player Left; Lobby Id: {obj.Lobby.Id}");
         }
         
         private void OnCreateLobbySettings()
@@ -217,6 +218,16 @@ namespace Project_Assets.Scripts.Lobby
                 entry.UpdateLobby(lobby);
                 entry.gameObject.SetActive(true);
             }
+        }
+
+        private void OnUpdateLobbyInfo(LobbyEventArgs lobbyEventArgs)
+        {
+            Debug.Log("On Update Lobby Info".Color("cyan"));
+
+            gameName.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_GameName].Value;
+            maxPlayers.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_MaxPlayers].Value;
+            gameSpeed.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_GameSpeed].Value;
+            gameMode.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_GameMode].Value;
         }
 
         private void ClearContainer(Transform container)
