@@ -3,9 +3,8 @@ namespace Project_Assets.Scripts.Enums
     public enum GameMode // GameMode == Map maybe
     {
         CaptureTheFlag,
-        DeathMatch,
+        TeamDeathMatch,
         BattleRoyal,
         SuddenDeath,
-        Tutorial,
     }
 }

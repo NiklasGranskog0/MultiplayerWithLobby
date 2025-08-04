@@ -8,6 +8,7 @@ using Project_Assets.Scripts.Structs;
 using TMPro;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies.Models;
+using Unity.Services.Vivox;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,6 +30,13 @@ namespace Project_Assets.Scripts.Lobby
         [SerializeField] private GameObject playerEntryPrefab;
         [SerializeField] private Transform playerListContainer;
         
+        [Space]
+        
+        [SerializeField] private GameObject chatListItem;
+        [SerializeField] private Transform chatContainer;
+        
+        [Space]
+        
         [Header("Create Game Panel Elements")]
         [SerializeField] private TMP_InputField gameNameInputField;
         [SerializeField] private TMP_Dropdown gameModeDropdown;
@@ -47,9 +55,15 @@ namespace Project_Assets.Scripts.Lobby
         [Header("Lobby Panel Elements")]
         [SerializeField] private Button startGameButton;
         [SerializeField] private Button leaveLobbyButton;
-
+        [SerializeField] private Image gameImage;
+        [SerializeField] private TMP_Text gameName;
+        [SerializeField] private TMP_Text gameMode;
+        [SerializeField] private TMP_Text gameSpeed;
+        [SerializeField] private TMP_Text maxPlayers;
+        
         private int MaxPlayers => maxPlayersDropdown.value + 1;
-        private int GameSpeed => gameModeDropdown.value + 1;
+        private int GameSpeedIndex => gameSpeedDropdown.value;
+        private int GameModeIndex => gameModeDropdown.value;
         private string GameName => gameNameInputField.text;
 
         private LobbyManager m_LobbyManager;
@@ -61,19 +75,21 @@ namespace Project_Assets.Scripts.Lobby
             // Value == index
             maxPlayersDropdown.value = 3; // (Set default value to 4 players)
             
-            createGameButton.onClick.AddListener(OnCreateLobbySettings); // Create lobby settings
-            cancelCreateButton.onClick.AddListener(OnCreateCancel);
-            
-            leaveLobbyButton.onClick.AddListener(OnLeaveLobby);
+            createGameButton.onClick.AddListener(OnCreateLobbySettings);
+            cancelCreateButton.onClick.AddListener(OnCancelCreateLobby);
             refreshGamesButton.onClick.AddListener(OnRefreshLobbies);
-            createLobbyButton.onClick.AddListener(OnCreateLobby); // Create lobby
+            createLobbyButton.onClick.AddListener(OnCreateLobby);
+            leaveLobbyButton.onClick.AddListener(OnLeaveLobby);
+
             // joinGameButton.onClick.AddListener(); // Join game by Id / Code
-            
-            m_LobbyManager.OnLobbyListChanged += OnLobbyListChanged;
-            m_LobbyManager.OnJoinedLobbyUpdate += OnJoinedLobbyUpdate;
-            m_LobbyManager.OnPlayerLeftLobbyAsync += OnPlayerLeftLobbyAsync;
-            m_LobbyManager.OnCreateLobbyAsync += OnCreateLobbyAsync;
+
             m_LobbyManager.OnPlayerJoinedLobbyAsync += OnPlayerJoinedLobbyAsync;
+            m_LobbyManager.OnPlayerLeftLobbyAsync += OnPlayerLeftLobbyAsync;
+            m_LobbyManager.OnJoinedLobbyUpdate += OnJoinedLobbyUpdate;
+            m_LobbyManager.OnLobbyListChanged += OnLobbyListChanged;
+            m_LobbyManager.OnCreateLobbyAsync += OnCreateLobbyAsync;
+
+            OnRefreshLobbies();
         }
 
         private async void OnCreateLobby()
@@ -83,15 +99,20 @@ namespace Project_Assets.Scripts.Lobby
                 IsLocked = false,
                 IsPrivate = false,
                 
-                GameMode = (GameMode.BattleRoyal, DataObject.VisibilityOptions.Public),
+                GameMode = ((GameMode)GameModeIndex, DataObject.VisibilityOptions.Public),
                 Map = (Map.Forest, DataObject.VisibilityOptions.Public),
                 MaxPlayers = (MaxPlayers, DataObject.VisibilityOptions.Public),
                 GameName = (GameName, DataObject.VisibilityOptions.Public),
-                GameSpeed = (GameSpeed, DataObject.VisibilityOptions.Public),
+                GameSpeed = ((GameSpeed)GameSpeedIndex, DataObject.VisibilityOptions.Public),
             };
             
             settings.SetData();
-            
+
+            gameName.text = settings.GameName.name;
+            maxPlayers.text = settings.MaxPlayers.max.ToString();
+            gameSpeed.text = settings.GameSpeed.speed.GameSpeedToString();
+            gameMode.text = settings.GameMode.mode.GameModeToString();
+
             var report = await m_LobbyManager.CreateLobbyAsync(settings);
             report.Log();
         }
@@ -144,7 +165,7 @@ namespace Project_Assets.Scripts.Lobby
             SwitchPanel(LobbyPanel.Create);
         }
 
-        private void OnCreateCancel()
+        private void OnCancelCreateLobby()
         {
             SwitchPanel(LobbyPanel.Games);
         }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Project_Assets.Scripts.Events;
@@ -27,12 +26,15 @@ namespace Project_Assets.Scripts.Lobby
         public event Action<LobbyListChangedEventArgs> OnLobbyListChanged;
 
         private readonly LobbyEventCallbacks m_EventCallbacks = new();
+        
+        private static StatusReport s_statusReport;
+        private static LobbiesStatusReport s_lobbiesStatusReport;
 
         public void UpdateActiveLobby(Unity.Services.Lobbies.Models.Lobby lobby)
         {
             if (ActiveLobby.Players.Count == lobby.Players.Count) return;
             
-            Debug.Log("LobbyManager.UpdateActiveLobby: Active Lobby less players".Color("red"));
+            Debug.Log("LobbyManager.UpdateActiveLobby: Active Lobby different amount of players".Color("red"));
             ActiveLobby = lobby;
                 
             OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
@@ -65,7 +67,6 @@ namespace Project_Assets.Scripts.Lobby
 
         public async Task<StatusReport> CreateLobbyAsync(CreateLobbySettings settings)
         {
-            var statusReport = new StatusReport();
             var player = CreateLocalPlayer();
 
             var lobbyOptions = new CreateLobbyOptions
@@ -76,12 +77,10 @@ namespace Project_Assets.Scripts.Lobby
                 Data = settings.Data,
             };
 
-            // TODO: check max players and ?????
-
             if (string.IsNullOrWhiteSpace(settings.GameName.name))
             {
-                statusReport.MakeReport(false, "Failed to create lobby, name was null");
-                return statusReport;
+                s_statusReport.MakeReport(false, "Failed to create lobby, name was null");
+                return s_statusReport;
             }
 
             try
@@ -100,24 +99,22 @@ namespace Project_Assets.Scripts.Lobby
 
                 ListAllPlayersInLobby();
 
-                statusReport.MakeReport(true, $"Lobby '{ActiveLobby.Name}' created with ID: {ActiveLobby.Id}");
+                s_statusReport.MakeReport(true, $"Lobby '{ActiveLobby.Name}' created with ID: {ActiveLobby.Id}");
             }
             catch (LobbyServiceException e)
             {
-                statusReport.MakeReport(false, $"CreateLobbyAsync error (Failed to create lobby): {e.Message}");
+                s_statusReport.MakeReport(false, $"CreateLobbyAsync error (Failed to create lobby): {e.Message}");
             }
 
-            return statusReport;
+            return s_statusReport;
         }
 
         public async Task<StatusReport> LeaveLobbyAsync()
         {
-            var statusReport = new StatusReport();
-
             if (ActiveLobby == null)
             {
-                statusReport.MakeReport(false, "ActiveLobby not found (null)");
-                return statusReport;
+                s_statusReport.MakeReport(false, "ActiveLobby not found (null)");
+                return s_statusReport;
             }
 
             string playerId = AuthenticationService.Instance.PlayerId;
@@ -142,21 +139,19 @@ namespace Project_Assets.Scripts.Lobby
                 var lobbies = await GetAllActiveLobbiesAsync();
                 lobbies.Log();
 
-                statusReport.MakeReport(true, $"{playerId} left the lobby");
+                s_statusReport.MakeReport(true, $"{playerId} left the lobby");
             }
             catch (LobbyServiceException e)
             {
-                statusReport.MakeReport(false, $"{playerId} Failed to leave lobby: {e.Message}");
+                s_statusReport.MakeReport(false, $"{playerId} Failed to leave lobby: {e.Message}");
             }
             
             ActiveLobby = null;
-            return statusReport;
+            return s_statusReport;
         }
 
         public async Task<StatusReport> JoinLobbyByCodeAsync(string code)
         {
-            var statusReport = new StatusReport();
-
             try
             {
                 var player = CreateLocalPlayer();
@@ -172,20 +167,18 @@ namespace Project_Assets.Scripts.Lobby
                 OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnPlayerJoinedLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
 
-                statusReport.MakeReport(true, $"Joined lobby by code: {ActiveLobby.Name})");
+                s_statusReport.MakeReport(true, $"Joined lobby by code: {ActiveLobby.Name})");
             }
             catch (LobbyServiceException e)
             {
-                statusReport.MakeReport(false, $"Lobby joined failed {e.Message}");
+                s_statusReport.MakeReport(false, $"Lobby joined failed {e.Message}");
             }
 
-            return statusReport;
+            return s_statusReport;
         }
 
         public async Task<StatusReport> JoinLobbyByIdAsync(string lobbyId)
         {
-            var statusReport = new StatusReport();
-
             try
             {
                 var player = CreateLocalPlayer();
@@ -201,44 +194,42 @@ namespace Project_Assets.Scripts.Lobby
                 OnPlayerJoinedLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
 
-                statusReport.MakeReport(true, $"Joined lobby by ID: {ActiveLobby.Id}");
+                s_statusReport.MakeReport(true, $"Joined lobby by ID: {ActiveLobby.Id}");
             }
             catch (LobbyServiceException e)
             {
-                statusReport.MakeReport(false, $"Failed to join lobby by ID: {e.Message}");
+                s_statusReport.MakeReport(false, $"Failed to join lobby by ID: {e.Message}");
             }
 
-            return statusReport;
+            return s_statusReport;
         }
 
         public async Task<StatusReport> KickPlayerAsync(string playerId)
         {
-            var statusReport = new StatusReport();
-            
             if (ActiveLobby == null)
             {
-                statusReport.MakeReport(false, "ActiveLobby not found (null)");
-                return statusReport;
+                s_statusReport.MakeReport(false, "ActiveLobby not found (null)");
+                return s_statusReport;
             }
 
             if (ActiveLobby.HostId != AuthenticationService.Instance.PlayerId)
             {
-                statusReport.MakeReport(false, "Only the host can kick players");
-                return statusReport;
+                s_statusReport.MakeReport(false, "Only the host can kick players");
+                return s_statusReport;
             }
 
             try
             {
                 await LobbyService.Instance.RemovePlayerAsync(ActiveLobby.Id, playerId);
                 
-                statusReport.MakeReport(true, $"Player {playerId} has been kicked from the lobby");
+                s_statusReport.MakeReport(true, $"Player {playerId} has been kicked from the lobby");
             }
             catch (LobbyServiceException e)
             {
-                statusReport.MakeReport(false, $"Failed to kick player: {e.Message}");
+                s_statusReport.MakeReport(false, $"Failed to kick player: {e.Message}");
             }
             
-            return statusReport;
+            return s_statusReport;
         }
 
         private void ListAllPlayersInLobby()
@@ -282,8 +273,6 @@ namespace Project_Assets.Scripts.Lobby
 
         public async Task<LobbiesStatusReport> GetAllActiveLobbiesAsync()
         {
-            var statusReport = new LobbiesStatusReport();
-
             try
             {
                 var queryOptions = new QueryLobbiesOptions
@@ -306,14 +295,14 @@ namespace Project_Assets.Scripts.Lobby
 
                 OnLobbyListChanged?.Invoke(new LobbyListChangedEventArgs { Lobbies = response.Results });
 
-                statusReport.MakeReport(response.Results, true, $"Found {response.Results.Count} active lobbies.");
+                s_lobbiesStatusReport.MakeReport(response.Results, true, $"Found {response.Results.Count} active lobbies.");
             }
             catch (LobbyServiceException e)
             {
-                statusReport.MakeReport(null, false, $"Failed to query lobbies: {e.Message}");
+                s_lobbiesStatusReport.MakeReport(null, false, $"Failed to query lobbies: {e.Message}");
             }
 
-            return statusReport;
+            return s_lobbiesStatusReport;
         }
     }
 }

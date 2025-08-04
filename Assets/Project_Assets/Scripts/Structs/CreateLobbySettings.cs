@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Framework_TempName;
 using Unity.Services.Lobbies.Models;
+using UnityEngine.UI;
 
 namespace Project_Assets.Scripts.Structs
 {
@@ -13,12 +14,13 @@ namespace Project_Assets.Scripts.Structs
         public Player Player { get; set; }
         public bool? IsPrivate { get; set; }
         public bool? IsLocked { get; set; }
+        public Image GameImage { get; set; }
         public (GameMode mode, DataObject.VisibilityOptions visibilityOptions) GameMode { get; set; }
         public (Map map, DataObject.VisibilityOptions visibilityOptions) Map { get; set; }
         public (int max, DataObject.VisibilityOptions visibilityOptions) MaxPlayers { get; set; }
         public (string name, DataObject.VisibilityOptions visibilityOptions) GameName { get; set; }
-        public (int speed, DataObject.VisibilityOptions visibilityOptions) GameSpeed { get; set; }
-        public Dictionary<string, DataObject> Data { get; set; }
+        public (GameSpeed speed, DataObject.VisibilityOptions visibilityOptions) GameSpeed { get; set; }
+        public Dictionary<string, DataObject> Data { get; private set; }
 
         public void SetData()
         {
