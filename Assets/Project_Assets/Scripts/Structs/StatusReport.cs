@@ -43,18 +43,18 @@ namespace Project_Assets.Scripts.Structs
     public struct LobbiesStatusReport : ILog
     {
         public List<Unity.Services.Lobbies.Models.Lobby> Lobbies;
-        private StatusReport m_Status;
+        public StatusReport Status;
 
         public void MakeReport(List<Unity.Services.Lobbies.Models.Lobby> lobbies, bool success, string message)
         {
             Lobbies = lobbies;
-            m_Status.Message = message;
-            m_Status.Success = success;
+            Status.Message = message;
+            Status.Success = success;
         }
 
         public void Log()
         {
-            Debug.Log($"Success: {m_Status.Success} :  Message: {m_Status.Message}".Color(m_Status.Success ? "green" : "red"));
+            Debug.Log($"Success: {Status.Success} :  Message: {Status.Message}".Color(Status.Success ? "green" : "red"));
         }
     }
 }

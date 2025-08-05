@@ -8,41 +8,36 @@ namespace Project_Assets.Scripts.Lobby
 {
     public class GameListItem : MonoBehaviour
     {
-        public TMP_Text gameName;
-        public TMP_Text gameSpeed;
-        public TMP_Text gameMode;
-        public TMP_Text maxPlayers;
-        public TMP_Text playerCount; // show how many players in lobby/game
+        [SerializeField] private TMP_Text gameListName;
         public Button joinButton;
-        
+
         private Unity.Services.Lobbies.Models.Lobby m_Lobby;
-        
         private LobbyManager m_LobbyManager;
-        
+        private LobbyUI m_LobbyUI;
+
         private void Awake()
         {
             ServiceLocator.Global.Get(out m_LobbyManager);
-            
-            joinButton.onClick.AddListener(JoinThisGame);
-        }
+            ServiceLocator.Global.Get(out m_LobbyUI);
 
-        // TEMP Should not join game when clicking list item, should update text input
-        private async void JoinThisGame()
-        {
-            var report = await m_LobbyManager.JoinLobbyByIdAsync(m_Lobby.Id);
-            report.Log();
+            joinButton.onClick.AddListener(OnGameListItemClick);
         }
 
         public void UpdateLobby(Unity.Services.Lobbies.Models.Lobby lobby)
         {
             m_Lobby = lobby;
+            gameListName.text = m_Lobby.Name;
+        }
 
-            gameName.text = lobby.Data[KeyConstants.k_GameName].Value;
-            // maxPlayers.text = lobby.Data[KeyConstants.k_MaxPlayers].Value;
-            // gameMode.text = lobby.Data[KeyConstants.k_GameMode].Value;
-            // gameSpeed.text = lobby.Data[KeyConstants.k_GameSpeed].Value;
+        private void OnGameListItemClick()
+        {
+            m_LobbyUI.CurrentSelectedLobby = m_Lobby;
+            m_LobbyUI.gameCodeInputField.text = m_Lobby.Name;
             
-            // TODO: Set info in side panel
+            m_LobbyUI.lobbyInfoGames.gameName.text = m_Lobby.Data[KeyConstants.k_GameName].Value;
+            m_LobbyUI.lobbyInfoGames.maxPlayers.text = m_Lobby.Data[KeyConstants.k_MaxPlayers].Value;
+            m_LobbyUI.lobbyInfoGames.gameMode.text = m_Lobby.Data[KeyConstants.k_GameMode].Value;
+            m_LobbyUI.lobbyInfoGames.gameSpeed.text = m_Lobby.Data[KeyConstants.k_GameSpeed].Value;
         }
     }
 }

@@ -16,6 +16,8 @@ namespace Project_Assets.Scripts.Lobby
 {
     public class LobbyUI : MonoBehaviour
     {
+        public Unity.Services.Lobbies.Models.Lobby CurrentSelectedLobby { get; set; }
+        
         [Header("Panels")]
         [SerializeField] private GameObject gamesListPanel;
         [SerializeField] private GameObject createGamePanel;
@@ -32,11 +34,6 @@ namespace Project_Assets.Scripts.Lobby
         
         [Space]
         
-        [SerializeField] private GameObject chatListItem;
-        [SerializeField] private Transform chatContainer;
-        
-        [Space]
-        
         [Header("Create Game Panel Elements")]
         [SerializeField] private TMP_InputField gameNameInputField;
         [SerializeField] private TMP_Dropdown gameModeDropdown;
@@ -47,19 +44,16 @@ namespace Project_Assets.Scripts.Lobby
         [SerializeField] private Button cancelCreateButton;
 
         [Header("Games Panel Elements")]
-        [SerializeField] private TMP_InputField gameCodeInputField;
+        public TMP_InputField gameCodeInputField;
         [SerializeField] private Button createGameButton;
         [SerializeField] private Button joinGameButton;
         [SerializeField] private Button refreshGamesButton;
+        public LobbyInfo lobbyInfoGames;
 
         [Header("Lobby Panel Elements")]
         [SerializeField] private Button startGameButton;
         [SerializeField] private Button leaveLobbyButton;
-        [SerializeField] private Image gameImage;
-        [SerializeField] private TMP_Text gameName;
-        [SerializeField] private TMP_Text gameMode;
-        [SerializeField] private TMP_Text gameSpeed;
-        [SerializeField] private TMP_Text maxPlayers;
+        [SerializeField] private LobbyInfo lobbyInfo;
         
         private int MaxPlayers => maxPlayersDropdown.value + 1;
         private int GameSpeedIndex => gameSpeedDropdown.value;
@@ -67,10 +61,17 @@ namespace Project_Assets.Scripts.Lobby
         private string GameName => gameNameInputField.text;
 
         private LobbyManager m_LobbyManager;
-        
+        private ErrorMessageText m_ErrorMessage;
+
+        private void Awake()
+        {
+            ServiceLocator.Global.Register(this, ServiceLevel.Global);
+        }
+
         private void Start()
         {
             ServiceLocator.Global.Get(out m_LobbyManager);
+            ServiceLocator.Global.Get(out m_ErrorMessage);
 
             // Value == index
             maxPlayersDropdown.value = 3; // (Set default value to 4 players)
@@ -81,7 +82,7 @@ namespace Project_Assets.Scripts.Lobby
             createLobbyButton.onClick.AddListener(OnCreateLobby);
             leaveLobbyButton.onClick.AddListener(OnLeaveLobby);
 
-            // joinGameButton.onClick.AddListener(); // Join game by Id / Code
+            joinGameButton.onClick.AddListener(JoinSelectedGame);
 
             m_LobbyManager.OnPlayerJoinedLobbyAsync += OnPlayerJoinedLobbyAsync;
             m_LobbyManager.OnPlayerLeftLobbyAsync += OnPlayerLeftLobbyAsync;
@@ -91,6 +92,12 @@ namespace Project_Assets.Scripts.Lobby
             m_LobbyManager.OnSettingsUpdate += OnUpdateLobbyInfo;
 
             OnRefreshLobbies();
+        }
+
+        private async void JoinSelectedGame()
+        {
+            var report = await m_LobbyManager.JoinLobbyByIdAsync(CurrentSelectedLobby.Id);
+            PrintStatusLog(report);
         }
 
         private async void OnCreateLobby()
@@ -109,13 +116,13 @@ namespace Project_Assets.Scripts.Lobby
             
             settings.SetData();
 
-            gameName.text = settings.GameName.name;
-            maxPlayers.text = settings.MaxPlayers.max.ToString();
-            gameSpeed.text = settings.GameSpeed.speed.GameSpeedToString();
-            gameMode.text = settings.GameMode.mode.GameModeToString();
+            lobbyInfo.gameName.text = settings.GameName.name;
+            lobbyInfo.maxPlayers.text = settings.MaxPlayers.max.ToString();
+            lobbyInfo.gameSpeed.text = settings.GameSpeed.speed.GameSpeedToString();
+            lobbyInfo.gameMode.text = settings.GameMode.mode.GameModeToString();
 
             var report = await m_LobbyManager.CreateLobbyAsync(settings);
-            report.Log();
+            PrintStatusLog(report);
         }
 
         // Temp
@@ -123,13 +130,13 @@ namespace Project_Assets.Scripts.Lobby
         {
             var lobbiesStatusReport = await m_LobbyManager.GetAllActiveLobbiesAsync();
             PopulateLobbyList(lobbiesStatusReport.Lobbies);
-            lobbiesStatusReport.Log();
+            PrintStatusLog(lobbiesStatusReport.Status);
         }
 
         private async void OnLeaveLobby()
         {
             var report = await m_LobbyManager.LeaveLobbyAsync();
-            report.Log();
+            PrintStatusLog(report);
         }
 
         private void OnLobbyListChanged(LobbyListChangedEventArgs e)
@@ -224,10 +231,10 @@ namespace Project_Assets.Scripts.Lobby
         {
             Debug.Log("On Update Lobby Info".Color("cyan"));
 
-            gameName.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_GameName].Value;
-            maxPlayers.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_MaxPlayers].Value;
-            gameSpeed.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_GameSpeed].Value;
-            gameMode.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_GameMode].Value;
+            lobbyInfo.gameName.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_GameName].Value;
+            lobbyInfo.maxPlayers.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_MaxPlayers].Value;
+            lobbyInfo.gameSpeed.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_GameSpeed].Value;
+            lobbyInfo.gameMode.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_GameMode].Value;
         }
 
         private void ClearContainer(Transform container)
@@ -236,6 +243,17 @@ namespace Project_Assets.Scripts.Lobby
             {
                 Destroy(child.gameObject);
             }
+        }
+
+        private void PrintStatusLog(StatusReport report)
+        {
+            if (!report.Success)
+            {
+                m_ErrorMessage.SetText(report.Message);
+                return;
+            }
+            
+            report.Log();
         }
 
         private void SwitchPanel(LobbyPanel panel)

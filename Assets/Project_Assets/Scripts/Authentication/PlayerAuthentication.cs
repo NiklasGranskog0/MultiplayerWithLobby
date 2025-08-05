@@ -5,6 +5,7 @@ using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Lobbies.Models;
+using Unity.Services.Vivox;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

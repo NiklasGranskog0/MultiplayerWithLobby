@@ -53,8 +53,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 829866846a54288499a2551a492d1a61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameName: {fileID: 1090894765803982209}
-  playerCount: {fileID: 0}
+  gameListName: {fileID: 1090894765803982209}
   joinButton: {fileID: 9180276513749104915}
 --- !u!114 &4713817416225064184
 MonoBehaviour:
