@@ -16523,6 +16523,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 1333005720}
+  fadeOutDuration: 5
 --- !u!224 &2033598953 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3933004814317243361, guid: cd002edcd07e30d408e76a7f252b550e, type: 3}
