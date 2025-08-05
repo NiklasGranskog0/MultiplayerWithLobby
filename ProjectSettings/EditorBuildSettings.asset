@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Scenes/SessionLobby.unity
     guid: 0412db4ab0ce5a049b3d4054f6838cce
   - enabled: 1
-    path: Assets/Scenes/Lobby.unity
+    path: Assets/Project_Assets/Scenes/Lobby.unity
     guid: 744d179cc240ead40b9505c1a61fd567
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
