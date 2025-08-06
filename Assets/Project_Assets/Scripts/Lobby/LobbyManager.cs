@@ -26,6 +26,8 @@ namespace Project_Assets.Scripts.Lobby
         public event Action<LobbyEventArgs> OnJoinedLobbyUpdate;
         public event Action<LobbyEventArgs> OnSettingsUpdate;
         public event Action<LobbyListChangedEventArgs> OnLobbyListChanged;
+        public event Action<string> OnJoinedTextChannel;
+        public event Action<string> OnLeftTextChannel;
 
         private readonly LobbyEventCallbacks m_EventCallbacks = new();
         
@@ -51,12 +53,6 @@ namespace Project_Assets.Scripts.Lobby
             if (ActiveLobby == null) return;
         }
 
-        // Testing
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Escape)) ListAllPlayersInLobby();
-        }
-
         private void Awake()
         {
             ServiceLocator.Global.Register(this, ServiceLevel.Global);
@@ -72,6 +68,7 @@ namespace Project_Assets.Scripts.Lobby
         private void PollerOnOnShouldBeenKicked(LobbyEventArgs obj)
         {
             OnPlayerLeftLobbyAsync?.Invoke(obj);
+            OnLeftTextChannel?.Invoke(obj.Lobby.Id);
             poller.StopLobbyPolling();
         }
 
@@ -106,6 +103,7 @@ namespace Project_Assets.Scripts.Lobby
                 
                 OnCreateLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby }); // Populate Player List
+                OnJoinedTextChannel?.Invoke(ActiveLobby.Id);
 
                 ListAllPlayersInLobby();
 
@@ -144,6 +142,7 @@ namespace Project_Assets.Scripts.Lobby
 
                 OnPlayerLeftLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
+                OnLeftTextChannel?.Invoke(ActiveLobby.Id);
 
                 // After UI have been changed to lobby list auto refresh active lobbies
                 var lobbies = await GetAllActiveLobbiesAsync();
@@ -176,6 +175,8 @@ namespace Project_Assets.Scripts.Lobby
 
                 OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnPlayerJoinedLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
+                OnSettingsUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
+                OnJoinedTextChannel?.Invoke(ActiveLobby.Id);
 
                 s_statusReport.MakeReport(true, $"Joined lobby by code: {ActiveLobby.Name})");
             }
@@ -204,6 +205,7 @@ namespace Project_Assets.Scripts.Lobby
                 OnPlayerJoinedLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnSettingsUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
+                OnJoinedTextChannel?.Invoke(ActiveLobby.Id);
 
                 s_statusReport.MakeReport(true, $"Joined lobby by ID: {ActiveLobby.Id}");
             }
@@ -232,6 +234,7 @@ namespace Project_Assets.Scripts.Lobby
             try
             {
                 await LobbyService.Instance.RemovePlayerAsync(ActiveLobby.Id, playerId);
+                OnLeftTextChannel?.Invoke(ActiveLobby.Id);
                 
                 s_statusReport.MakeReport(true, $"Player {playerId} has been kicked from the lobby");
             }

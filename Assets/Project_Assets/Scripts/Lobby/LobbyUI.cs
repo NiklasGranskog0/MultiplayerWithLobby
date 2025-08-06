@@ -142,7 +142,7 @@ namespace Project_Assets.Scripts.Lobby
         private void OnLobbyListChanged(LobbyListChangedEventArgs e)
         {
             PopulateLobbyList(e.Lobbies);
-            Debug.Log("Populate Lobby List".Color("cyan"));
+            Debug.Log("Populate Lobby List (LobbyListChanged)".Color("cyan"));
         }
 
         private void OnJoinedLobbyUpdate(LobbyEventArgs e)
@@ -180,7 +180,7 @@ namespace Project_Assets.Scripts.Lobby
 
         private void PopulatePlayerList(Unity.Services.Lobbies.Models.Lobby lobby)
         {
-            if (lobby == null || lobby.Players == null)
+            if (lobby?.Players == null)
             {
                 Debug.LogWarning("Lobby is null or empty".Color("red"));
                 ClearContainer(playerListContainer);

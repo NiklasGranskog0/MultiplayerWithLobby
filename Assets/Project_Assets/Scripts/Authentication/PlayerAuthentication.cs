@@ -36,7 +36,7 @@ namespace Project_Assets.Scripts.Authentication
                 InitializationOptions options = new InitializationOptions();
                 options.SetProfile(playerName);
 
-                Debug.Log(playerName);
+                // Debug.Log(playerName);
                 await UnityServices.InitializeAsync(options);
             }
 
