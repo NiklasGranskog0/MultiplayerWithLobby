@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Events;
 using Project_Assets.Scripts.Framework_TempName;
@@ -40,11 +41,13 @@ namespace Project_Assets.Scripts.Lobby
         [SerializeField] private TMP_Dropdown maxPlayersDropdown;
         [SerializeField] private TMP_Dropdown visibilityDropdown;
         [SerializeField] private TMP_Dropdown gameSpeedDropdown;
+        [SerializeField] private TMP_InputField crateGamePasswordInputField;
         [SerializeField] private Button createLobbyButton;
         [SerializeField] private Button cancelCreateButton;
 
         [Header("Games Panel Elements")]
         public TMP_InputField gameCodeInputField;
+        [SerializeField] private TMP_InputField gamePasswordInputField;
         [SerializeField] private Button createGameButton;
         [SerializeField] private Button joinGameButton;
         [SerializeField] private Button refreshGamesButton;
@@ -53,6 +56,7 @@ namespace Project_Assets.Scripts.Lobby
         [Header("Lobby Panel Elements")]
         [SerializeField] private Button startGameButton;
         [SerializeField] private Button leaveLobbyButton;
+        [SerializeField] private TMP_Text gameCodeText;
         [SerializeField] private LobbyInfo lobbyInfo;
         
         private int MaxPlayers => maxPlayersDropdown.value + 1;
@@ -83,6 +87,9 @@ namespace Project_Assets.Scripts.Lobby
             leaveLobbyButton.onClick.AddListener(OnLeaveLobby);
 
             joinGameButton.onClick.AddListener(JoinSelectedGame);
+            
+            visibilityDropdown.onValueChanged.AddListener(GameVisibilityChanged);
+            crateGamePasswordInputField.interactable = false;
 
             m_LobbyManager.OnPlayerJoinedLobbyAsync += OnPlayerJoinedLobbyAsync;
             m_LobbyManager.OnPlayerLeftLobbyAsync += OnPlayerLeftLobbyAsync;
@@ -90,14 +97,49 @@ namespace Project_Assets.Scripts.Lobby
             m_LobbyManager.OnLobbyListChanged += OnLobbyListChanged;
             m_LobbyManager.OnCreateLobbyAsync += OnCreateLobbyAsync;
             m_LobbyManager.OnSettingsUpdate += OnUpdateLobbyInfo;
+            m_LobbyManager.OnSetGameCode += OnSetGameCode;
 
             OnRefreshLobbies();
         }
 
+        private void GameVisibilityChanged(int arg0)
+        {
+            crateGamePasswordInputField.interactable = visibilityDropdown.value == 1;
+        }
+
+        private void OnSetGameCode(string obj)
+        {
+            gameCodeText.text = obj;
+        }
+
         private async void JoinSelectedGame()
         {
-            var report = await m_LobbyManager.JoinLobbyByIdAsync(CurrentSelectedLobby.Id);
-            PrintStatusLog(report);
+            var report = new StatusReport();
+            bool joinedByCode = false;
+            
+            if (CurrentSelectedLobby == null)
+            {
+                joinedByCode = await TryJoinByCode();
+            }
+
+            if (!string.IsNullOrEmpty(CurrentSelectedLobby?.Id) && !joinedByCode)
+            {
+                report = await m_LobbyManager.JoinLobbyByIdAsync(CurrentSelectedLobby?.Id, gamePasswordInputField.text);
+                PrintStatusLog(report, LobbyPanel.Games);    
+            }
+        }
+
+        private async Task<bool> TryJoinByCode()
+        {
+            if (!string.IsNullOrWhiteSpace(gameCodeInputField.text))
+            {
+                var report = await m_LobbyManager.JoinLobbyByCodeAsync(gameCodeInputField.text, gamePasswordInputField.text);
+                PrintStatusLog(report, LobbyPanel.Games);
+
+                return report.Success;
+            }
+            
+            return false;
         }
 
         private async void OnCreateLobby()
@@ -106,6 +148,7 @@ namespace Project_Assets.Scripts.Lobby
             {
                 IsLocked = false,
                 IsPrivate = visibilityDropdown.value == 1,
+                Password = crateGamePasswordInputField.text,
                 
                 GameMode = ((GameMode)GameModeIndex, DataObject.VisibilityOptions.Public),
                 Map = (Map.Forest, DataObject.VisibilityOptions.Public),
@@ -121,8 +164,9 @@ namespace Project_Assets.Scripts.Lobby
             lobbyInfo.gameSpeed.text = settings.GameSpeed.speed.GameSpeedToString();
             lobbyInfo.gameMode.text = settings.GameMode.mode.GameModeToString();
 
-            var report = await m_LobbyManager.CreateLobbyAsync(settings);
-            PrintStatusLog(report);
+            // TODO: Error message on password less than(<) 8 characters
+            var report = await m_LobbyManager.CreateLobbyAsync(settings, crateGamePasswordInputField.interactable);
+            PrintStatusLog(report, LobbyPanel.Create); 
         }
 
         // Temp
@@ -130,13 +174,14 @@ namespace Project_Assets.Scripts.Lobby
         {
             var lobbiesStatusReport = await m_LobbyManager.GetAllActiveLobbiesAsync();
             PopulateLobbyList(lobbiesStatusReport.Lobbies);
-            PrintStatusLog(lobbiesStatusReport.Status);
+            PrintStatusLog(lobbiesStatusReport.Status, LobbyPanel.Games);
         }
 
         private async void OnLeaveLobby()
         {
             var report = await m_LobbyManager.LeaveLobbyAsync();
-            PrintStatusLog(report);
+            PrintStatusLog(report, LobbyPanel.Games);
+            CurrentSelectedLobby = null;
         }
 
         private void OnLobbyListChanged(LobbyListChangedEventArgs e)
@@ -166,6 +211,7 @@ namespace Project_Assets.Scripts.Lobby
         {
             SwitchPanel(LobbyPanel.Games);
             Debug.Log($"Player Left; Lobby Id: {obj.Lobby.Id}");
+            CurrentSelectedLobby = null;
         }
         
         private void OnCreateLobbySettings()
@@ -245,11 +291,11 @@ namespace Project_Assets.Scripts.Lobby
             }
         }
 
-        private void PrintStatusLog(StatusReport report)
+        private void PrintStatusLog(StatusReport report, LobbyPanel panel)
         {
             if (!report.Success)
             {
-                m_ErrorMessage.SetText(report.Message);
+                m_ErrorMessage.ShowError(report.Message, panel);
                 return;
             }
             
@@ -261,6 +307,9 @@ namespace Project_Assets.Scripts.Lobby
             gamesListPanel.SetActive(false);
             createGamePanel.SetActive(false);
             lobbyPanel.SetActive(false);
+            
+            gamePasswordInputField.text = string.Empty;
+            gameCodeInputField.text = string.Empty;
 
             switch (panel)
             {

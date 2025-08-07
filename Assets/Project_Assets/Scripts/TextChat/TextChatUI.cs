@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
+using Project_Assets.Scripts.Lobby;
 using Project_Assets.Scripts.Structs;
 using TMPro;
 using Unity.Services.Vivox;
@@ -23,23 +24,32 @@ namespace Project_Assets.Scripts.TextChat
         private readonly IList<KeyValuePair<string, ChatListItem>> m_MessageObjectPool =
             new List<KeyValuePair<string, ChatListItem>>();
 
-        private Task m_GetMessages;
         private DateTime? m_OldestMessage;
 
         private VivoxManager m_VivoxManager;
+        private LobbyManager m_LobbyManager;
         private static StatusReport s_statusReport;
 
         private void Start()
         {
             ServiceLocator.Global.Get(out m_VivoxManager);
+            ServiceLocator.Global.Get(out m_LobbyManager);
             
             chatScrollRect.verticalScrollbar.interactable = false;
             
             VivoxService.Instance.ChannelJoined += OnChannelJoined;
             VivoxService.Instance.ChannelMessageReceived += OnChannelMessageReceived;
             VivoxService.Instance.DirectedMessageReceived += OnDirectedMessageReceived;
+
+            m_LobbyManager.OnLeftTextChannel += OnLeftTextChannel;
             
             chatScrollRect.onValueChanged.AddListener(ScrollRectChange);
+        }
+
+        private void OnLeftTextChannel(string obj)
+        {
+            ClearMessagePool();
+            m_OldestMessage = null;
         }
 
         private void Update()
@@ -113,16 +123,16 @@ namespace Project_Assets.Scripts.TextChat
         {
             yield return new WaitForEndOfFrame();
             chatScrollRect.verticalNormalizedPosition = 0;
-            // if (chatScrollRect.verticalScrollbar.value > 0f) chatScrollRect.verticalScrollbar.value = 0f;
             yield return null;
         }
 
-        private void ScrollRectChange(Vector2 vector)
+        private async void ScrollRectChange(Vector2 vector)
         {
-            if (chatScrollRect.verticalNormalizedPosition >= 0.95f && m_GetMessages != null && (m_GetMessages.IsCompleted || m_GetMessages.IsFaulted || m_GetMessages.IsCanceled))
+            if (chatScrollRect.verticalNormalizedPosition >= 0.95f)
             {
                 chatScrollRect.normalizedPosition = new Vector2(0, 0.8f);
-                m_GetMessages = GetChatHistory(false);
+                var getMessages = await GetChatHistory(false);
+                getMessages.Log();
             }
         }
 
@@ -141,9 +151,10 @@ namespace Project_Assets.Scripts.TextChat
             ClearTextInput();
         }
 
-        private void OnChannelJoined(string s)
+        private async void OnChannelJoined(string s)
         {
-            m_GetMessages = GetChatHistory(true);
+            var getMessages = await GetChatHistory(true);
+            getMessages.Log();
         }
         
         private void OnChannelMessageReceived(VivoxMessage message)

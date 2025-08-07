@@ -14,6 +14,7 @@ namespace Project_Assets.Scripts.Structs
         public Player Player { get; set; }
         public bool? IsPrivate { get; set; }
         public bool? IsLocked { get; set; }
+        public string Password { get; set; }
         public Image GameImage { get; set; }
         public (GameMode mode, DataObject.VisibilityOptions visibilityOptions) GameMode { get; set; }
         public (Map map, DataObject.VisibilityOptions visibilityOptions) Map { get; set; }

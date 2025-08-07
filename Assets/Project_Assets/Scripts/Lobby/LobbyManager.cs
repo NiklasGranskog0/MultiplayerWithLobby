@@ -28,6 +28,7 @@ namespace Project_Assets.Scripts.Lobby
         public event Action<LobbyListChangedEventArgs> OnLobbyListChanged;
         public event Action<string> OnJoinedTextChannel;
         public event Action<string> OnLeftTextChannel;
+        public event Action<string> OnSetGameCode;
 
         private readonly LobbyEventCallbacks m_EventCallbacks = new();
         
@@ -72,7 +73,7 @@ namespace Project_Assets.Scripts.Lobby
             poller.StopLobbyPolling();
         }
 
-        public async Task<StatusReport> CreateLobbyAsync(CreateLobbySettings settings)
+        public async Task<StatusReport> CreateLobbyAsync(CreateLobbySettings settings, bool password)
         {
             var player = m_PlayerAuthentication.Player;
 
@@ -83,6 +84,11 @@ namespace Project_Assets.Scripts.Lobby
                 IsLocked = settings.IsLocked,
                 Data = settings.Data,
             };
+
+            if (password)
+            {
+                lobbyOptions.Password = settings.Password;
+            }
 
             if (string.IsNullOrWhiteSpace(settings.GameName.name))
             {
@@ -104,6 +110,7 @@ namespace Project_Assets.Scripts.Lobby
                 OnCreateLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby }); // Populate Player List
                 OnJoinedTextChannel?.Invoke(ActiveLobby.Id);
+                OnSetGameCode?.Invoke(ActiveLobby.LobbyCode);
 
                 ListAllPlayersInLobby();
 
@@ -159,7 +166,7 @@ namespace Project_Assets.Scripts.Lobby
             return s_statusReport;
         }
 
-        public async Task<StatusReport> JoinLobbyByCodeAsync(string code)
+        public async Task<StatusReport> JoinLobbyByCodeAsync(string code, string password = null)
         {
             try
             {
@@ -169,6 +176,8 @@ namespace Project_Assets.Scripts.Lobby
                 {
                     Player = player,
                 };
+                
+                if (!string.IsNullOrWhiteSpace(password)) joinOptions.Password = password;
 
                 ActiveLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code, joinOptions);
                 poller.StartLobbyPolling(ActiveLobby);
@@ -177,8 +186,9 @@ namespace Project_Assets.Scripts.Lobby
                 OnPlayerJoinedLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnSettingsUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnJoinedTextChannel?.Invoke(ActiveLobby.Id);
+                OnSetGameCode?.Invoke(ActiveLobby.LobbyCode);
 
-                s_statusReport.MakeReport(true, $"Joined lobby by code: {ActiveLobby.Name})");
+                s_statusReport.MakeReport(true, $"Joined lobby by code: {ActiveLobby.Name}");
             }
             catch (LobbyServiceException e)
             {
@@ -188,7 +198,7 @@ namespace Project_Assets.Scripts.Lobby
             return s_statusReport;
         }
 
-        public async Task<StatusReport> JoinLobbyByIdAsync(string lobbyId)
+        public async Task<StatusReport> JoinLobbyByIdAsync(string lobbyId, string password = null)
         {
             try
             {
@@ -196,8 +206,10 @@ namespace Project_Assets.Scripts.Lobby
 
                 var joinOptions = new JoinLobbyByIdOptions
                 {
-                    Player = player
+                    Player = player,
                 };
+                
+                if (!string.IsNullOrWhiteSpace(password)) joinOptions.Password = password;
 
                 ActiveLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId, joinOptions);
                 poller.StartLobbyPolling(ActiveLobby);
@@ -206,6 +218,7 @@ namespace Project_Assets.Scripts.Lobby
                 OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnSettingsUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnJoinedTextChannel?.Invoke(ActiveLobby.Id);
+                OnSetGameCode?.Invoke(ActiveLobby.LobbyCode);
 
                 s_statusReport.MakeReport(true, $"Joined lobby by ID: {ActiveLobby.Id}");
             }

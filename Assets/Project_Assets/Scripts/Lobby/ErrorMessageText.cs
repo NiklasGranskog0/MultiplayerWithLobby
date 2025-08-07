@@ -1,37 +1,36 @@
-using System.Collections;
+using System;
+using System.Collections.Generic;
+using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
-using TMPro;
+using Project_Assets.Scripts.Structs;
 using UnityEngine;
 
 namespace Project_Assets.Scripts.Lobby
 {
     public class ErrorMessageText : MonoBehaviour
     {
-        [SerializeField] private TMP_Text text;
-        [SerializeField] private float fadeOutDuration;
-        private float m_Duration;
+        [SerializeField] private List<ErrorPanels> errorPanels;
         
         private void Awake()
         {
             ServiceLocator.Global.Register(this, ServiceLevel.Global);
         }
 
-        public void SetText(string errorMessage)
+        public void ShowError(string errorMessage, LobbyPanel panel)
         {
-            text.text = errorMessage;
-            StartCoroutine(FadeOut());
-        }
-
-        private IEnumerator FadeOut()
-        {
-            m_Duration = 0f;
-            
-            while (m_Duration < fadeOutDuration)
+            switch (panel)
             {
-                float alpha = Mathf.Lerp(1f, 0f, m_Duration / fadeOutDuration);
-                text.color = new Color(text.color.r, text.color.g, text.color.b, alpha);
-                m_Duration += Time.deltaTime;
-                yield return null;
+                case LobbyPanel.Games:
+                    errorPanels[0].SetText(errorMessage);
+                    break;
+                case LobbyPanel.Create:
+                    errorPanels[1].SetText(errorMessage);
+                    break;
+                case LobbyPanel.Lobby:
+                    errorPanels[2].SetText(errorMessage);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(panel), panel, null);
             }
         }
     }
