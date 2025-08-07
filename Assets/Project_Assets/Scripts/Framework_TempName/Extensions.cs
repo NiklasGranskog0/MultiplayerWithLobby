@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using Project_Assets.Scripts.Enums;
+using TMPro;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -72,6 +74,24 @@ namespace Project_Assets.Scripts.Framework_TempName
             };
         }
 
+        #endregion
+        
+        #region Strings
+        
+        public static IEnumerator FadeOut(this TMP_Text t, float fadeDuration)
+        {
+            var duration = 0f;
+            
+            while (duration < fadeDuration)
+            {
+                var alpha = Mathf.Lerp(1f, 0f, duration / fadeDuration);
+                 t.color = new Color(t.color.r, t.color.g, t.color.b, alpha);
+                duration += Time.deltaTime;
+                yield return null;
+            }
+        }
+        
+        
         #endregion
     }
 }
