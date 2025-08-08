@@ -1,3 +1,4 @@
+using System.Text;
 using Project_Assets.Scripts.Framework_TempName;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
 using TMPro;
@@ -38,6 +39,10 @@ namespace Project_Assets.Scripts.Lobby
             m_LobbyUI.lobbyInfoGames.maxPlayers.text = m_Lobby.Data[KeyConstants.k_MaxPlayers].Value;
             m_LobbyUI.lobbyInfoGames.gameMode.text = m_Lobby.Data[KeyConstants.k_GameMode].Value;
             m_LobbyUI.lobbyInfoGames.gameSpeed.text = m_Lobby.Data[KeyConstants.k_GameSpeed].Value;
+            m_LobbyUI.lobbyInfoGames.mapName.text = m_Lobby.Data[KeyConstants.k_Map].Value;
+            
+            m_LobbyUI.lobbyInfoGames.gameImage.color = Color.white;
+            m_LobbyUI.lobbyInfoGames.gameImage.texture = m_LobbyUI.gameImagesDictionary[m_Lobby.Data[KeyConstants.k_GameImage].Value];
         }
     }
 }

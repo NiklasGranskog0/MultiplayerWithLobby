@@ -11,5 +11,6 @@ namespace Project_Assets.Scripts.Framework_TempName
         public const string k_GameName = "GameName";
         public const string k_GameSpeed = "GameSpeed";
         public const string k_GamePassword = "GamePassword";
+        public const string k_GameImage = "GameImage";
     }
 }

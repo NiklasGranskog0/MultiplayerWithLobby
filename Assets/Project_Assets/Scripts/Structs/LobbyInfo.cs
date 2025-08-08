@@ -11,7 +11,8 @@ namespace Project_Assets.Scripts.Structs
         public TMP_Text gameMode;
         public TMP_Text gameSpeed;
         public TMP_Text maxPlayers;
+        public TMP_Text mapName;
 
-        public Image gameImage;
+        public RawImage gameImage;
     }
 }

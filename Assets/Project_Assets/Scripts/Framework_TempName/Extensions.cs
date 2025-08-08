@@ -73,6 +73,19 @@ namespace Project_Assets.Scripts.Framework_TempName
                 _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
             };
         }
+        
+        public static string GameMapToString(this Map map)
+        {
+            return map switch
+            {
+                Map.Maze => "Maze",
+                Map.Forest => "Forest",
+                Map.Desert => "Desert",
+                Map.Mountain => "Mountain",
+                Map.River => "River",
+                _ => throw new ArgumentOutOfRangeException(nameof(map), map, null)
+            };
+        }
 
         #endregion
         
