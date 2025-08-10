@@ -39,16 +39,6 @@ namespace Project_Assets.Scripts.Lobby
 
         private CreateLobbySettings m_CreateLobbySettings;
 
-        public void UpdateActiveLobby(Unity.Services.Lobbies.Models.Lobby lobby)
-        {
-            // if (ActiveLobby.Players.Count == lobby.Players.Count) return;
-            //
-            // Debug.Log("LobbyManager.UpdateActiveLobby: Active Lobby different amount of players".Color("red"));
-            // ActiveLobby = lobby;
-            //
-            // OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
-        }
-
         private void LobbyUpdate(ILobbyChanges obj)
         {
             if (ActiveLobby == null) return;
@@ -159,7 +149,6 @@ namespace Project_Assets.Scripts.Lobby
                 await LobbyService.Instance.RemovePlayerAsync(ActiveLobby.Id, playerId);
 
                 OnPlayerLeftLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
-                OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnLeftTextChannel?.Invoke(ActiveLobby.Id);
 
                 // After UI have been changed to lobby list auto refresh active lobbies
@@ -298,8 +287,6 @@ namespace Project_Assets.Scripts.Lobby
                 };
                 
                 ActiveLobby = await LobbyService.Instance.UpdatePlayerAsync(ActiveLobby.Id, playerId, updatePlayerOptions);
-                
-                OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 
                 s_statusReport.MakeReport(true, $"Updated {playerId} team index to: {index}");
             }
