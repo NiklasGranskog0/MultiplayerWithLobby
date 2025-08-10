@@ -4,6 +4,7 @@ namespace Project_Assets.Scripts.Framework_TempName
     {
         public const string k_PlayerName = "PlayerName";
         public const string k_PlayerId = "PlayerId";
+        public const string k_PlayerTeam = "PlayerTeam";
         
         public const string k_GameMode = "GameMode";
         public const string k_Map = "Map";

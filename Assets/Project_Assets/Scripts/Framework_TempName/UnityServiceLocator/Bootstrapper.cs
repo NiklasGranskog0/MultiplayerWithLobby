@@ -1,5 +1,4 @@
-﻿using Unity.Burst.CompilerServices;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Project_Assets.Scripts.Framework_TempName.UnityServiceLocator
 {

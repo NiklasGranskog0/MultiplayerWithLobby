@@ -42,7 +42,12 @@ namespace Project_Assets.Scripts.Lobby
             m_LobbyUI.lobbyInfoGames.mapName.text = m_Lobby.Data[KeyConstants.k_Map].Value;
             
             m_LobbyUI.lobbyInfoGames.gameImage.color = Color.white;
-            m_LobbyUI.lobbyInfoGames.gameImage.texture = m_LobbyUI.gameImagesDictionary[m_Lobby.Data[KeyConstants.k_GameImage].Value];
+            
+            if (m_Lobby.Data[KeyConstants.k_GameImage].Value != null)
+            {
+                m_LobbyUI.lobbyInfoGames.gameImage.texture =
+                    m_LobbyUI.gameImagesDictionary[m_Lobby.Data[KeyConstants.k_GameImage].Value];
+            }
         }
     }
 }

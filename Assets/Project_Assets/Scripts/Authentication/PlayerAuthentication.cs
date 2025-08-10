@@ -36,13 +36,12 @@ namespace Project_Assets.Scripts.Authentication
                 InitializationOptions options = new InitializationOptions();
                 options.SetProfile(playerName);
 
-                // Debug.Log(playerName);
                 await UnityServices.InitializeAsync(options);
             }
 
             AuthenticationService.Instance.SignedIn += () =>
             {
-                Debug.Log("Signed in as " + AuthenticationService.Instance.PlayerId);
+                // Debug.Log("Signed in as " + AuthenticationService.Instance.PlayerId);
             };
 
             if (!AuthenticationService.Instance.IsSignedIn)
@@ -54,7 +53,6 @@ namespace Project_Assets.Scripts.Authentication
         }
 
         /// Returns a Player object with metadata.
-        /// Can't get Data if visibility is lower than public 
         private Player CreateLocalPlayer()
         {
             return new Player
@@ -69,7 +67,11 @@ namespace Project_Assets.Scripts.Authentication
                     {
                         KeyConstants.k_PlayerId, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public,
                             AuthenticationService.Instance.PlayerId)
-                    }
+                    },
+                    
+                    { 
+                        KeyConstants.k_PlayerTeam, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public)  
+                    },
                 }
             };
         }

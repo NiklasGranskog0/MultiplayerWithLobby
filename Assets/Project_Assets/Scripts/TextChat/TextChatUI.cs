@@ -35,7 +35,9 @@ namespace Project_Assets.Scripts.TextChat
             ServiceLocator.Global.Get(out m_VivoxManager);
             ServiceLocator.Global.Get(out m_LobbyManager);
             
-            chatScrollRect.verticalScrollbar.interactable = false;
+            chatScrollRect.verticalScrollbar.gameObject.SetActive(false);
+            chatScrollRect.horizontalScrollbar.gameObject.SetActive(false);
+            chatScrollRect.enabled = false;
             
             VivoxService.Instance.ChannelJoined += OnChannelJoined;
             VivoxService.Instance.ChannelMessageReceived += OnChannelMessageReceived;
@@ -146,6 +148,13 @@ namespace Project_Assets.Scripts.TextChat
         private void SendMessage()
         {
             if (string.IsNullOrEmpty(chatInputField.text)) return;
+
+            if (chatInputField.text.StartsWith('/'))
+            {
+                Command();
+                ClearTextInput();
+                return;
+            }
             
             VivoxService.Instance.SendChannelTextMessageAsync(m_VivoxManager.CurrentChannelName, chatInputField.text);
             ClearTextInput();
@@ -184,6 +193,17 @@ namespace Project_Assets.Scripts.TextChat
             newMessageObj.SetMessage(message);
             
             if (scrollToBottom) StartCoroutine(ScrollToBottom());
+        }
+        
+        private void Command()
+        {
+            var command = chatInputField.text.Split(' ');
+            var commandName = command[0][1..];
+            var commandArgs = command.Skip(1).ToArray();
+            
+            foreach (var args in commandArgs)
+            {
+            }
         }
     }
 }

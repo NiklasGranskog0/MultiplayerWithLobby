@@ -31,33 +31,43 @@ namespace Project_Assets.Scripts.Lobby
         public event Action<string> OnSetGameCode;
 
         private readonly LobbyEventCallbacks m_EventCallbacks = new();
-        
+
         private static StatusReport s_statusReport;
         private static LobbiesStatusReport s_lobbiesStatusReport;
-        
+
         private PlayerAuthentication m_PlayerAuthentication;
-        
+
         private CreateLobbySettings m_CreateLobbySettings;
 
         public void UpdateActiveLobby(Unity.Services.Lobbies.Models.Lobby lobby)
         {
-            if (ActiveLobby.Players.Count == lobby.Players.Count) return;
-            
-            Debug.Log("LobbyManager.UpdateActiveLobby: Active Lobby different amount of players".Color("red"));
-            ActiveLobby = lobby;
-                
-            OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
+            // if (ActiveLobby.Players.Count == lobby.Players.Count) return;
+            //
+            // Debug.Log("LobbyManager.UpdateActiveLobby: Active Lobby different amount of players".Color("red"));
+            // ActiveLobby = lobby;
+            //
+            // OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
         }
 
         private void LobbyUpdate(ILobbyChanges obj)
         {
             if (ActiveLobby == null) return;
+
+            try
+            {
+                obj.ApplyToLobby(ActiveLobby);
+                OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
+            }
+            catch (Exception e)
+            {
+                Debug.Log($"LobbyUpdate apply failed: {e.Message}");
+            }
         }
 
         private void Awake()
         {
             ServiceLocator.Global.Register(this, ServiceLevel.Global);
-            
+
             poller.OnShouldBeenKicked += PollerOnOnShouldBeenKicked;
         }
 
@@ -102,11 +112,12 @@ namespace Project_Assets.Scripts.Lobby
                     settings.MaxPlayers.max, lobbyOptions);
 
                 await LobbyService.Instance.SubscribeToLobbyEventsAsync(ActiveLobby.Id, m_EventCallbacks);
+                m_EventCallbacks.LobbyChanged -= LobbyUpdate;
                 m_EventCallbacks.LobbyChanged += LobbyUpdate;
 
                 heartbeat.StartHeartBeat(ActiveLobby.Id);
                 poller.StartLobbyPolling(ActiveLobby);
-                
+
                 OnCreateLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby }); // Populate Player List
                 OnJoinedTextChannel?.Invoke(ActiveLobby.Id);
@@ -142,7 +153,7 @@ namespace Project_Assets.Scripts.Lobby
             }
 
             poller.StopLobbyPolling();
-            
+
             try
             {
                 await LobbyService.Instance.RemovePlayerAsync(ActiveLobby.Id, playerId);
@@ -161,7 +172,7 @@ namespace Project_Assets.Scripts.Lobby
             {
                 s_statusReport.MakeReport(false, $"{playerId} Failed to leave lobby: {e.Message}");
             }
-            
+
             ActiveLobby = null;
             return s_statusReport;
         }
@@ -176,11 +187,16 @@ namespace Project_Assets.Scripts.Lobby
                 {
                     Player = player,
                 };
-                
+
                 if (!string.IsNullOrWhiteSpace(password)) joinOptions.Password = password;
 
                 ActiveLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code, joinOptions);
                 poller.StartLobbyPolling(ActiveLobby);
+
+                // Subscribe to lobby events to receive changes (e.g., player data updates)
+                await LobbyService.Instance.SubscribeToLobbyEventsAsync(ActiveLobby.Id, m_EventCallbacks);
+                m_EventCallbacks.LobbyChanged -= LobbyUpdate;
+                m_EventCallbacks.LobbyChanged += LobbyUpdate;
 
                 OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnPlayerJoinedLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
@@ -208,11 +224,16 @@ namespace Project_Assets.Scripts.Lobby
                 {
                     Player = player,
                 };
-                
+
                 if (!string.IsNullOrWhiteSpace(password)) joinOptions.Password = password;
 
                 ActiveLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId, joinOptions);
                 poller.StartLobbyPolling(ActiveLobby);
+
+                // Subscribe to lobby events to receive changes (e.g., player data updates)
+                await LobbyService.Instance.SubscribeToLobbyEventsAsync(ActiveLobby.Id, m_EventCallbacks);
+                m_EventCallbacks.LobbyChanged -= LobbyUpdate;
+                m_EventCallbacks.LobbyChanged += LobbyUpdate;
 
                 OnPlayerJoinedLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
@@ -247,15 +268,46 @@ namespace Project_Assets.Scripts.Lobby
             try
             {
                 await LobbyService.Instance.RemovePlayerAsync(ActiveLobby.Id, playerId);
-                OnLeftTextChannel?.Invoke(ActiveLobby.Id);
-                
+
                 s_statusReport.MakeReport(true, $"Player {playerId} has been kicked from the lobby");
             }
             catch (LobbyServiceException e)
             {
                 s_statusReport.MakeReport(false, $"Failed to kick player: {e.Message}");
             }
-            
+
+            return s_statusReport;
+        }
+
+        public async Task<StatusReport> UpdatePlayerTeamAsync(string playerId, int index)
+        {
+            if (ActiveLobby == null)
+            {
+                s_statusReport.MakeReport(false, "ActiveLobby not found (null)");
+                return s_statusReport;
+            }
+
+            try
+            {
+                var updatePlayerOptions = new UpdatePlayerOptions
+                {
+                    Data = new Dictionary<string, PlayerDataObject>
+                    {
+                        {KeyConstants.k_PlayerTeam, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public, index.ToString())}
+                    }
+                };
+                
+                ActiveLobby = await LobbyService.Instance.UpdatePlayerAsync(ActiveLobby.Id, playerId, updatePlayerOptions);
+                
+                OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
+                
+                s_statusReport.MakeReport(true, $"Updated {playerId} team index to: {index}");
+            }
+            catch (LobbyServiceException e)
+            {
+                s_statusReport.MakeReport(false, $"Failed to update player team: {e.Message}");;
+            }
+
             return s_statusReport;
         }
 
@@ -271,10 +323,11 @@ namespace Project_Assets.Scripts.Lobby
 
             foreach (var player in ActiveLobby.Players)
             {
-                Debug.Log($"Name: {player.Data[KeyConstants.k_PlayerName].Value} Id: {player.Data[KeyConstants.k_PlayerId].Value}");
+                Debug.Log(
+                    $"Name: {player.Data[KeyConstants.k_PlayerName].Value} Id: {player.Data[KeyConstants.k_PlayerId].Value}");
             }
         }
-        
+
         public async Task<LobbiesStatusReport> GetAllActiveLobbiesAsync()
         {
             try
@@ -299,7 +352,8 @@ namespace Project_Assets.Scripts.Lobby
 
                 OnLobbyListChanged?.Invoke(new LobbyListChangedEventArgs { Lobbies = response.Results });
 
-                s_lobbiesStatusReport.MakeReport(response.Results, true, $"Found {response.Results.Count} active lobbies.");
+                s_lobbiesStatusReport.MakeReport(response.Results, true,
+                    $"Found {response.Results.Count} active lobbies.");
             }
             catch (LobbyServiceException e)
             {

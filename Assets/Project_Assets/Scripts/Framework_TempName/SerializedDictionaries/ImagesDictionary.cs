@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Resources.MapImages
+namespace Project_Assets.Scripts.Framework_TempName.SerializedDictionaries
 {
     [CreateAssetMenu(fileName = "Images", menuName = "Scriptable Objects/Images")]
     public class ImagesDictionary : ScriptableObject

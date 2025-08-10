@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Events;
 using Project_Assets.Scripts.Framework_TempName;
+using Project_Assets.Scripts.Framework_TempName.SerializedDictionaries;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
 using Project_Assets.Scripts.Structs;
-using Resources.MapImages;
 using TMPro;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies.Models;
@@ -55,7 +55,6 @@ namespace Project_Assets.Scripts.Lobby
 
         [Header("Lobby Panel Elements")] [SerializeField]
         private Button startGameButton;
-
         [SerializeField] private Button leaveLobbyButton;
         [SerializeField] private TMP_Text gameCodeText;
         [SerializeField] private LobbyInfo lobbyInfo;
@@ -70,6 +69,9 @@ namespace Project_Assets.Scripts.Lobby
         private ErrorMessageText m_ErrorMessage;
 
         public ImagesDictionary gameImagesDictionary;
+        private string m_GameImageName;
+        [SerializeField] private Button tempQuitButton;
+        
 
         private void Awake()
         {
@@ -105,13 +107,21 @@ namespace Project_Assets.Scripts.Lobby
             m_LobbyManager.OnSettingsUpdate += OnUpdateLobbyInfo;
             m_LobbyManager.OnSetGameCode += OnSetGameCode;
 
+            tempQuitButton.onClick.AddListener(QuitLobby);
+            
             OnRefreshLobbies();
+        }
+
+        private void QuitLobby()
+        {
+            Application.Quit();
         }
 
         private void OnSetMapImagePreview()
         {
+            m_GameImageName = "B";
             previewGameImage.color = Color.white;
-            previewGameImage.texture = gameImagesDictionary["B"];
+            previewGameImage.texture = gameImagesDictionary[m_GameImageName];
         }
 
         private void GameVisibilityChanged(int arg0)
@@ -163,7 +173,7 @@ namespace Project_Assets.Scripts.Lobby
                 IsPrivate = visibilityDropdown.value == 1,
                 Password = crateGamePasswordInputField.text,
 
-                GameImage = (previewGameImage, "B", DataObject.VisibilityOptions.Public),
+                GameImage = (previewGameImage, m_GameImageName, DataObject.VisibilityOptions.Public),
                 GameMode = ((GameMode)GameModeIndex, DataObject.VisibilityOptions.Public),
                 GameMap = ((Map)GameMapIndex, DataObject.VisibilityOptions.Public),
                 MaxPlayers = (MaxPlayers, DataObject.VisibilityOptions.Public),
@@ -246,7 +256,7 @@ namespace Project_Assets.Scripts.Lobby
         {
             if (lobby?.Players == null)
             {
-                Debug.LogWarning("Lobby is null or empty".Color("red"));
+                Debug.LogWarning("Lobby players is null or empty".Color("red"));
                 ClearContainer(playerListContainer);
                 return;
             }
@@ -260,14 +270,14 @@ namespace Project_Assets.Scripts.Lobby
                 string playerId = player.Data[KeyConstants.k_PlayerId].Value;
 
                 var entry = Instantiate(playerEntryPrefab, playerListContainer).GetComponent<PlayerListItem>();
-
+                
                 entry.Initialize(playerName, playerId, new PlayerConfiguration
                 {
                     Player = player,
                     IsHostPlayer = playerId == lobby.HostId,
                     IsLocalPlayer = playerId == AuthenticationService.Instance.PlayerId,
                 });
-
+                
                 entry.gameObject.SetActive(true);
             }
         }
@@ -302,15 +312,20 @@ namespace Project_Assets.Scripts.Lobby
             lobbyInfo.mapName.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_Map].Value;
 
             lobbyInfo.gameImage.color = Color.white;
-            lobbyInfo.gameImage.texture =
-                gameImagesDictionary[lobbyEventArgs.Lobby.Data[KeyConstants.k_GameImage].Value];
+
+            if (lobbyEventArgs.Lobby.Data[KeyConstants.k_GameImage].Value != null)
+            {
+                lobbyInfo.gameImage.texture =
+                    gameImagesDictionary[lobbyEventArgs.Lobby.Data[KeyConstants.k_GameImage].Value];
+            }
         }
 
         private void ClearContainer(Transform container)
         {
             foreach (Transform child in container)
             {
-                Destroy(child.gameObject);
+                if (child != null)
+                    Destroy(child.gameObject);
             }
         }
 

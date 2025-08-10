@@ -150,7 +150,7 @@ namespace Project_Assets.Scripts.Framework_TempName.UnityServiceLocator
             }
 
             container = transform.parent.OrNull()?.GetComponentInParent<ServiceLocator>().OrNull() ??
-                        ForSceneOf(this); // ?? Global;
+                        ForSceneOf(this) ?? Global;
             return container != null;
         }
 
@@ -184,7 +184,7 @@ namespace Project_Assets.Scripts.Framework_TempName.UnityServiceLocator
             var go = new GameObject(k_SceneServiceLocatorName, typeof(ServiceLocatorSceneBootstrapper));
         }
 #endif
-        
+
         private void LogRegisterService<T>(T service, ServiceLevel level, string sceneName = "")
         {
             var endString = $"Registered service of the type {typeof(T).Name.Color("red")}".Color("lightblue");

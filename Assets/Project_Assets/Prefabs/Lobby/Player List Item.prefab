@@ -1410,6 +1410,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: {fileID: 8542442535086177505}
   kickButton: {fileID: 5916272673275333323}
+  teamDropdown: {fileID: 6376791943262958518}
   team: 0
 --- !u!1 &7623046027574312478
 GameObject:

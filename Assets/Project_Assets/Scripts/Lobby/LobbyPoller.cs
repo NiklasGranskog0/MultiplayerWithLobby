@@ -91,7 +91,7 @@ namespace Project_Assets.Scripts.Lobby
             }
             
             CurrentLobby = updatedLobby;
-            m_LobbyManager.UpdateActiveLobby(CurrentLobby);
+            // m_LobbyManager.UpdateActiveLobby(CurrentLobby);
             Debug.Log($"Lobby polled. Host: {CurrentLobby.HostId}, Players: {CurrentLobby.Players.Count}".Color("cyan"));
         }
 
@@ -135,7 +135,7 @@ namespace Project_Assets.Scripts.Lobby
                 if (selectedHostId == myId)
                 {
                     m_LobbyManager.heartbeat.StartHeartBeat(m_LobbyManager.ActiveLobby.Id);
-                    m_LobbyManager.UpdateActiveLobby(CurrentLobby);
+                    // m_LobbyManager.UpdateActiveLobby(CurrentLobby);
                     Debug.Log("Started heartbeat (new host)".Color("cyan"));
                 }
             }
