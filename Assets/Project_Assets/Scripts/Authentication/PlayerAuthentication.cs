@@ -41,7 +41,7 @@ namespace Project_Assets.Scripts.Authentication
 
             AuthenticationService.Instance.SignedIn += () =>
             {
-                // Debug.Log("Signed in as " + AuthenticationService.Instance.PlayerId);
+                Debug.Log("Signed in as " + AuthenticationService.Instance.PlayerId);
             };
 
             if (!AuthenticationService.Instance.IsSignedIn)
@@ -52,7 +52,7 @@ namespace Project_Assets.Scripts.Authentication
             }
         }
 
-        /// Returns a Player object with metadata.
+        // Returns a Player object with metadata.
         private Player CreateLocalPlayer()
         {
             return new Player
@@ -70,7 +70,7 @@ namespace Project_Assets.Scripts.Authentication
                     },
                     
                     { 
-                        KeyConstants.k_PlayerTeam, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public)  
+                        KeyConstants.k_PlayerTeam, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public, "0")  
                     },
                 }
             };

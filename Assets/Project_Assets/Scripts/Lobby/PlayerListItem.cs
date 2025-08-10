@@ -23,7 +23,7 @@ namespace Project_Assets.Scripts.Lobby
         private PlayerConfiguration m_PlayerConfiguration;
 
         private string PlayerId { get; set; }
-        
+
         private LobbyManager m_LobbyManager;
         private ErrorMessageText m_ErrorMessageText;
 
@@ -32,16 +32,21 @@ namespace Project_Assets.Scripts.Lobby
             ServiceLocator.Global.Get(out m_LobbyManager);
             ServiceLocator.Global.Get(out m_ErrorMessageText);
 
-            playerName.text = pName;
             PlayerId = playerId;
             m_PlayerConfiguration = config;
 
+            if (m_PlayerConfiguration.IsHostPlayer)
+            {
+                playerName.text = pName + " [Host]";
+            }
+            else playerName.text = pName;
+
             ShowKickButton();
             kickButton.onClick.AddListener(OnClickKickButton);
-            
+
             teamDropdown.onValueChanged.AddListener(OnTeamSelectionChanged);
             teamDropdown.interactable = m_PlayerConfiguration.IsLocalPlayer;
-            
+
             // Initialize dropdown from player data without triggering callbacks
             if (m_PlayerConfiguration.Player.Data != null &&
                 m_PlayerConfiguration.Player.Data.ContainsKey(KeyConstants.k_PlayerTeam) &&
@@ -61,16 +66,23 @@ namespace Project_Assets.Scripts.Lobby
             {
                 kickButton.gameObject.SetActive(false);
             }
-            else
+            
+            if (m_PlayerConfiguration is { IsHostPlayer: false, IsLocalPlayer: true})
+            {
+                kickButton.gameObject.SetActive(false);
+            }
+            
+            if (m_PlayerConfiguration is { IsHostPlayer: false, IsLocalPlayer: false})
             {
                 kickButton.gameObject.SetActive(true);
+                // TODO: Only make button interactable to the Host player
             }
         }
 
         private async void OnTeamSelectionChanged(int index)
         {
             var report = await m_LobbyManager.UpdatePlayerTeamAsync(PlayerId, index);
-            
+
             if (!report.Success) m_ErrorMessageText.ShowError(report.Message, LobbyPanel.Lobby);
             else report.Log();
         }
