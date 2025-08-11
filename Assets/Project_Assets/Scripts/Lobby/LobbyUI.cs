@@ -19,41 +19,43 @@ namespace Project_Assets.Scripts.Lobby
     {
         public Unity.Services.Lobbies.Models.Lobby CurrentSelectedLobby { get; set; }
 
-        [Header("Panels")] [SerializeField] private GameObject gamesListPanel;
+        [Header("Panels")] 
+        [SerializeField] private GameObject gamesListPanel;
         [SerializeField] private GameObject createGamePanel;
         [SerializeField] private GameObject lobbyPanel;
 
-        [Header("List Items")] [SerializeField]
-        private GameObject lobbyEntryPrefab;
-
+        [Header("List Items")] 
+        [SerializeField] private GameObject lobbyEntryPrefab;
         [SerializeField] private Transform lobbyListContainer;
 
-        [Space] [SerializeField] private GameObject playerEntryPrefab;
+        [Space(5)] 
+        
+        [SerializeField] private GameObject playerEntryPrefab;
         [SerializeField] private Transform playerListContainer;
 
-        [Space] [Header("Create Game Panel Elements")] [SerializeField]
-        private TMP_InputField gameNameInputField;
-
+        [Space] [Header("Create Game Panel Elements")] 
+        [SerializeField] private TMP_InputField gameNameInputField;
         [SerializeField] private TMP_Dropdown gameModeDropdown;
         [SerializeField] private TMP_Dropdown maxPlayersDropdown;
         [SerializeField] private TMP_Dropdown mapDropdown;
         [SerializeField] private TMP_Dropdown visibilityDropdown;
         [SerializeField] private TMP_Dropdown gameSpeedDropdown;
-        [SerializeField] private TMP_InputField crateGamePasswordInputField;
+        [SerializeField] private TMP_InputField createGamePasswordInputField;
         [SerializeField] private Button createLobbyButton;
         [SerializeField] private Button cancelCreateButton;
         [SerializeField] private Button setMapImageButton;
         [SerializeField] private RawImage previewGameImage;
 
-        [Header("Games Panel Elements")] public TMP_InputField gameCodeInputField;
+        [Header("Games Panel Elements")] 
+        public TMP_InputField gameCodeInputField;
         [SerializeField] private TMP_InputField gamePasswordInputField;
         [SerializeField] private Button createGameButton;
         [SerializeField] private Button joinGameButton;
         [SerializeField] private Button refreshGamesButton;
         public LobbyInfo lobbyInfoGames;
 
-        [Header("Lobby Panel Elements")] [SerializeField]
-        private Button startGameButton;
+        [Header("Lobby Panel Elements")] 
+        [SerializeField] private Button startGameButton;
         [SerializeField] private Button leaveLobbyButton;
         [SerializeField] private TMP_Text gameCodeText;
         [SerializeField] private LobbyInfo lobbyInfo;
@@ -96,19 +98,25 @@ namespace Project_Assets.Scripts.Lobby
             setMapImageButton.onClick.AddListener(OnSetMapImagePreview);
 
             visibilityDropdown.onValueChanged.AddListener(GameVisibilityChanged);
-            crateGamePasswordInputField.interactable = false;
+            createGamePasswordInputField.interactable = false;
 
             m_LobbyManager.OnPlayerJoinedLobbyAsync += OnPlayerJoinedLobbyAsync;
             m_LobbyManager.OnPlayerLeftLobbyAsync += OnPlayerLeftLobbyAsync;
-            m_LobbyManager.OnJoinedLobbyUpdate += OnJoinedLobbyUpdate;
+            m_LobbyManager.OnLobbyPlayerUpdate += OnLobbyPlayerUpdate;
             m_LobbyManager.OnLobbyListChanged += OnLobbyListChanged;
             m_LobbyManager.OnCreateLobbyAsync += OnCreateLobbyAsync;
             m_LobbyManager.OnSettingsUpdate += OnUpdateLobbyInfo;
             m_LobbyManager.OnSetGameCode += OnSetGameCode;
 
             tempQuitButton.onClick.AddListener(QuitLobby);
+            startGameButton.onClick.AddListener(OnHostStartGame);
             
             OnRefreshLobbies();
+        }
+
+        private void OnHostStartGame()
+        {
+            SwitchPanel(LobbyPanel.Game);
         }
 
         private void QuitLobby()
@@ -125,7 +133,7 @@ namespace Project_Assets.Scripts.Lobby
 
         private void GameVisibilityChanged(int arg0)
         {
-            crateGamePasswordInputField.interactable = visibilityDropdown.value == 1;
+            createGamePasswordInputField.interactable = visibilityDropdown.value == 1;
         }
 
         private void OnSetGameCode(string obj)
@@ -146,7 +154,7 @@ namespace Project_Assets.Scripts.Lobby
             if (!string.IsNullOrEmpty(CurrentSelectedLobby?.Id) && !joinedByCode)
             {
                 report = await m_LobbyManager.JoinLobbyByIdAsync(CurrentSelectedLobby?.Id, gamePasswordInputField.text);
-                PrintStatusLog(report, LobbyPanel.Games);
+                PrintStatusLog(report, LobbyPanel.GamePanel);
             }
         }
 
@@ -156,7 +164,7 @@ namespace Project_Assets.Scripts.Lobby
             {
                 var report =
                     await m_LobbyManager.JoinLobbyByCodeAsync(gameCodeInputField.text, gamePasswordInputField.text);
-                PrintStatusLog(report, LobbyPanel.Games);
+                PrintStatusLog(report, LobbyPanel.GamePanel);
 
                 return report.Success;
             }
@@ -170,7 +178,7 @@ namespace Project_Assets.Scripts.Lobby
             {
                 IsLocked = false,
                 IsPrivate = visibilityDropdown.value == 1,
-                Password = crateGamePasswordInputField.text,
+                Password = createGamePasswordInputField.text,
 
                 GameImage = (previewGameImage, m_GameImageName, DataObject.VisibilityOptions.Public),
                 GameMode = ((GameMode)GameModeIndex, DataObject.VisibilityOptions.Public),
@@ -191,9 +199,14 @@ namespace Project_Assets.Scripts.Lobby
             lobbyInfo.gameImage.color = Color.white;
             lobbyInfo.gameImage.texture = settings.GameImage.image.texture;
 
-            // TODO: Error message on password less than(<) 8 characters
-            var report = await m_LobbyManager.CreateLobbyAsync(settings, crateGamePasswordInputField.interactable);
-            PrintStatusLog(report, LobbyPanel.Create);
+            if (createGamePasswordInputField.text.Length < 8 && visibilityDropdown.value == 1)
+            {
+                m_ErrorMessage.ShowError("Password must be at least 8 characters long", LobbyPanel.CreatePanel);
+                return;
+            }
+            
+            var report = await m_LobbyManager.CreateLobbyAsync(settings, createGamePasswordInputField.interactable);
+            PrintStatusLog(report, LobbyPanel.CreatePanel);
         }
 
         // Temp
@@ -201,13 +214,13 @@ namespace Project_Assets.Scripts.Lobby
         {
             var lobbiesStatusReport = await m_LobbyManager.GetAllActiveLobbiesAsync();
             PopulateLobbyList(lobbiesStatusReport.Lobbies);
-            PrintStatusLog(lobbiesStatusReport.Status, LobbyPanel.Games);
+            PrintStatusLog(lobbiesStatusReport.Status, LobbyPanel.GamePanel);
         }
 
         private async void OnLeaveLobby()
         {
             var report = await m_LobbyManager.LeaveLobbyAsync();
-            PrintStatusLog(report, LobbyPanel.Games);
+            PrintStatusLog(report, LobbyPanel.GamePanel);
             CurrentSelectedLobby = null;
         }
 
@@ -217,9 +230,9 @@ namespace Project_Assets.Scripts.Lobby
             Debug.Log("Populate Lobby List (LobbyListChanged)".Color("cyan"));
         }
 
-        private void OnJoinedLobbyUpdate(LobbyEventArgs e)
+        private void OnLobbyPlayerUpdate(LobbyEventArgs e)
         {
-            PopulatePlayerList(e.Lobby);
+            UpdatePlayerList(e.Lobby);
             Debug.Log("Populate Player List".Color("cyan"));
         }
 
@@ -236,22 +249,22 @@ namespace Project_Assets.Scripts.Lobby
 
         private void OnPlayerLeftLobbyAsync(LobbyEventArgs obj)
         {
-            SwitchPanel(LobbyPanel.Games);
+            SwitchPanel(LobbyPanel.GamePanel);
             Debug.Log($"Player Left; Lobby Id: {obj.Lobby.Id}");
             CurrentSelectedLobby = null;
         }
 
         private void OnCreateLobbySettings()
         {
-            SwitchPanel(LobbyPanel.Create);
+            SwitchPanel(LobbyPanel.CreatePanel);
         }
 
         private void OnCancelCreateLobby()
         {
-            SwitchPanel(LobbyPanel.Games);
+            SwitchPanel(LobbyPanel.GamePanel);
         }
 
-        private void PopulatePlayerList(Unity.Services.Lobbies.Models.Lobby lobby)
+        private void UpdatePlayerList(Unity.Services.Lobbies.Models.Lobby lobby)
         {
             if (lobby?.Players == null)
             {
@@ -350,14 +363,19 @@ namespace Project_Assets.Scripts.Lobby
 
             switch (panel)
             {
-                case LobbyPanel.Games:
+                case LobbyPanel.GamePanel:
                     gamesListPanel.SetActive(true);
                     break;
-                case LobbyPanel.Create:
+                case LobbyPanel.CreatePanel:
                     createGamePanel.SetActive(true);
                     break;
                 case LobbyPanel.Lobby:
                     lobbyPanel.SetActive(true);
+                    break;
+                case LobbyPanel.Loading: // Temp
+                    break;
+                case LobbyPanel.Game:
+                    lobbyPanel.SetActive(false);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(panel), panel, null);

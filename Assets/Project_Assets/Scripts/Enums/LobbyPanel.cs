@@ -2,8 +2,10 @@ namespace Project_Assets.Scripts.Enums
 {
     public enum LobbyPanel
     {
-        Games,
-        Create,
+        GamePanel,
+        CreatePanel,
         Lobby,
+        Loading,
+        Game,
     }
 }

@@ -5,7 +5,6 @@ using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Lobbies.Models;
-using Unity.Services.Vivox;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -70,7 +69,11 @@ namespace Project_Assets.Scripts.Authentication
                     },
                     
                     { 
-                        KeyConstants.k_PlayerTeam, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public, "0")  
+                        KeyConstants.k_PlayerTeam, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, "0")  
+                    },
+
+                    {
+                       KeyConstants.k_PlayerReady, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, "false")  
                     },
                 }
             };

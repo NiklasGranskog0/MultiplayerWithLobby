@@ -23,7 +23,7 @@ namespace Project_Assets.Scripts.Lobby
         public event Action<LobbyEventArgs> OnCreateLobbyAsync;
         public event Action<LobbyEventArgs> OnPlayerLeftLobbyAsync;
         public event Action<LobbyEventArgs> OnPlayerJoinedLobbyAsync;
-        public event Action<LobbyEventArgs> OnJoinedLobbyUpdate;
+        public event Action<LobbyEventArgs> OnLobbyPlayerUpdate;
         public event Action<LobbyEventArgs> OnSettingsUpdate;
         public event Action<LobbyListChangedEventArgs> OnLobbyListChanged;
         public event Action<string> OnJoinedTextChannel;
@@ -46,7 +46,7 @@ namespace Project_Assets.Scripts.Lobby
             try
             {
                 obj.ApplyToLobby(ActiveLobby);
-                OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
+                OnLobbyPlayerUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
             }
             catch (Exception e)
             {
@@ -107,13 +107,13 @@ namespace Project_Assets.Scripts.Lobby
 
                 heartbeat.StartHeartBeat(ActiveLobby.Id);
                 poller.StartLobbyPolling(ActiveLobby);
+                
+                Debug.Log($"ActiveLobby Join Code: {ActiveLobby.LobbyCode}".Color("orange"));
 
                 OnCreateLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
-                OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby }); // Populate Player List
+                OnLobbyPlayerUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnJoinedTextChannel?.Invoke(ActiveLobby.Id);
                 OnSetGameCode?.Invoke(ActiveLobby.LobbyCode);
-
-                ListAllPlayersInLobby();
 
                 s_statusReport.MakeReport(true, $"Lobby '{ActiveLobby.Name}' created with ID: {ActiveLobby.Id}");
             }
@@ -187,7 +187,7 @@ namespace Project_Assets.Scripts.Lobby
                 m_EventCallbacks.LobbyChanged -= LobbyUpdate;
                 m_EventCallbacks.LobbyChanged += LobbyUpdate;
 
-                OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
+                OnLobbyPlayerUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnPlayerJoinedLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnSettingsUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnJoinedTextChannel?.Invoke(ActiveLobby.Id);
@@ -225,7 +225,7 @@ namespace Project_Assets.Scripts.Lobby
                 m_EventCallbacks.LobbyChanged += LobbyUpdate;
 
                 OnPlayerJoinedLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
-                OnJoinedLobbyUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
+                OnLobbyPlayerUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnSettingsUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnJoinedTextChannel?.Invoke(ActiveLobby.Id);
                 OnSetGameCode?.Invoke(ActiveLobby.LobbyCode);
@@ -268,6 +268,38 @@ namespace Project_Assets.Scripts.Lobby
             return s_statusReport;
         }
 
+        public async Task<StatusReport> UpdateReadyButton(string playerId, bool isReady)
+        {
+            if (ActiveLobby == null)
+            {
+                s_statusReport.MakeReport(false, "ActiveLobby not found (null)");
+                return s_statusReport;
+            }
+
+            try
+            {
+                var updatePlayerOptions = new UpdatePlayerOptions
+                {
+                    Data = new Dictionary<string, PlayerDataObject>
+                    {
+                        { KeyConstants.k_PlayerReady, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, isReady.ToString().ToLower()) }
+                    }
+                };
+
+                ActiveLobby = await LobbyService.Instance.UpdatePlayerAsync(ActiveLobby.Id, playerId, updatePlayerOptions);
+
+                OnLobbyPlayerUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
+
+                s_statusReport.MakeReport(true, $"Updated {playerId} ready state to: {isReady}");
+            }
+            catch (LobbyServiceException e)
+            {
+                s_statusReport.MakeReport(false, $"Failed to update ready state: {e.Message}");
+            }
+
+            return s_statusReport;
+        }
+
         public async Task<StatusReport> UpdatePlayerTeamAsync(string playerId, int index)
         {
             if (ActiveLobby == null)
@@ -282,7 +314,7 @@ namespace Project_Assets.Scripts.Lobby
                 {
                     Data = new Dictionary<string, PlayerDataObject>
                     {
-                        {KeyConstants.k_PlayerTeam, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public, index.ToString())}
+                        {KeyConstants.k_PlayerTeam, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, index.ToString())}
                     }
                 };
                 
@@ -298,22 +330,22 @@ namespace Project_Assets.Scripts.Lobby
             return s_statusReport;
         }
 
-        private void ListAllPlayersInLobby()
-        {
-            if (ActiveLobby == null)
-            {
-                Debug.Log("No active lobby");
-                return;
-            }
-
-            Debug.Log("Listing all players in lobby: ");
-
-            foreach (var player in ActiveLobby.Players)
-            {
-                Debug.Log(
-                    $"Name: {player.Data[KeyConstants.k_PlayerName].Value} Id: {player.Data[KeyConstants.k_PlayerId].Value}");
-            }
-        }
+        // private void ListAllPlayersInLobby()
+        // {
+        //     if (ActiveLobby == null)
+        //     {
+        //         Debug.Log("No active lobby");
+        //         return;
+        //     }
+        //
+        //     Debug.Log("Listing all players in lobby: ");
+        //
+        //     foreach (var player in ActiveLobby.Players)
+        //     {
+        //         Debug.Log(
+        //             $"Name: {player.Data[KeyConstants.k_PlayerName].Value} Id: {player.Data[KeyConstants.k_PlayerId].Value}");
+        //     }
+        // }
 
         public async Task<LobbiesStatusReport> GetAllActiveLobbiesAsync()
         {
@@ -329,6 +361,7 @@ namespace Project_Assets.Scripts.Lobby
                             op: QueryFilter.OpOptions.GT,
                             value: "0")
                     },
+                    
                     Order = new List<QueryOrder>
                     {
                         new QueryOrder(false, QueryOrder.FieldOptions.Created) // Sort by newest first

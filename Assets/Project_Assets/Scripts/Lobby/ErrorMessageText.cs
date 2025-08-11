@@ -21,10 +21,10 @@ namespace Project_Assets.Scripts.Lobby
         {
             switch (panel)
             {
-                case LobbyPanel.Games:
+                case LobbyPanel.GamePanel:
                     StartCoroutine(errorPanels[0].SetText(errorMessage).FadeOut(errorPanels[0].fadeDuration));
                     break;
-                case LobbyPanel.Create:
+                case LobbyPanel.CreatePanel:
                     StartCoroutine(errorPanels[1].SetText(errorMessage).FadeOut(errorPanels[1].fadeDuration));
                     break;
                 case LobbyPanel.Lobby:

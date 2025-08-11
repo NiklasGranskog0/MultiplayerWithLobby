@@ -1569,6 +1569,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: {fileID: 1652119342}
   kickButton: {fileID: 1712646253}
+  readyButton: {fileID: 0}
+  readyButtonText: {fileID: 0}
   teamDropdown: {fileID: 1917213846}
 --- !u!1 &82691490
 GameObject:
@@ -4704,6 +4706,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: {fileID: 1796952813}
   kickButton: {fileID: 787577644}
+  readyButton: {fileID: 0}
+  readyButtonText: {fileID: 0}
   teamDropdown: {fileID: 1761929385}
 --- !u!1 &287765477
 GameObject:
@@ -5401,6 +5405,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: {fileID: 1008714232}
   kickButton: {fileID: 1979367905}
+  readyButton: {fileID: 0}
+  readyButtonText: {fileID: 0}
   teamDropdown: {fileID: 682161748}
 --- !u!1 &353011972
 GameObject:
@@ -5932,6 +5938,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: {fileID: 224219917}
   kickButton: {fileID: 321595151}
+  readyButton: {fileID: 0}
+  readyButtonText: {fileID: 0}
   teamDropdown: {fileID: 1172960168}
 --- !u!1 &402281248
 GameObject:
@@ -9632,6 +9640,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: {fileID: 994304321}
   kickButton: {fileID: 1691595582}
+  readyButton: {fileID: 0}
+  readyButtonText: {fileID: 0}
   teamDropdown: {fileID: 1928350989}
 --- !u!1 &593602133
 GameObject:
@@ -12216,9 +12226,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Back
-
-'
+  m_text: Quit
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -24021,6 +24029,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: {fileID: 1411035286}
   kickButton: {fileID: 1329575515}
+  readyButton: {fileID: 0}
+  readyButtonText: {fileID: 0}
   teamDropdown: {fileID: 1617405347}
 --- !u!1 &1441923641
 GameObject:
@@ -24383,6 +24393,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: {fileID: 1962591608}
   kickButton: {fileID: 32002823}
+  readyButton: {fileID: 0}
+  readyButtonText: {fileID: 0}
   teamDropdown: {fileID: 1129554189}
 --- !u!1 &1466701759
 GameObject:
@@ -26241,7 +26253,7 @@ MonoBehaviour:
   mapDropdown: {fileID: 1278132696}
   visibilityDropdown: {fileID: 1833478895}
   gameSpeedDropdown: {fileID: 483052818}
-  crateGamePasswordInputField: {fileID: 1036845210}
+  createGamePasswordInputField: {fileID: 1036845210}
   createLobbyButton: {fileID: 1254572739}
   cancelCreateButton: {fileID: 1620597413}
   setMapImageButton: {fileID: 463401517}
@@ -27954,6 +27966,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: {fileID: 1040185392}
   kickButton: {fileID: 682507888}
+  readyButton: {fileID: 0}
+  readyButtonText: {fileID: 0}
   teamDropdown: {fileID: 517274684}
 --- !u!1 &1691595580
 GameObject:
