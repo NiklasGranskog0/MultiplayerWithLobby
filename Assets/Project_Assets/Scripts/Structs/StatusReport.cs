@@ -5,6 +5,23 @@ using UnityEngine;
 
 namespace Project_Assets.Scripts.Structs
 {
+    public struct RelayStatus : ILog
+    {
+        public StatusReport Status;
+        public string JoinCode;
+        
+        public void MakeReport(bool success, string message)
+        {
+            Status.Message = message;
+            Status.Success = success;
+        }
+        
+        public void Log()
+        {
+            Debug.Log($"Success: {Status.Success} :  Message: {Status.Message}".Color(Status.Success ? "green" : "red"));
+        }
+    }
+    
     public struct StatusReport : ILog
     {
         public string Message;

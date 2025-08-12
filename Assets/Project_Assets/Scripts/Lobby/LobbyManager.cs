@@ -30,15 +30,13 @@ namespace Project_Assets.Scripts.Lobby
         public event Action<string> OnLeftTextChannel;
         public event Action<string> OnSetGameCode;
 
-        private readonly LobbyEventCallbacks m_EventCallbacks = new();
-
         private static StatusReport s_statusReport;
         private static LobbiesStatusReport s_lobbiesStatusReport;
-
-        private PlayerAuthentication m_PlayerAuthentication;
-
         private CreateLobbySettings m_CreateLobbySettings;
 
+        private readonly LobbyEventCallbacks m_EventCallbacks = new();
+        private PlayerAuthentication m_PlayerAuthentication;
+        
         private void LobbyUpdate(ILobbyChanges obj)
         {
             if (ActiveLobby == null) return;
@@ -47,10 +45,11 @@ namespace Project_Assets.Scripts.Lobby
             {
                 obj.ApplyToLobby(ActiveLobby);
                 OnLobbyPlayerUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
+                Debug.Log("LobbyUpdate".Color("orange"));
             }
             catch (Exception e)
             {
-                Debug.Log($"LobbyUpdate apply failed: {e.Message}");
+                Debug.Log($"LobbyUpdate apply failed: {e.Message}".Color("red"));
             }
         }
 
@@ -257,7 +256,6 @@ namespace Project_Assets.Scripts.Lobby
             try
             {
                 await LobbyService.Instance.RemovePlayerAsync(ActiveLobby.Id, playerId);
-
                 s_statusReport.MakeReport(true, $"Player {playerId} has been kicked from the lobby");
             }
             catch (LobbyServiceException e)

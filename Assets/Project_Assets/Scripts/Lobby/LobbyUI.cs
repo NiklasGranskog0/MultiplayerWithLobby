@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Events;
 using Project_Assets.Scripts.Framework_TempName;
 using Project_Assets.Scripts.Framework_TempName.SerializedDictionaries;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
+using Project_Assets.Scripts.Network.Relay;
 using Project_Assets.Scripts.Structs;
 using TMPro;
 using Unity.Services.Authentication;
@@ -18,6 +20,7 @@ namespace Project_Assets.Scripts.Lobby
     public class LobbyUI : MonoBehaviour
     {
         public Unity.Services.Lobbies.Models.Lobby CurrentSelectedLobby { get; set; }
+        public Unity.Services.Lobbies.Models.Lobby CurrentLobby { get; set; }
 
         [Header("Panels")] 
         [SerializeField] private GameObject gamesListPanel;
@@ -65,9 +68,11 @@ namespace Project_Assets.Scripts.Lobby
         private int GameModeIndex => gameModeDropdown.value;
         private int GameMapIndex => mapDropdown.value;
         private string GameName => gameNameInputField.text;
+        private Dictionary<Player, string> m_PlayersReadyValues = new();
 
         private LobbyManager m_LobbyManager;
         private ErrorMessageText m_ErrorMessage;
+        private RelayManager m_RelayManager;
 
         public ImagesDictionary gameImagesDictionary;
         private string m_GameImageName;
@@ -83,6 +88,7 @@ namespace Project_Assets.Scripts.Lobby
         {
             ServiceLocator.Global.Get(out m_LobbyManager);
             ServiceLocator.Global.Get(out m_ErrorMessage);
+            ServiceLocator.Global.Get(out m_RelayManager);
 
             // Value == index
             maxPlayersDropdown.value = 3; // (Set default value to 4 players)
@@ -110,13 +116,18 @@ namespace Project_Assets.Scripts.Lobby
 
             tempQuitButton.onClick.AddListener(QuitLobby);
             startGameButton.onClick.AddListener(OnHostStartGame);
+            startGameButton.interactable = false;
             
             OnRefreshLobbies();
         }
 
-        private void OnHostStartGame()
+        private async void OnHostStartGame()
         {
-            SwitchPanel(LobbyPanel.Game);
+            int maxPlayers = 3;
+            
+            SwitchPanel(LobbyPanel.Loading);
+            var task = await m_RelayManager.CreateRelay(maxPlayers);
+            task.Log();
         }
 
         private void QuitLobby()
@@ -143,7 +154,6 @@ namespace Project_Assets.Scripts.Lobby
 
         private async void JoinSelectedGame()
         {
-            var report = new StatusReport();
             bool joinedByCode = false;
 
             if (CurrentSelectedLobby == null)
@@ -153,8 +163,8 @@ namespace Project_Assets.Scripts.Lobby
 
             if (!string.IsNullOrEmpty(CurrentSelectedLobby?.Id) && !joinedByCode)
             {
-                report = await m_LobbyManager.JoinLobbyByIdAsync(CurrentSelectedLobby?.Id, gamePasswordInputField.text);
-                PrintStatusLog(report, LobbyPanel.GamePanel);
+                var task = await m_LobbyManager.JoinLobbyByIdAsync(CurrentSelectedLobby?.Id, gamePasswordInputField.text);
+                PrintStatusLog(task, LobbyPanel.GamePanel);
             }
         }
 
@@ -162,11 +172,11 @@ namespace Project_Assets.Scripts.Lobby
         {
             if (!string.IsNullOrWhiteSpace(gameCodeInputField.text))
             {
-                var report =
+                var task =
                     await m_LobbyManager.JoinLobbyByCodeAsync(gameCodeInputField.text, gamePasswordInputField.text);
-                PrintStatusLog(report, LobbyPanel.GamePanel);
+                PrintStatusLog(task, LobbyPanel.GamePanel);
 
-                return report.Success;
+                return task.Success;
             }
 
             return false;
@@ -205,22 +215,22 @@ namespace Project_Assets.Scripts.Lobby
                 return;
             }
             
-            var report = await m_LobbyManager.CreateLobbyAsync(settings, createGamePasswordInputField.interactable);
-            PrintStatusLog(report, LobbyPanel.CreatePanel);
+            var task = await m_LobbyManager.CreateLobbyAsync(settings, createGamePasswordInputField.interactable);
+            PrintStatusLog(task, LobbyPanel.CreatePanel);
         }
 
         // Temp
         private async void OnRefreshLobbies()
         {
-            var lobbiesStatusReport = await m_LobbyManager.GetAllActiveLobbiesAsync();
-            PopulateLobbyList(lobbiesStatusReport.Lobbies);
-            PrintStatusLog(lobbiesStatusReport.Status, LobbyPanel.GamePanel);
+            var task = await m_LobbyManager.GetAllActiveLobbiesAsync();
+            PopulateLobbyList(task.Lobbies);
+            PrintStatusLog(task.Status, LobbyPanel.GamePanel);
         }
 
         private async void OnLeaveLobby()
         {
-            var report = await m_LobbyManager.LeaveLobbyAsync();
-            PrintStatusLog(report, LobbyPanel.GamePanel);
+            var task = await m_LobbyManager.LeaveLobbyAsync();
+            PrintStatusLog(task, LobbyPanel.GamePanel);
             CurrentSelectedLobby = null;
         }
 
@@ -239,12 +249,14 @@ namespace Project_Assets.Scripts.Lobby
         private void OnPlayerJoinedLobbyAsync(LobbyEventArgs obj)
         {
             SwitchPanel(LobbyPanel.Lobby);
+            CurrentLobby = obj.Lobby;
             Debug.Log("Player Joined Lobby".Color("cyan"));
         }
 
         private void OnCreateLobbyAsync(LobbyEventArgs obj)
         {
             SwitchPanel(LobbyPanel.Lobby);
+            CurrentLobby = obj.Lobby;
         }
 
         private void OnPlayerLeftLobbyAsync(LobbyEventArgs obj)
@@ -252,6 +264,7 @@ namespace Project_Assets.Scripts.Lobby
             SwitchPanel(LobbyPanel.GamePanel);
             Debug.Log($"Player Left; Lobby Id: {obj.Lobby.Id}");
             CurrentSelectedLobby = null;
+            CurrentLobby = null;
         }
 
         private void OnCreateLobbySettings()
@@ -274,7 +287,9 @@ namespace Project_Assets.Scripts.Lobby
             }
 
             ClearContainer(playerListContainer);
-
+            
+            RemoveKickedPlayerFromReadyValues(lobby);
+            
             foreach (var player in lobby.Players)
             {
                 string playerName = player.Data[KeyConstants.k_PlayerName].Value;
@@ -291,7 +306,45 @@ namespace Project_Assets.Scripts.Lobby
                 });
                 
                 entry.gameObject.SetActive(true);
+                
+                var localIsHost = AuthenticationService.Instance.PlayerId == lobby.HostId;
+
+                if (!localIsHost)
+                {
+                    startGameButton.gameObject.SetActive(false);
+                }
+                
+                var readyValue = player.Data[KeyConstants.k_PlayerReady].Value;
+
+                if (localIsHost)
+                {
+                    if (!m_PlayersReadyValues.TryAdd(player, readyValue))
+                    {
+                        m_PlayersReadyValues[player] = readyValue;
+                    }
+                }
             }
+
+            UpdateStartGameButton();
+        }
+
+        private void RemoveKickedPlayerFromReadyValues(Unity.Services.Lobbies.Models.Lobby lobby)
+        {
+            foreach (var player in m_PlayersReadyValues.Keys.ToList().Where(player => !lobby.Players.Contains(player)))
+            {
+                m_PlayersReadyValues.Remove(player);
+            }
+        }
+
+        private void UpdateStartGameButton()
+        {
+            if (m_PlayersReadyValues.Where(playerReady => playerReady.Value != "true").Any(player => player.Value == "false"))
+            {
+                startGameButton.interactable = false;
+                return;
+            }
+
+            startGameButton.interactable = true;
         }
 
         private void PopulateLobbyList(List<Unity.Services.Lobbies.Models.Lobby> lobbies)
@@ -341,15 +394,15 @@ namespace Project_Assets.Scripts.Lobby
             }
         }
 
-        private void PrintStatusLog(StatusReport report, LobbyPanel panel)
+        private void PrintStatusLog(StatusReport task, LobbyPanel panel)
         {
-            if (!report.Success)
+            if (!task.Success)
             {
-                m_ErrorMessage.ShowError(report.Message, panel);
+                m_ErrorMessage.ShowError(task.Message, panel);
                 return;
             }
 
-            report.Log();
+            task.Log();
         }
 
         private void SwitchPanel(LobbyPanel panel)
@@ -372,7 +425,8 @@ namespace Project_Assets.Scripts.Lobby
                 case LobbyPanel.Lobby:
                     lobbyPanel.SetActive(true);
                     break;
-                case LobbyPanel.Loading: // Temp
+                case LobbyPanel.Loading:
+                    lobbyPanel.SetActive(false);
                     break;
                 case LobbyPanel.Game:
                     lobbyPanel.SetActive(false);

@@ -59,6 +59,7 @@ namespace Project_Assets.Scripts.Lobby
             {
                 readyButton.gameObject.SetActive(false);
                 PlayerReady = true;
+                m_PlayerConfiguration.Player.Data[KeyConstants.k_PlayerReady].Value = "true";
             }
 
             // Initialize dropdown from player data without triggering callbacks
