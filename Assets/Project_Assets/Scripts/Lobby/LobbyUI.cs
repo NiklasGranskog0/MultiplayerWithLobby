@@ -308,11 +308,7 @@ namespace Project_Assets.Scripts.Lobby
                 entry.gameObject.SetActive(true);
                 
                 var localIsHost = AuthenticationService.Instance.PlayerId == lobby.HostId;
-
-                if (!localIsHost)
-                {
-                    startGameButton.gameObject.SetActive(false);
-                }
+                startGameButton.gameObject.SetActive(localIsHost);
                 
                 var readyValue = player.Data[KeyConstants.k_PlayerReady].Value;
 
