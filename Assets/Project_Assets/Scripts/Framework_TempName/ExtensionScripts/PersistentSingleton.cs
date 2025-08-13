@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Project_Assets.Scripts.Framework_TempName
+namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
 {
     public class PersistentSingleton<T> : MonoBehaviour where T : Component
     {

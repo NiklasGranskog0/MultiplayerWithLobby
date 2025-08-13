@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Project_Assets.Scripts.Framework_TempName
+namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
 {
     public static class Extensions
     {

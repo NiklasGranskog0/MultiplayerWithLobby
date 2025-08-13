@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using Project_Assets.Scripts.Authentication;
 using Project_Assets.Scripts.Events;
 using Project_Assets.Scripts.Framework_TempName;
+using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
+using Project_Assets.Scripts.Network.Relay;
 using Project_Assets.Scripts.Structs;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
@@ -36,7 +38,8 @@ namespace Project_Assets.Scripts.Lobby
 
         private readonly LobbyEventCallbacks m_EventCallbacks = new();
         private PlayerAuthentication m_PlayerAuthentication;
-        
+        private RelayManager m_RelayManager;
+
         private void LobbyUpdate(ILobbyChanges obj)
         {
             if (ActiveLobby == null) return;
@@ -56,6 +59,7 @@ namespace Project_Assets.Scripts.Lobby
         private void Awake()
         {
             ServiceLocator.Global.Register(this, ServiceLevel.Global);
+            LobbyUI.onStartGame += StartGame;
 
             poller.OnShouldBeenKicked += PollerOnOnShouldBeenKicked;
         }
@@ -63,6 +67,7 @@ namespace Project_Assets.Scripts.Lobby
         private void Start()
         {
             ServiceLocator.Global.Get(out m_PlayerAuthentication);
+            ServiceLocator.Global.Get(out m_RelayManager);
         }
 
         private void PollerOnOnShouldBeenKicked(LobbyEventArgs obj)
@@ -106,7 +111,7 @@ namespace Project_Assets.Scripts.Lobby
 
                 heartbeat.StartHeartBeat(ActiveLobby.Id);
                 poller.StartLobbyPolling(ActiveLobby);
-                
+
                 Debug.Log($"ActiveLobby Join Code: {ActiveLobby.LobbyCode}".Color("orange"));
 
                 OnCreateLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
@@ -280,11 +285,16 @@ namespace Project_Assets.Scripts.Lobby
                 {
                     Data = new Dictionary<string, PlayerDataObject>
                     {
-                        { KeyConstants.k_PlayerReady, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, isReady.ToString().ToLower()) }
+                        {
+                            KeyConstants.k_PlayerReady,
+                            new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member,
+                                isReady.ToString().ToLower())
+                        }
                     }
                 };
 
-                ActiveLobby = await LobbyService.Instance.UpdatePlayerAsync(ActiveLobby.Id, playerId, updatePlayerOptions);
+                ActiveLobby =
+                    await LobbyService.Instance.UpdatePlayerAsync(ActiveLobby.Id, playerId, updatePlayerOptions);
 
                 OnLobbyPlayerUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
 
@@ -312,23 +322,58 @@ namespace Project_Assets.Scripts.Lobby
                 {
                     Data = new Dictionary<string, PlayerDataObject>
                     {
-                        {KeyConstants.k_PlayerTeam, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, index.ToString())}
+                        {
+                            KeyConstants.k_PlayerTeam,
+                            new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, index.ToString())
+                        }
                     }
                 };
-                
-                ActiveLobby = await LobbyService.Instance.UpdatePlayerAsync(ActiveLobby.Id, playerId, updatePlayerOptions);
-                
+
+                ActiveLobby =
+                    await LobbyService.Instance.UpdatePlayerAsync(ActiveLobby.Id, playerId, updatePlayerOptions);
+
                 s_statusReport.MakeReport(true, $"Updated {playerId} team index to: {index}");
             }
             catch (LobbyServiceException e)
             {
-                s_statusReport.MakeReport(false, $"Failed to update player team: {e.Message}");;
+                s_statusReport.MakeReport(false, $"Failed to update player team: {e.Message}");
             }
 
             return s_statusReport;
         }
 
-        // private void ListAllPlayersInLobby()
+        private async void StartGame()
+        {
+            var maxPlayersString = ActiveLobby.Data[KeyConstants.k_MaxPlayers].Value;
+            var maxPlayers = int.Parse(maxPlayersString);
+
+            if (AuthenticationService.Instance.PlayerId != ActiveLobby.HostId) return;
+
+            try
+            {
+                var relayStatus = await m_RelayManager.CreateRelay(maxPlayers - 1);
+
+                ActiveLobby = await LobbyService.Instance.UpdateLobbyAsync(ActiveLobby.Id, new UpdateLobbyOptions
+                {
+                    Data = new Dictionary<string, DataObject>
+                    {
+                        {KeyConstants.k_RelayCode, new DataObject(DataObject.VisibilityOptions.Member, relayStatus.JoinCode)},
+                    }
+                });
+                
+                relayStatus.Log();
+
+                heartbeat.StopHeartBeat();
+                poller.StopLobbyPolling();
+                ActiveLobby = null;
+            }
+            catch (LobbyServiceException e)
+            {
+                Debug.Log($"Start game failed: {e.Message}");
+            }
+        }
+
+    // private void ListAllPlayersInLobby()
         // {
         //     if (ActiveLobby == null)
         //     {
@@ -359,7 +404,7 @@ namespace Project_Assets.Scripts.Lobby
                             op: QueryFilter.OpOptions.GT,
                             value: "0")
                     },
-                    
+
                     Order = new List<QueryOrder>
                     {
                         new QueryOrder(false, QueryOrder.FieldOptions.Created) // Sort by newest first

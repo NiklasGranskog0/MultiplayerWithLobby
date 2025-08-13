@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using Project_Assets.Scripts.Events;
 using Project_Assets.Scripts.Framework_TempName;
+using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
+using Project_Assets.Scripts.Network.Relay;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using UnityEngine;
@@ -11,15 +13,15 @@ namespace Project_Assets.Scripts.Lobby
 {
     public class LobbyPoller : MonoBehaviour
     {
-        public float pollingInterval = 1f; // Fastest polling rate is 1f
+        public float pollingInterval = 1f; // The fastest polling rate is 1f
         private Unity.Services.Lobbies.Models.Lobby CurrentLobby { get; set; }
 
-        public event Action<LobbyEventArgs> OnShouldBeenKicked; 
-        
+        public event Action<LobbyEventArgs> OnShouldBeenKicked;
+
         private Coroutine m_PollingCoroutine;
 
         private LobbyManager m_LobbyManager;
-        
+
         private void Start()
         {
             ServiceLocator.Global.Get(out m_LobbyManager);
@@ -31,11 +33,11 @@ namespace Project_Assets.Scripts.Lobby
             {
                 StopCoroutine(m_PollingCoroutine);
             }
-            
+
             CurrentLobby = lobby;
             m_PollingCoroutine = StartCoroutine(PollLobbyCoroutine());
         }
-        
+
         public void StopLobbyPolling()
         {
             if (m_PollingCoroutine != null)
@@ -46,7 +48,7 @@ namespace Project_Assets.Scripts.Lobby
 
             CurrentLobby = null;
         }
-        
+
         private IEnumerator PollLobbyCoroutine()
         {
             while (CurrentLobby != null)
@@ -55,7 +57,7 @@ namespace Project_Assets.Scripts.Lobby
                 yield return FetchLobbyUpdate();
             }
         }
-        
+
         private IEnumerator FetchLobbyUpdate()
         {
             var task = LobbyService.Instance.GetLobbyAsync(CurrentLobby.Id);
@@ -73,13 +75,20 @@ namespace Project_Assets.Scripts.Lobby
             {
                 OnShouldBeenKicked?.Invoke(new LobbyEventArgs { Lobby = CurrentLobby });
             }
-            
+
             if (CurrentLobby == null)
             {
                 Debug.Log("Lobby not found, stopping lobby polling".Color("red"));
                 yield break;
             }
-            
+
+            if (CurrentLobby.Data[KeyConstants.k_RelayCode].Value != null)
+            {
+                JoinRelay();
+                StopLobbyPolling();
+                yield break;
+            }
+
             var updatedLobby = task.Result;
             string oldHostId = CurrentLobby.HostId;
             string newHostId = updatedLobby.HostId;
@@ -89,32 +98,33 @@ namespace Project_Assets.Scripts.Lobby
                 Debug.LogWarning("Host is missing. Attempting host reassignment...".Color("red"));
                 yield return AssignNewHost(updatedLobby);
             }
-            
+
             CurrentLobby = updatedLobby;
-            Debug.Log($"Lobby polled. Host: {CurrentLobby.HostId}, Players: {CurrentLobby.Players.Count}".Color("cyan"));
+            Debug.Log($"Lobby polled. Host: {CurrentLobby.HostId}, Players: {CurrentLobby.Players.Count}"
+                .Color("cyan"));
         }
 
         private bool CheckIfKicked()
         {
             return !CurrentLobby.Players.Exists(p => p.Id == AuthenticationService.Instance.PlayerId);
         }
-        
+
         // When new host has been assigned start a new heartbeat for the lobby
         private IEnumerator AssignNewHost(Unity.Services.Lobbies.Models.Lobby lobby)
         {
             string myId = AuthenticationService.Instance.PlayerId;
-            
+
             if (!lobby.Players.Exists(p => p.Id == myId)) yield break;
 
             string selectedHostId = lobby.Players[0].Id;
-            
+
             if (myId != selectedHostId) yield break;
 
             var updateOptions = new UpdateLobbyOptions
             {
                 HostId = selectedHostId
             };
-            
+
             var task = LobbyService.Instance.UpdateLobbyAsync(lobby.Id, updateOptions);
 
             while (!task.IsCompleted)
@@ -127,7 +137,7 @@ namespace Project_Assets.Scripts.Lobby
                 Debug.LogError($"Host reassignment failed: {task.Exception.Message}".Color("red"));
             }
             else
-            { 
+            {
                 Debug.Log($"Host reassignment succeeded {selectedHostId}".Color("green"));
                 m_LobbyManager.ActiveLobby = task.Result;
 
@@ -136,6 +146,15 @@ namespace Project_Assets.Scripts.Lobby
                     m_LobbyManager.heartbeat.StartHeartBeat(m_LobbyManager.ActiveLobby.Id);
                     Debug.Log("Started heartbeat (new host)".Color("cyan"));
                 }
+            }
+        }
+
+        private async void JoinRelay()
+        {
+            if (AuthenticationService.Instance.PlayerId != CurrentLobby.HostId)
+            {
+                var relayStatus = await RelayManager.JoinRelay(CurrentLobby.Data[KeyConstants.k_RelayCode].Value);
+                relayStatus.Log();
             }
         }
     }

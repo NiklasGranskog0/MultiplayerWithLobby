@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Events;
-using Project_Assets.Scripts.Framework_TempName;
+using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
 using Project_Assets.Scripts.Framework_TempName.SerializedDictionaries;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
 using Project_Assets.Scripts.Network.Relay;
@@ -19,6 +19,8 @@ namespace Project_Assets.Scripts.Lobby
 {
     public class LobbyUI : MonoBehaviour
     {
+        public static Action onStartGame;
+        
         public Unity.Services.Lobbies.Models.Lobby CurrentSelectedLobby { get; set; }
         public Unity.Services.Lobbies.Models.Lobby CurrentLobby { get; set; }
 
@@ -68,7 +70,7 @@ namespace Project_Assets.Scripts.Lobby
         private int GameModeIndex => gameModeDropdown.value;
         private int GameMapIndex => mapDropdown.value;
         private string GameName => gameNameInputField.text;
-        private Dictionary<Player, string> m_PlayersReadyValues = new();
+        private readonly Dictionary<Player, string> m_PlayersReadyValues = new();
 
         private LobbyManager m_LobbyManager;
         private ErrorMessageText m_ErrorMessage;
@@ -77,7 +79,6 @@ namespace Project_Assets.Scripts.Lobby
         public ImagesDictionary gameImagesDictionary;
         private string m_GameImageName;
         [SerializeField] private Button tempQuitButton;
-        
 
         private void Awake()
         {
@@ -121,13 +122,10 @@ namespace Project_Assets.Scripts.Lobby
             OnRefreshLobbies();
         }
 
-        private async void OnHostStartGame()
+        private void OnHostStartGame()
         {
-            int maxPlayers = 3;
-            
+            onStartGame?.Invoke();
             SwitchPanel(LobbyPanel.Loading);
-            var task = await m_RelayManager.CreateRelay(maxPlayers);
-            task.Log();
         }
 
         private void QuitLobby()

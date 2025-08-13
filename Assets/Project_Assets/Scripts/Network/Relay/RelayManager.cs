@@ -27,15 +27,36 @@ namespace Project_Assets.Scripts.Network.Relay
                 var relayServerData = allocation.ToRelayServerData("dtls");
 
                 NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
+                NetworkManager.Singleton.StartHost();
                 
                 s_statusReport.JoinCode = joinCode;
                 s_statusReport.MakeReport(true, $"Relay Created, Join Code: {joinCode}");
             }
-            catch (Exception e)
+            catch (RelayServiceException e)
             {
                 s_statusReport.MakeReport(false, $"Create Relay failed: {e.Message}");
             }
 
+            return s_statusReport;
+        }
+
+        public static async Task<RelayStatus> JoinRelay(string joinCode)
+        {
+            try
+            {
+                var allocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
+                var relayServerData = allocation.ToRelayServerData("dtls");
+                
+                NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
+                NetworkManager.Singleton.StartClient();
+                
+                s_statusReport.MakeReport(true, $"Joined relay with Code: {joinCode}");
+            }
+            catch (RelayServiceException e)
+            {
+                s_statusReport.MakeReport(false, $"Join Relay failed: {e.Message}");
+            }
+            
             return s_statusReport;
         }
     }

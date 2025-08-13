@@ -1,4 +1,4 @@
-namespace Project_Assets.Scripts.Framework_TempName
+namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
 {
     public static class KeyConstants
     {
@@ -6,6 +6,7 @@ namespace Project_Assets.Scripts.Framework_TempName
         public const string k_PlayerId = "PlayerId";
         public const string k_PlayerTeam = "PlayerTeam";
         public const string k_PlayerReady = "PlayerReady";
+        public const string k_RelayCode = "RelayCode";
         
         public const string k_GameMode = "GameMode";
         public const string k_Map = "Map";
