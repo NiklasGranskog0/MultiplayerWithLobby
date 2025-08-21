@@ -2,15 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Project_Assets.Scripts.Authentication;
+using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Events;
-using Project_Assets.Scripts.Framework_TempName;
 using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
 using Project_Assets.Scripts.Network.Relay;
+using Project_Assets.Scripts.Scenes;
 using Project_Assets.Scripts.Structs;
+using Unity.Netcode;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using Unity.Services.Relay;
 using UnityEngine;
 
 namespace Project_Assets.Scripts.Lobby
@@ -21,6 +24,8 @@ namespace Project_Assets.Scripts.Lobby
 
         [SerializeField] public LobbyHeartbeat heartbeat;
         [SerializeField] public LobbyPoller poller;
+        [SerializeField] public GameStartTimer gameStartTimer;
+        private string m_LastSystemMessageSeen;
 
         public event Action<LobbyEventArgs> OnCreateLobbyAsync;
         public event Action<LobbyEventArgs> OnPlayerLeftLobbyAsync;
@@ -31,6 +36,7 @@ namespace Project_Assets.Scripts.Lobby
         public event Action<string> OnJoinedTextChannel;
         public event Action<string> OnLeftTextChannel;
         public event Action<string> OnSetGameCode;
+        public event Action<string> OnSendSystemMessage;
 
         private static StatusReport s_statusReport;
         private static LobbiesStatusReport s_lobbiesStatusReport;
@@ -38,36 +44,96 @@ namespace Project_Assets.Scripts.Lobby
 
         private readonly LobbyEventCallbacks m_EventCallbacks = new();
         private PlayerAuthentication m_PlayerAuthentication;
+        private SceneManager m_SceneManager;
+        private LobbyUI m_LobbyUI;
+        private HostDictionary m_HostDictionary;
         private RelayManager m_RelayManager;
-
-        private void LobbyUpdate(ILobbyChanges obj)
-        {
-            if (ActiveLobby == null) return;
-
-            try
-            {
-                obj.ApplyToLobby(ActiveLobby);
-                OnLobbyPlayerUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
-                Debug.Log("LobbyUpdate".Color("orange"));
-            }
-            catch (Exception e)
-            {
-                Debug.Log($"LobbyUpdate apply failed: {e.Message}".Color("red"));
-            }
-        }
 
         private void Awake()
         {
-            ServiceLocator.Global.Register(this, ServiceLevel.Global);
-            LobbyUI.onStartGame += StartGame;
+            ServiceLocator.ForSceneOf(this).Register(this, ServiceLevel.Scene, gameObject.scene.name);
+            LobbyUI.onStartGame += StartCountdownTimer;
 
             poller.OnShouldBeenKicked += PollerOnOnShouldBeenKicked;
+            gameStartTimer.OnTimerLeft += SendTimerLeftMessage;
+            gameStartTimer.OnTimerFinished += StartGame;
         }
 
         private void Start()
         {
             ServiceLocator.Global.Get(out m_PlayerAuthentication);
-            ServiceLocator.Global.Get(out m_RelayManager);
+            ServiceLocator.Global.Get(out m_SceneManager);
+            ServiceLocator.Global.Get(out m_HostDictionary);
+            ServiceLocator.ForSceneOf(this).Get(out m_LobbyUI);
+            ServiceLocator.ForSceneOf(this).Get(out m_RelayManager);
+        }
+
+        private async void LobbyUpdate(ILobbyChanges obj)
+        {
+            if (ActiveLobby == null) return;
+
+            m_HostDictionary.ClientsAndHost.Clear();
+            foreach (var player in ActiveLobby.Players)
+            {
+                m_HostDictionary.ClientsAndHost.TryAdd(player, player.Id == ActiveLobby.HostId);
+            }
+
+            try
+            {
+                obj.ApplyToLobby(ActiveLobby);
+                OnLobbyPlayerUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
+
+                // If a new system message is present, notify listeners at once
+                if (ActiveLobby.Data != null &&
+                    ActiveLobby.Data.TryGetValue(KeyConstants.k_SystemMessage, out var sysMsgObj))
+                {
+                    var msg = sysMsgObj?.Value;
+                    if (!string.IsNullOrEmpty(msg) && msg != m_LastSystemMessageSeen)
+                    {
+                        // This message will always be called on game start, which means we want to load the game scene
+                        m_LastSystemMessageSeen = msg;
+
+                        // Only need to do this if we're not the host, because host will load game scene in StartGame()
+                        if (AuthenticationService.Instance.PlayerId != ActiveLobby.HostId)
+                        {
+                            await m_SceneManager.LoadSceneGroupByEnum(SceneGroupToLoad.Game);
+                        }
+                    }
+                }
+
+                Debug.Log("LobbyUpdate".Color("orange"));
+            }
+            catch (LobbyServiceException e)
+            {
+                Debug.Log($"LobbyUpdate apply failed: {e.Message}".Color("red"));
+            }
+        }
+
+        private async void StartCountdownTimer()
+        {
+            try
+            {
+                ActiveLobby = await LobbyService.Instance.UpdateLobbyAsync(ActiveLobby.Id, new UpdateLobbyOptions
+                {
+                    IsLocked = true
+                });
+
+                m_LobbyUI.startGameButton.interactable = false;
+                s_statusReport.MakeReport(true, "Lobby locked, Starting countdown timer...");
+            }
+            catch (LobbyServiceException e)
+            {
+                s_statusReport.MakeReport(false, $"Failed to lock Lobby: {e.Message}");
+                return;
+            }
+
+            s_statusReport.Log();
+            gameStartTimer.StartTimer();
+        }
+
+        private void SendTimerLeftMessage(float obj)
+        {
+            OnSendSystemMessage?.Invoke($"Game starting in {obj}... ".Color("red"));
         }
 
         private void PollerOnOnShouldBeenKicked(LobbyEventArgs obj)
@@ -105,14 +171,18 @@ namespace Project_Assets.Scripts.Lobby
                 ActiveLobby = await LobbyService.Instance.CreateLobbyAsync(settings.GameName.name,
                     settings.MaxPlayers.max, lobbyOptions);
 
+                var relay = await m_RelayManager.CreateRelay(settings.MaxPlayers.max - 1);
+                relay.Log();
+
+                var relayCodeUpdate = await UpdateRelayJoinCode(relay.JoinCode);
+                relayCodeUpdate.Log();
+
                 await LobbyService.Instance.SubscribeToLobbyEventsAsync(ActiveLobby.Id, m_EventCallbacks);
                 m_EventCallbacks.LobbyChanged -= LobbyUpdate;
                 m_EventCallbacks.LobbyChanged += LobbyUpdate;
 
                 heartbeat.StartHeartBeat(ActiveLobby.Id);
                 poller.StartLobbyPolling(ActiveLobby);
-
-                Debug.Log($"ActiveLobby Join Code: {ActiveLobby.LobbyCode}".Color("orange"));
 
                 OnCreateLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnLobbyPlayerUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
@@ -154,6 +224,11 @@ namespace Project_Assets.Scripts.Lobby
 
                 OnPlayerLeftLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnLeftTextChannel?.Invoke(ActiveLobby.Id);
+
+                if (AuthenticationService.Instance.PlayerId == playerId)
+                {
+                    NetworkManager.Singleton.Shutdown();
+                }
 
                 // After UI have been changed to lobby list auto refresh active lobbies
                 var lobbies = await GetAllActiveLobbiesAsync();
@@ -204,6 +279,7 @@ namespace Project_Assets.Scripts.Lobby
                 s_statusReport.MakeReport(false, $"Lobby joined failed {e.Message}");
             }
 
+            JoinRelay(ActiveLobby.Data[KeyConstants.k_RelayCode].Value);
             return s_statusReport;
         }
 
@@ -241,6 +317,7 @@ namespace Project_Assets.Scripts.Lobby
                 s_statusReport.MakeReport(false, $"Failed to join lobby by ID: {e.Message}");
             }
 
+            JoinRelay(ActiveLobby.Data[KeyConstants.k_RelayCode].Value);
             return s_statusReport;
         }
 
@@ -261,6 +338,7 @@ namespace Project_Assets.Scripts.Lobby
             try
             {
                 await LobbyService.Instance.RemovePlayerAsync(ActiveLobby.Id, playerId);
+
                 s_statusReport.MakeReport(true, $"Player {playerId} has been kicked from the lobby");
             }
             catch (LobbyServiceException e)
@@ -342,30 +420,52 @@ namespace Project_Assets.Scripts.Lobby
             return s_statusReport;
         }
 
-        private async void StartGame()
+        private async Task<StatusReport> UpdateRelayJoinCode(string code)
         {
-            var maxPlayersString = ActiveLobby.Data[KeyConstants.k_MaxPlayers].Value;
-            var maxPlayers = int.Parse(maxPlayersString);
-
-            if (AuthenticationService.Instance.PlayerId != ActiveLobby.HostId) return;
-
             try
             {
-                var relayStatus = await m_RelayManager.CreateRelay(maxPlayers - 1);
-
                 ActiveLobby = await LobbyService.Instance.UpdateLobbyAsync(ActiveLobby.Id, new UpdateLobbyOptions
                 {
                     Data = new Dictionary<string, DataObject>
                     {
-                        {KeyConstants.k_RelayCode, new DataObject(DataObject.VisibilityOptions.Member, relayStatus.JoinCode)},
+                        { KeyConstants.k_RelayCode, new DataObject(DataObject.VisibilityOptions.Member, code) }
                     }
                 });
-                
-                relayStatus.Log();
 
-                heartbeat.StopHeartBeat();
-                poller.StopLobbyPolling();
-                ActiveLobby = null;
+                s_statusReport.MakeReport(true, $"Updated relay join code to: {code}");
+            }
+            catch (LobbyServiceException e)
+            {
+                s_statusReport.MakeReport(false, $"Failed to update relay join code: {e.Message}");
+            }
+
+            return s_statusReport;
+        }
+
+        private async void StartGame()
+        {
+            foreach (var player in ActiveLobby.Players)
+            {
+                if (ActiveLobby.HostId == player.Id)
+                {
+                    m_HostDictionary.ClientsAndHost.TryAdd(player, true);
+                }
+            }
+
+            try
+            {
+                // Send a system message to all players via lobby data update
+                var message = "GameStarting";
+                ActiveLobby = await LobbyService.Instance.UpdateLobbyAsync(ActiveLobby.Id, new UpdateLobbyOptions
+                {
+                    Data = new Dictionary<string, DataObject>
+                    {
+                        { KeyConstants.k_SystemMessage, new DataObject(DataObject.VisibilityOptions.Member, message) }
+                    }
+                });
+
+                m_SceneManager.loadingTitleText.text = ActiveLobby.Name;
+                await m_SceneManager.LoadSceneGroupByEnum(SceneGroupToLoad.Game);
             }
             catch (LobbyServiceException e)
             {
@@ -373,22 +473,11 @@ namespace Project_Assets.Scripts.Lobby
             }
         }
 
-    // private void ListAllPlayersInLobby()
-        // {
-        //     if (ActiveLobby == null)
-        //     {
-        //         Debug.Log("No active lobby");
-        //         return;
-        //     }
-        //
-        //     Debug.Log("Listing all players in lobby: ");
-        //
-        //     foreach (var player in ActiveLobby.Players)
-        //     {
-        //         Debug.Log(
-        //             $"Name: {player.Data[KeyConstants.k_PlayerName].Value} Id: {player.Data[KeyConstants.k_PlayerId].Value}");
-        //     }
-        // }
+        private async void JoinRelay(string code)
+        {
+            var relay = await m_RelayManager.JoinRelay(code);
+            relay.Log();
+        }
 
         public async Task<LobbiesStatusReport> GetAllActiveLobbiesAsync()
         {

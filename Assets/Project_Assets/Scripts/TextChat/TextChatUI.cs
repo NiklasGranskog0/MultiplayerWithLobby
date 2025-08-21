@@ -33,7 +33,7 @@ namespace Project_Assets.Scripts.TextChat
         private void Start()
         {
             ServiceLocator.Global.Get(out m_VivoxManager);
-            ServiceLocator.Global.Get(out m_LobbyManager);
+            ServiceLocator.ForSceneOf(this).Get(out m_LobbyManager);
             
             chatScrollRect.verticalScrollbar.gameObject.SetActive(false);
             chatScrollRect.horizontalScrollbar.gameObject.SetActive(false);
@@ -41,9 +41,9 @@ namespace Project_Assets.Scripts.TextChat
             
             VivoxService.Instance.ChannelJoined += OnChannelJoined;
             VivoxService.Instance.ChannelMessageReceived += OnChannelMessageReceived;
-            VivoxService.Instance.DirectedMessageReceived += OnDirectedMessageReceived;
 
             m_LobbyManager.OnLeftTextChannel += OnLeftTextChannel;
+            m_LobbyManager.OnSendSystemMessage += SystemSendMessage;
             
             chatScrollRect.onValueChanged.AddListener(ScrollRectChange);
         }
@@ -65,6 +65,9 @@ namespace Project_Assets.Scripts.TextChat
         {
             if (m_MessageObjectPool.Count > 0) ClearMessagePool();
             m_OldestMessage = null;
+            
+            VivoxService.Instance.ChannelJoined -= OnChannelJoined;
+            VivoxService.Instance.ChannelMessageReceived -= OnChannelMessageReceived;
         }
 
         private async Task<StatusReport> GetChatHistory(bool scrollToBottom = false)
@@ -145,19 +148,17 @@ namespace Project_Assets.Scripts.TextChat
             SendMessage();
         }
 
-        private void SendMessage()
+        private async void SendMessage()
         {
             if (string.IsNullOrEmpty(chatInputField.text)) return;
-
-            if (chatInputField.text.StartsWith('/'))
-            {
-                Command();
-                ClearTextInput();
-                return;
-            }
             
-            VivoxService.Instance.SendChannelTextMessageAsync(m_VivoxManager.CurrentChannelName, chatInputField.text);
+            await VivoxService.Instance.SendChannelTextMessageAsync(m_VivoxManager.CurrentChannelName, chatInputField.text);
             ClearTextInput();
+        }
+
+        private async void SystemSendMessage(string message)
+        {
+            await VivoxService.Instance.SendChannelTextMessageAsync(m_VivoxManager.CurrentChannelName, message);
         }
 
         private async void OnChannelJoined(string s)
@@ -167,11 +168,6 @@ namespace Project_Assets.Scripts.TextChat
         }
         
         private void OnChannelMessageReceived(VivoxMessage message)
-        {
-            AddMessageToChat(message, false, true);
-        }
-        
-        private void OnDirectedMessageReceived(VivoxMessage message)
         {
             AddMessageToChat(message, false, true);
         }
@@ -193,17 +189,6 @@ namespace Project_Assets.Scripts.TextChat
             newMessageObj.SetMessage(message);
             
             if (scrollToBottom) StartCoroutine(ScrollToBottom());
-        }
-        
-        private void Command()
-        {
-            var command = chatInputField.text.Split(' ');
-            var commandName = command[0][1..];
-            var commandArgs = command.Skip(1).ToArray();
-            
-            foreach (var args in commandArgs)
-            {
-            }
         }
     }
 }

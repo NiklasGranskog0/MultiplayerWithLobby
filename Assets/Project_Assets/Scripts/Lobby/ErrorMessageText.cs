@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Project_Assets.Scripts.Enums;
-using Project_Assets.Scripts.Framework_TempName;
 using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
 using Project_Assets.Scripts.Structs;
@@ -15,7 +14,7 @@ namespace Project_Assets.Scripts.Lobby
         
         private void Awake()
         {
-            ServiceLocator.Global.Register(this, ServiceLevel.Global);
+            ServiceLocator.ForSceneOf(this).Register(this, ServiceLevel.Scene, gameObject.scene.name);
         }
         
         public void ShowError(string errorMessage, LobbyPanel panel)

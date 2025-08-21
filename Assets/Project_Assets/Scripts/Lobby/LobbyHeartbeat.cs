@@ -8,7 +8,7 @@ namespace Project_Assets.Scripts.Lobby
 {
     public class LobbyHeartbeat : MonoBehaviour
     {
-        public float heartBeatInterval = 15f; // Can not be higher than 30
+        public float heartBeatInterval = 15f; // Cannot be higher than 30
         private Coroutine m_HeartBeatCoroutine;
         private string m_LobbyId;
     

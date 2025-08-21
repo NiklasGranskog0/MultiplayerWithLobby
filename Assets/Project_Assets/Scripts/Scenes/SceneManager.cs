@@ -4,23 +4,25 @@ using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
 using Project_Assets.Scripts.ScriptableObjects;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Project_Assets.Scripts.Scenes
 {
+    
     public class SceneManager : MonoBehaviour
     {
         private LoadingProgress m_LoadingProgress;
         private SceneGroupManager m_SceneGroupManager;
 
         [SerializeField] private GameObject loadingScreen;
-
         [SerializeField] private Slider progressSlider;
-
         [SerializeField] private SceneGroupAsset sceneGroupAssets;
         [SerializeField] private float fillSpeed;
         [SerializeField] private SceneGroupToLoad sceneGroupToLoad;
+        public TMP_Text loadingText;
+        public TMP_Text loadingTitleText;
 
         private const float k_TargetProgress = 1f;
         public bool IsLoading { get; private set; }
@@ -68,6 +70,15 @@ namespace Project_Assets.Scripts.Scenes
             
             EnableLoadingCanvas();
             await m_SceneGroupManager.LoadScenes(sceneGroupAssets.sceneGroups[index], m_LoadingProgress);
+        }
+        
+        public async Task LoadSceneGroupByEnum(SceneGroupToLoad sceneGroup)
+        {
+            progressSlider.value = 0f;
+            
+            Debug.Log("SceneLoader: ".Color("red") + $"Loading scene group {sceneGroup.ToString()}".Color("lightblue"));
+            EnableLoadingCanvas();
+            await m_SceneGroupManager.LoadScenes(sceneGroupAssets.sceneGroups[(int)sceneGroup], m_LoadingProgress);
         }
 
         public async Task LoadSceneGroupByName(string groupName)

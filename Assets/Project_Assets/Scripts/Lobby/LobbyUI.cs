@@ -7,11 +7,11 @@ using Project_Assets.Scripts.Events;
 using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
 using Project_Assets.Scripts.Framework_TempName.SerializedDictionaries;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
-using Project_Assets.Scripts.Network.Relay;
 using Project_Assets.Scripts.Structs;
 using TMPro;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies.Models;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -60,7 +60,7 @@ namespace Project_Assets.Scripts.Lobby
         public LobbyInfo lobbyInfoGames;
 
         [Header("Lobby Panel Elements")] 
-        [SerializeField] private Button startGameButton;
+        [SerializeField] public Button startGameButton;
         [SerializeField] private Button leaveLobbyButton;
         [SerializeField] private TMP_Text gameCodeText;
         [SerializeField] private LobbyInfo lobbyInfo;
@@ -74,7 +74,6 @@ namespace Project_Assets.Scripts.Lobby
 
         private LobbyManager m_LobbyManager;
         private ErrorMessageText m_ErrorMessage;
-        private RelayManager m_RelayManager;
 
         public ImagesDictionary gameImagesDictionary;
         private string m_GameImageName;
@@ -82,14 +81,13 @@ namespace Project_Assets.Scripts.Lobby
 
         private void Awake()
         {
-            ServiceLocator.Global.Register(this, ServiceLevel.Global);
+            ServiceLocator.ForSceneOf(this).Register(this, ServiceLevel.Scene, gameObject.scene.name);
         }
 
         private void Start()
         {
-            ServiceLocator.Global.Get(out m_LobbyManager);
-            ServiceLocator.Global.Get(out m_ErrorMessage);
-            ServiceLocator.Global.Get(out m_RelayManager);
+            ServiceLocator.ForSceneOf(this).Get(out m_LobbyManager);
+            ServiceLocator.ForSceneOf(this).Get(out m_ErrorMessage);
 
             // Value == index
             maxPlayersDropdown.value = 3; // (Set default value to 4 players)
@@ -118,14 +116,16 @@ namespace Project_Assets.Scripts.Lobby
             tempQuitButton.onClick.AddListener(QuitLobby);
             startGameButton.onClick.AddListener(OnHostStartGame);
             startGameButton.interactable = false;
+            leaveLobbyButton.interactable = true;
             
             OnRefreshLobbies();
         }
 
         private void OnHostStartGame()
         {
+            // TODO: Lobby players leave button still active during game starting countdown
+            leaveLobbyButton.interactable = false;
             onStartGame?.Invoke();
-            SwitchPanel(LobbyPanel.Loading);
         }
 
         private void QuitLobby()
@@ -345,7 +345,7 @@ namespace Project_Assets.Scripts.Lobby
         {
             if (lobbies == null || lobbies.Count == 0)
             {
-                Debug.LogWarning("No lobbies found".Color("red"));
+                Debug.Log("No lobbies found".Color("red"));
                 ClearContainer(lobbyListContainer);
                 return;
             }

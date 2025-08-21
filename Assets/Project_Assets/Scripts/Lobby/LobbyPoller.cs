@@ -82,13 +82,6 @@ namespace Project_Assets.Scripts.Lobby
                 yield break;
             }
 
-            if (CurrentLobby.Data[KeyConstants.k_RelayCode].Value != null)
-            {
-                JoinRelay();
-                StopLobbyPolling();
-                yield break;
-            }
-
             var updatedLobby = task.Result;
             string oldHostId = CurrentLobby.HostId;
             string newHostId = updatedLobby.HostId;
@@ -146,15 +139,6 @@ namespace Project_Assets.Scripts.Lobby
                     m_LobbyManager.heartbeat.StartHeartBeat(m_LobbyManager.ActiveLobby.Id);
                     Debug.Log("Started heartbeat (new host)".Color("cyan"));
                 }
-            }
-        }
-
-        private async void JoinRelay()
-        {
-            if (AuthenticationService.Instance.PlayerId != CurrentLobby.HostId)
-            {
-                var relayStatus = await RelayManager.JoinRelay(CurrentLobby.Data[KeyConstants.k_RelayCode].Value);
-                relayStatus.Log();
             }
         }
     }

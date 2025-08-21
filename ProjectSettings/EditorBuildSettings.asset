@@ -5,24 +5,18 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 0
-    path: Assets/NGO_Minimal_Setup/NGO_Setup.unity
-    guid: e1638496f8a29024b8e4f850498eaaf9
-  - enabled: 0
-    path: Assets/Scenes/SessionLobby.unity
-    guid: 0412db4ab0ce5a049b3d4054f6838cce
-  - enabled: 0
-    path: Assets/Project_Assets/Scenes/Lobby.unity
-    guid: 744d179cc240ead40b9505c1a61fd567
-  - enabled: 0
-    path: Assets/Project_Assets/Scenes/Game.unity
-    guid: b6fe0121c0a8db94a98eb4a076fe28b9
   - enabled: 1
     path: Assets/Project_Assets/Scenes/StartupScene.unity
     guid: 79d44e06a9dee854d8f2d857145d43a2
+  - enabled: 1
+    path: Assets/Project_Assets/Scenes/Lobby.unity
+    guid: 744d179cc240ead40b9505c1a61fd567
+  - enabled: 1
+    path: Assets/Project_Assets/Scenes/GameTextChat.unity
+    guid: 085a41677ba6a5145b82b189a0eb0c8c
+  - enabled: 1
+    path: Assets/Project_Assets/Scenes/Game.unity
+    guid: b6fe0121c0a8db94a98eb4a076fe28b9
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: b581935a6dc5d5541a20466de4a25543, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

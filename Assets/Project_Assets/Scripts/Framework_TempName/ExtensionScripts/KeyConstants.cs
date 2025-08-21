@@ -4,6 +4,7 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
     {
         public const string k_PlayerName = "PlayerName";
         public const string k_PlayerId = "PlayerId";
+        public const string k_Host = "false";
         public const string k_PlayerTeam = "PlayerTeam";
         public const string k_PlayerReady = "PlayerReady";
         public const string k_RelayCode = "RelayCode";
@@ -15,5 +16,7 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
         public const string k_GameSpeed = "GameSpeed";
         public const string k_GamePassword = "GamePassword";
         public const string k_GameImage = "GameImage";
+
+        public const string k_SystemMessage = "SystemMessage";
     }
 }

@@ -18,7 +18,6 @@ namespace Project_Assets.Scripts.Structs
         public bool? IsPrivate { get; set; }
         public bool? IsLocked { get; set; }
         public string Password { get; set; }
-        public string RelayJoinCode { get; set; }
         public (GameMode mode, DataObject.VisibilityOptions visibilityOptions) GameMode { get; set; }
         public (Map map, DataObject.VisibilityOptions visibilityOptions) GameMap { get; set; }
         public (int max, DataObject.VisibilityOptions visibilityOptions) MaxPlayers { get; set; }
@@ -37,7 +36,6 @@ namespace Project_Assets.Scripts.Structs
                 {KeyConstants.k_GameName, new DataObject(GameName.visibilityOptions, GameName.name)},
                 {KeyConstants.k_GameSpeed, new DataObject(GameSpeed.visibilityOptions, GameSpeed.speed.GameSpeedToString())},
                 {KeyConstants.k_GameImage, new DataObject(DataObject.VisibilityOptions.Public, GameImage.imageName)},
-                {KeyConstants.k_RelayCode, new DataObject(DataObject.VisibilityOptions.Member, RelayJoinCode)},
             };
         }
     }

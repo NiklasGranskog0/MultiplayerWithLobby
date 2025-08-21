@@ -23,7 +23,7 @@ namespace Project_Assets.Scripts.Lobby
         public Button kickButton;
         public Button readyButton;
         public TMP_Text readyButtonText;
-        
+
         public TMP_Dropdown teamDropdown;
         private PlayerConfiguration m_PlayerConfiguration;
 
@@ -35,8 +35,8 @@ namespace Project_Assets.Scripts.Lobby
 
         public void Initialize(string pName, string playerId, PlayerConfiguration config)
         {
-            ServiceLocator.Global.Get(out m_LobbyManager);
-            ServiceLocator.Global.Get(out m_ErrorMessageText);
+            ServiceLocator.ForSceneOf(this).Get(out m_LobbyManager);
+            ServiceLocator.ForSceneOf(this).Get(out m_ErrorMessageText);
 
             PlayerId = playerId;
             m_PlayerConfiguration = config;
@@ -47,12 +47,13 @@ namespace Project_Assets.Scripts.Lobby
             }
             else playerName.text = pName;
 
+
             ShowKickButton();
             kickButton.onClick.AddListener(OnClickKickButton);
 
             teamDropdown.onValueChanged.AddListener(OnTeamSelectionChanged);
             teamDropdown.interactable = m_PlayerConfiguration.IsLocalPlayer;
-            
+
             readyButton.onClick.AddListener(OnReadyClick);
             readyButton.interactable = m_PlayerConfiguration.IsLocalPlayer;
 
@@ -62,7 +63,7 @@ namespace Project_Assets.Scripts.Lobby
                 PlayerReady = true;
                 m_PlayerConfiguration.Player.Data[KeyConstants.k_PlayerReady].Value = "true";
             }
-
+           
             // Initialize dropdown from player data without triggering callbacks
             if (m_PlayerConfiguration.Player.Data != null &&
                 m_PlayerConfiguration.Player.Data.ContainsKey(KeyConstants.k_PlayerTeam) &&
@@ -81,7 +82,8 @@ namespace Project_Assets.Scripts.Lobby
                 bool ready = false;
                 if (m_PlayerConfiguration.Player.Data != null &&
                     m_PlayerConfiguration.Player.Data.ContainsKey(KeyConstants.k_PlayerReady) &&
-                    bool.TryParse(m_PlayerConfiguration.Player.Data[KeyConstants.k_PlayerReady].Value, out var parsedReady))
+                    bool.TryParse(m_PlayerConfiguration.Player.Data[KeyConstants.k_PlayerReady].Value,
+                        out var parsedReady))
                 {
                     ready = parsedReady;
                 }

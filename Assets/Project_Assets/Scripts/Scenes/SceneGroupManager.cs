@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Eflatun.SceneReference;
 using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Structs;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
 
 namespace Project_Assets.Scripts.Scenes
@@ -19,7 +17,6 @@ namespace Project_Assets.Scripts.Scenes
 
         private SceneGroup m_ActiveSceneGroup;
 
-        private readonly AsyncOperationHandleGroup m_AsyncOperationHandleGroup = new(10);
         private readonly AsyncOperationGroup m_AsyncOperationGroup = new(10);
 
         public async Task LoadScenes(SceneGroup sceneGroup, IProgress<float> loadingProgress,
@@ -52,18 +49,13 @@ namespace Project_Assets.Scripts.Scenes
                             LoadSceneMode.Additive);
                     m_AsyncOperationGroup.AsyncOperations.Add(asyncOperation);
                 }
-                else if (sceneData.sceneReference.State == SceneReferenceState.Addressable)
-                {
-                    var sceneHandle = Addressables.LoadSceneAsync(sceneData.sceneReference.Path, LoadSceneMode.Additive);
-                    m_AsyncOperationHandleGroup.HandleGroups.Add(sceneHandle);
-                }
 
                 OnSceneLoaded?.Invoke(sceneData.Name);
             }
 
-            while (!m_AsyncOperationGroup.IsDone || !m_AsyncOperationHandleGroup.IsDone)
+            while (!m_AsyncOperationGroup.IsDone)
             {
-                loadingProgress.Report((m_AsyncOperationGroup.Progress + m_AsyncOperationHandleGroup.Progress) / 2);
+                loadingProgress.Report(m_AsyncOperationGroup.Progress / 2);
                 await Task.Delay(100);
             }
 
@@ -79,7 +71,7 @@ namespace Project_Assets.Scripts.Scenes
             OnSceneGroupLoaded?.Invoke();
         }
 
-        public async Task UnloadScenes(bool unloadUnusedAssets = false)
+        private async Task UnloadScenes(bool unloadUnusedAssets = false)
         {
             var scenes = new List<string>();
             var activeScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
@@ -91,9 +83,7 @@ namespace Project_Assets.Scripts.Scenes
                 if (!sceneAt.isLoaded) continue;
 
                 var sceneName = sceneAt.name;
-                if (sceneName.Equals(activeScene) || sceneName == "Bootstrapper") continue;
-                if (m_AsyncOperationHandleGroup.HandleGroups.Any(h => h.IsValid() && h.Result.Scene.name == sceneName))
-                    continue;
+                if (sceneName.Equals(activeScene) || sceneName == "StartupScene") continue;
                 scenes.Add(sceneName);
             }
 
@@ -107,16 +97,6 @@ namespace Project_Assets.Scripts.Scenes
                 asyncOperationGroup.AsyncOperations.Add(asyncOperation);
                 OnSceneUnloaded?.Invoke(scene);
             }
-
-            foreach (var handle in m_AsyncOperationHandleGroup.HandleGroups)
-            {
-                if (handle.IsValid())
-                {
-                    Addressables.UnloadSceneAsync(handle);
-                }
-            }
-
-            m_AsyncOperationHandleGroup.HandleGroups.Clear();
 
             while (!asyncOperationGroup.IsDone)
             {
