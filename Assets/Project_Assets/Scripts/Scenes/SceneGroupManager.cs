@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Eflatun.SceneReference;
 using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Structs;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,8 +20,7 @@ namespace Project_Assets.Scripts.Scenes
 
         private readonly AsyncOperationGroup m_AsyncOperationGroup = new(10);
 
-        public async Task LoadScenes(SceneGroup sceneGroup, IProgress<float> loadingProgress,
-            bool reloadDuplicateScenes = false)
+        public async Task LoadScenes(SceneGroup sceneGroup, IProgress<float> loadingProgress)
         {
             m_ActiveSceneGroup = sceneGroup;
             var loadedScenes = new List<string>();
@@ -40,13 +40,15 @@ namespace Project_Assets.Scripts.Scenes
             {
                 var sceneData = sceneGroup.scenes[i];
 
-                if (!reloadDuplicateScenes && loadedScenes.Contains(sceneData.Name)) continue;
+                if (loadedScenes.Contains(sceneData.Name))
+                    continue;
 
                 if (sceneData.sceneReference.State == SceneReferenceState.Regular)
                 {
                     var asyncOperation =
                         UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneData.sceneReference.Path,
                             LoadSceneMode.Additive);
+
                     m_AsyncOperationGroup.AsyncOperations.Add(asyncOperation);
                 }
 
@@ -55,7 +57,7 @@ namespace Project_Assets.Scripts.Scenes
 
             while (!m_AsyncOperationGroup.IsDone)
             {
-                loadingProgress.Report(m_AsyncOperationGroup.Progress / 2);
+                loadingProgress.Report(m_AsyncOperationGroup.Progress);
                 await Task.Delay(100);
             }
 
@@ -73,7 +75,7 @@ namespace Project_Assets.Scripts.Scenes
 
         private async Task UnloadScenes(bool unloadUnusedAssets = false)
         {
-            var scenes = new List<string>();
+            var scenes = new HashSet<string>();
             var activeScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
             var sceneCount = UnityEngine.SceneManagement.SceneManager.sceneCount;
 
@@ -83,7 +85,6 @@ namespace Project_Assets.Scripts.Scenes
                 if (!sceneAt.isLoaded) continue;
 
                 var sceneName = sceneAt.name;
-                if (sceneName.Equals(activeScene) || sceneName == "StartupScene") continue;
                 scenes.Add(sceneName);
             }
 
@@ -91,6 +92,8 @@ namespace Project_Assets.Scripts.Scenes
 
             foreach (var scene in scenes)
             {
+                if (scene.Equals("StartupScene")) continue;
+                
                 var asyncOperation = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(scene);
                 if (asyncOperation is null) continue;
 

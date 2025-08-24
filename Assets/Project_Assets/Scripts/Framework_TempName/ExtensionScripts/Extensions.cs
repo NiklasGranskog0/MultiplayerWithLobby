@@ -1,7 +1,12 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Project_Assets.Scripts.Enums;
+using Project_Assets.Scripts.Lobby;
 using TMPro;
+using Unity.Services.Lobbies;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -25,7 +30,7 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
         public static string Color(this string s, string color) => $"<color={color.ToUpper()}>{s}</color>";
 
         #endregion
-        
+
         #region Enums
 
         public static GameSpeed GameSpeedFromIndex(this int index)
@@ -38,7 +43,7 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
                 _ => throw new ArgumentOutOfRangeException(nameof(index), index, null)
             };
         }
-        
+
         public static string GameSpeedToString(this GameSpeed speed)
         {
             return speed switch
@@ -73,7 +78,7 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
                 _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
             };
         }
-        
+
         public static string GameMapToString(this Map map)
         {
             return map switch
@@ -88,23 +93,54 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
         }
 
         #endregion
-        
+
         #region Strings
-        
+
         public static IEnumerator FadeOut(this TMP_Text t, float fadeDuration)
         {
             var duration = 0f;
-            
+
             while (duration < fadeDuration)
             {
                 var alpha = Mathf.Lerp(1f, 0f, duration / fadeDuration);
-                 t.color = new Color(t.color.r, t.color.g, t.color.b, alpha);
+                t.color = new Color(t.color.r, t.color.g, t.color.b, alpha);
                 duration += Time.deltaTime;
                 yield return null;
             }
         }
-        
-        
+
+        #endregion
+
+        #region Lobby
+
+        public static UpdatePlayerOptions UpdatePlayerData(string key, string value,
+            PlayerDataObject.VisibilityOptions visibility = PlayerDataObject.VisibilityOptions.Public)
+        {
+            return new UpdatePlayerOptions()
+            {
+                Data = new Dictionary<string, PlayerDataObject>
+                {
+                    {
+                        key, new PlayerDataObject(visibility, value)
+                    }
+                }
+            };
+        }
+
+        public static Task<Unity.Services.Lobbies.Models.Lobby> UpdateLobbyData(string lobbyId, string key,
+            string value, DataObject.VisibilityOptions visibility = DataObject.VisibilityOptions.Member)
+        {
+            return LobbyService.Instance.UpdateLobbyAsync(lobbyId, new UpdateLobbyOptions
+            {
+                Data = new Dictionary<string, DataObject>
+                {
+                    {
+                        key, new DataObject(visibility, value)
+                    }
+                }
+            });
+        }
+
         #endregion
     }
 }

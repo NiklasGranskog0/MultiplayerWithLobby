@@ -11,7 +11,7 @@ namespace Project_Assets.Scripts.Lobby
 
         private void Awake()
         {
-            ServiceLocator.Global.Register(this, ServiceLevel.Global);
+            // ServiceLocator.Global.Register(this, ServiceLevel.Global);
             ClientsAndHost = new Dictionary<Player, bool>();
         }
     }

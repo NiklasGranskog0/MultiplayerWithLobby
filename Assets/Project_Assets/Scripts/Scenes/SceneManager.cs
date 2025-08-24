@@ -46,7 +46,7 @@ namespace Project_Assets.Scripts.Scenes
         private async void Start()
         {
             m_LoadingProgress.ProgressChanged += ProgressReport;
-            await LoadSceneGroupByIndex((int)sceneGroupToLoad);
+            await LoadSceneGroupByEnum(sceneGroupToLoad);
         }
 
         private void Update()
@@ -55,6 +55,7 @@ namespace Project_Assets.Scripts.Scenes
 
             var currentFillAmount = progressSlider.value;
             progressSlider.value = Mathf.Lerp(currentFillAmount, k_TargetProgress, Time.deltaTime * fillSpeed);
+            loadingText.text = $"{(int)(progressSlider.value * 100)}%";
         }
         
         private async Task LoadSceneGroupByIndex(int index)
@@ -76,7 +77,7 @@ namespace Project_Assets.Scripts.Scenes
         {
             progressSlider.value = 0f;
             
-            Debug.Log("SceneLoader: ".Color("red") + $"Loading scene group {sceneGroup.ToString()}".Color("lightblue"));
+            Debug.Log("SceneLoader: ".Color("red") + $"Loading scene group {sceneGroup.ToString()}".Color("red"));
             EnableLoadingCanvas();
             await m_SceneGroupManager.LoadScenes(sceneGroupAssets.sceneGroups[(int)sceneGroup], m_LoadingProgress);
         }

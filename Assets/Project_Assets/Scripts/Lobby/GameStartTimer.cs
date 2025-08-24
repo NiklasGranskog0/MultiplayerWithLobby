@@ -20,15 +20,15 @@ namespace Project_Assets.Scripts.Lobby
 
         private IEnumerator TimerCoroutine()
         {
-            while (TimerLeft >= 0)
+            while (TimerLeft > 0f)
             {
                 yield return new WaitForSeconds(1);
                 OnTimerLeft?.Invoke(TimerLeft);
-                TimerLeft -= 1;
+                TimerLeft -= 1f;
 
-                if (!(TimerLeft <= 0)) continue;
+                if (!(TimerLeft <= 0f)) continue;
                 
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(1f);
                 OnTimerFinished?.Invoke();
             }
         }

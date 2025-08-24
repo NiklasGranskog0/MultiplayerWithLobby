@@ -13,7 +13,6 @@ using Unity.Netcode;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
-using Unity.Services.Relay;
 using UnityEngine;
 
 namespace Project_Assets.Scripts.Lobby
@@ -46,7 +45,6 @@ namespace Project_Assets.Scripts.Lobby
         private PlayerAuthentication m_PlayerAuthentication;
         private SceneManager m_SceneManager;
         private LobbyUI m_LobbyUI;
-        private HostDictionary m_HostDictionary;
         private RelayManager m_RelayManager;
 
         private void Awake()
@@ -63,7 +61,6 @@ namespace Project_Assets.Scripts.Lobby
         {
             ServiceLocator.Global.Get(out m_PlayerAuthentication);
             ServiceLocator.Global.Get(out m_SceneManager);
-            ServiceLocator.Global.Get(out m_HostDictionary);
             ServiceLocator.ForSceneOf(this).Get(out m_LobbyUI);
             ServiceLocator.ForSceneOf(this).Get(out m_RelayManager);
         }
@@ -71,12 +68,6 @@ namespace Project_Assets.Scripts.Lobby
         private async void LobbyUpdate(ILobbyChanges obj)
         {
             if (ActiveLobby == null) return;
-
-            m_HostDictionary.ClientsAndHost.Clear();
-            foreach (var player in ActiveLobby.Players)
-            {
-                m_HostDictionary.ClientsAndHost.TryAdd(player, player.Id == ActiveLobby.HostId);
-            }
 
             try
             {
@@ -166,10 +157,14 @@ namespace Project_Assets.Scripts.Lobby
                 return s_statusReport;
             }
 
+            OnCreateLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
+
             try
             {
                 ActiveLobby = await LobbyService.Instance.CreateLobbyAsync(settings.GameName.name,
                     settings.MaxPlayers.max, lobbyOptions);
+
+                OnLobbyPlayerUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
 
                 var relay = await m_RelayManager.CreateRelay(settings.MaxPlayers.max - 1);
                 relay.Log();
@@ -181,20 +176,18 @@ namespace Project_Assets.Scripts.Lobby
                 m_EventCallbacks.LobbyChanged -= LobbyUpdate;
                 m_EventCallbacks.LobbyChanged += LobbyUpdate;
 
-                heartbeat.StartHeartBeat(ActiveLobby.Id);
-                poller.StartLobbyPolling(ActiveLobby);
-
-                OnCreateLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
-                OnLobbyPlayerUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
-                OnJoinedTextChannel?.Invoke(ActiveLobby.Id);
-                OnSetGameCode?.Invoke(ActiveLobby.LobbyCode);
-
                 s_statusReport.MakeReport(true, $"Lobby '{ActiveLobby.Name}' created with ID: {ActiveLobby.Id}");
             }
             catch (LobbyServiceException e)
             {
                 s_statusReport.MakeReport(false, $"CreateLobbyAsync error (Failed to create lobby): {e.Message}");
             }
+
+            heartbeat.StartHeartBeat(ActiveLobby.Id);
+            poller.StartLobbyPolling(ActiveLobby);
+
+            OnJoinedTextChannel?.Invoke(ActiveLobby.Id);
+            OnSetGameCode?.Invoke(ActiveLobby.LobbyCode);
 
             return s_statusReport;
         }
@@ -229,10 +222,6 @@ namespace Project_Assets.Scripts.Lobby
                 {
                     NetworkManager.Singleton.Shutdown();
                 }
-
-                // After UI have been changed to lobby list auto refresh active lobbies
-                var lobbies = await GetAllActiveLobbiesAsync();
-                lobbies.Log();
 
                 s_statusReport.MakeReport(true, $"{playerId} left the lobby");
             }
@@ -396,7 +385,7 @@ namespace Project_Assets.Scripts.Lobby
 
             try
             {
-                var updatePlayerOptions = new UpdatePlayerOptions
+                var updatePlayerOptions = new UpdatePlayerOptions()
                 {
                     Data = new Dictionary<string, PlayerDataObject>
                     {
@@ -428,7 +417,9 @@ namespace Project_Assets.Scripts.Lobby
                 {
                     Data = new Dictionary<string, DataObject>
                     {
-                        { KeyConstants.k_RelayCode, new DataObject(DataObject.VisibilityOptions.Member, code) }
+                        {
+                            KeyConstants.k_RelayCode, new DataObject(DataObject.VisibilityOptions.Member, code)
+                        }
                     }
                 });
 
@@ -444,14 +435,6 @@ namespace Project_Assets.Scripts.Lobby
 
         private async void StartGame()
         {
-            foreach (var player in ActiveLobby.Players)
-            {
-                if (ActiveLobby.HostId == player.Id)
-                {
-                    m_HostDictionary.ClientsAndHost.TryAdd(player, true);
-                }
-            }
-
             try
             {
                 // Send a system message to all players via lobby data update
@@ -460,9 +443,12 @@ namespace Project_Assets.Scripts.Lobby
                 {
                     Data = new Dictionary<string, DataObject>
                     {
-                        { KeyConstants.k_SystemMessage, new DataObject(DataObject.VisibilityOptions.Member, message) }
+                        {
+                            KeyConstants.k_SystemMessage, new DataObject(DataObject.VisibilityOptions.Member, message)
+                        }
                     }
                 });
+
 
                 m_SceneManager.loadingTitleText.text = ActiveLobby.Name;
                 await m_SceneManager.LoadSceneGroupByEnum(SceneGroupToLoad.Game);
