@@ -37,6 +37,7 @@ namespace Project_Assets.Scripts.TextChat
             await VivoxService.Instance.LeaveAllChannelsAsync();
         }
 
+        // TODO: Wrap sent message so text doesn't get smaller
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Return))

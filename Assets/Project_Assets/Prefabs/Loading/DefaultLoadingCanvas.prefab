@@ -653,7 +653,7 @@ GameObject:
   - component: {fileID: 8141250448239674948}
   - component: {fileID: 3190454173704886485}
   m_Layer: 5
-  m_Name: LoadingScreenCanvas
+  m_Name: DefaultLoadingCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
