@@ -63,8 +63,6 @@ namespace Project_Assets.Scripts.Lobby
             ServiceLocator.Global.Get(out m_SceneManager);
             ServiceLocator.ForSceneOf(this).Get(out m_LobbyUI);
             ServiceLocator.ForSceneOf(this).Get(out m_RelayManager);
-            
-            m_SceneManager.SwitchLoadingScreen(LoadingScreenEnum.Game);
         }
 
         private async void LobbyUpdate(ILobbyChanges obj)
@@ -451,6 +449,7 @@ namespace Project_Assets.Scripts.Lobby
                     }
                 });
 
+                m_SceneManager.SwitchLoadingScreen(LoadingScreenEnum.Game);
                 m_SceneManager.SetLoadingScreenTitle(ActiveLobby.Name);
                 await m_SceneManager.LoadSceneGroupByEnum(SceneGroupToLoad.Game);
             }

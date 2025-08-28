@@ -1,10 +1,7 @@
 using System.Collections.Generic;
-using System.Text;
 using Project_Assets.Scripts.Enums;
-using Project_Assets.Scripts.Framework_TempName;
 using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
 using Unity.Services.Lobbies.Models;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace Project_Assets.Scripts.Structs
@@ -14,7 +11,7 @@ namespace Project_Assets.Scripts.Structs
     /// </summary>
     public struct CreateLobbySettings
     {
-        public Player Player { get; set; }
+        public Unity.Services.Lobbies.Models.Player Player { get; set; }
         public bool? IsPrivate { get; set; }
         public bool? IsLocked { get; set; }
         public string Password { get; set; }

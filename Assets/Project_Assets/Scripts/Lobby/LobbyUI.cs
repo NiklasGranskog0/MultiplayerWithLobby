@@ -70,7 +70,7 @@ namespace Project_Assets.Scripts.Lobby
         private int GameModeIndex => gameModeDropdown.value;
         private int GameMapIndex => mapDropdown.value;
         private string GameName => gameNameInputField.text;
-        private readonly Dictionary<Player, string> m_PlayersReadyValues = new();
+        private readonly Dictionary<Unity.Services.Lobbies.Models.Player, string> m_PlayersReadyValues = new();
 
         private LobbyManager m_LobbyManager;
         private ErrorMessageText m_ErrorMessage;

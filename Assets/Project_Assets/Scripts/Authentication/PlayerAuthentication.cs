@@ -12,7 +12,7 @@ namespace Project_Assets.Scripts.Authentication
 {
     public class PlayerAuthentication : MonoBehaviour
     {
-        public Player Player;
+        public Unity.Services.Lobbies.Models.Player Player;
         public string PlayerId { get; set; }
         public string PlayerName { get; set; }
 
@@ -52,9 +52,9 @@ namespace Project_Assets.Scripts.Authentication
         }
 
         // Returns a Player object with metadata.
-        private Player CreateLocalPlayer()
+        private Unity.Services.Lobbies.Models.Player CreateLocalPlayer()
         {
-            return new Player
+            return new Unity.Services.Lobbies.Models.Player
             {
                 Data = new Dictionary<string, PlayerDataObject>
                 {

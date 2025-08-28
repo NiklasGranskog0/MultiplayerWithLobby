@@ -12,7 +12,7 @@ namespace Project_Assets.Scripts.Lobby
 {
     public struct PlayerConfiguration
     {
-        public Player Player;
+        public Unity.Services.Lobbies.Models.Player Player;
         public bool IsHostPlayer;
         public bool IsLocalPlayer;
     }

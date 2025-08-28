@@ -5,7 +5,6 @@ using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
 using Project_Assets.Scripts.ScriptableObjects;
-using Project_Assets.Scripts.Structs;
 using UnityEngine;
 
 namespace Project_Assets.Scripts.Scenes
@@ -15,7 +14,6 @@ namespace Project_Assets.Scripts.Scenes
         private LoadingProgress m_LoadingProgress;
         private SceneGroupManager m_SceneGroupManager;
 
-        // TODO: switch to game loading screen when game is loading
         [SerializeField] private LoadingScene defaultLoadingScreen;
         [SerializeField] private LoadingScene gameLoadingScreen;
         [SerializeField] private SceneGroupAsset sceneGroupAssets;
@@ -69,7 +67,7 @@ namespace Project_Assets.Scripts.Scenes
                 Debug.LogError($"Invalid scene group index: {index}");
             }
 
-            EnableLoadingCanvas(CurrentLoadingScreen);
+            EnableLoadingCanvas(true);
             await m_SceneGroupManager.LoadScenes(sceneGroupAssets.sceneGroups[index], m_LoadingProgress);
         }
 
@@ -78,7 +76,7 @@ namespace Project_Assets.Scripts.Scenes
             ResetProgressSlider(CurrentLoadingScreen);
 
             Debug.Log("SceneLoader: ".Color("red") + $"Loading scene group {sceneGroup.ToString()}".Color("red"));
-            EnableLoadingCanvas(CurrentLoadingScreen);
+            EnableLoadingCanvas(true);
             await m_SceneGroupManager.LoadScenes(sceneGroupAssets.sceneGroups[(int)sceneGroup], m_LoadingProgress);
         }
 
@@ -89,7 +87,7 @@ namespace Project_Assets.Scripts.Scenes
             foreach (var sceneGroup in sceneGroupAssets.sceneGroups.Where(sceneGroup =>
                          groupName.Equals(sceneGroup.groupName)))
             {
-                EnableLoadingCanvas(CurrentLoadingScreen);
+                EnableLoadingCanvas(true);
                 await m_SceneGroupManager.LoadScenes(sceneGroup, m_LoadingProgress);
             }
         }
@@ -115,14 +113,14 @@ namespace Project_Assets.Scripts.Scenes
         {
             // TODO: Send message to the host that scene have been loaded
 
-            EnableLoadingCanvas(CurrentLoadingScreen, false);
+            EnableLoadingCanvas(false);
             Debug.Log("SceneLoader: ".Color("red") + "Finished Loading Scene Group".Color("lightblue"));
         }
 
-        private void EnableLoadingCanvas(LoadingScene loadingScene, bool enable = true)
+        private void EnableLoadingCanvas(bool enable)
         {
             IsLoading = enable;
-            loadingScene.loadingScreen.SetActive(enable);
+            CurrentLoadingScreen.loadingScreen.SetActive(enable);
         }
 
         public void SwitchLoadingScreen(LoadingScreenEnum loadingScreenEnum)
