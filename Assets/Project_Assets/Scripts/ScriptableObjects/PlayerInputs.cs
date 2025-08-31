@@ -10,10 +10,9 @@ namespace Project_Assets.Scripts.ScriptableObjects
         private ProjectInputs m_Actions;
         
         public event Action<Vector2> OnMovementEvent;
-        // public event Action OnMovementEventEnd;
         
         public event Action<Vector2> OnCameraEvent;
-        // public event Action OnCameraEventEnd;
+        public event Action OnCameraMoveEvent;
         
         private void OnEnable()
         {
@@ -31,18 +30,18 @@ namespace Project_Assets.Scripts.ScriptableObjects
         {
             if (context.performed || context.canceled)
                 OnMovementEvent?.Invoke(context.ReadValue<Vector2>());
-            
-            // if (context.canceled)
-            //     OnMovementEventEnd?.Invoke();
         }
         
         public void OnCamera(InputAction.CallbackContext context)
         {
             if (context.performed || context.canceled)
                 OnCameraEvent?.Invoke(context.ReadValue<Vector2>());
-            
-            // if (context.canceled)
-            //     OnCameraEventEnd?.Invoke();
+        }
+
+        public void OnMoveCamera(InputAction.CallbackContext context)
+        {
+            if (context.performed || context.canceled)
+                OnCameraMoveEvent?.Invoke();
         }
     }
 }

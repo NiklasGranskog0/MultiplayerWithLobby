@@ -10,5 +10,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 784f66316f3fbfb41a1d03c2ec94e1dd, type: 3}
-  m_Name: InputManager
+  m_Name: PlayerInputs
   m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.ScriptableObjects.PlayerInputs

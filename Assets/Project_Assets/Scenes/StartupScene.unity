@@ -188,6 +188,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8579647305339323936, guid: 213f0e1b2542a9f4c8ab4cc0620891be, type: 3}
+      propertyPath: sceneGroupToLoad
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8579647305339323936, guid: 213f0e1b2542a9f4c8ab4cc0620891be, type: 3}
       propertyPath: gameLoadingScreen.fillSpeed
       value: 5
       objectReference: {fileID: 0}

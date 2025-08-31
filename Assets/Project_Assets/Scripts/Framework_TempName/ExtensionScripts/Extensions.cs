@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Project_Assets.Scripts.Enums;
-using Project_Assets.Scripts.Lobby;
 using TMPro;
+using Unity.Netcode;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
@@ -139,6 +139,28 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
                     }
                 }
             });
+        }
+
+        #endregion
+
+        #region NetworkGameObjects
+
+        public static NetworkObject CreateNetworkObject(GameObject prefab, Transform position, ulong clientId,
+            bool isPlayerObject = false, bool destroyWithScene = false, bool forceOverride = false)
+        {
+            if (!prefab.TryGetComponent<NetworkObject>(out var networkObject))
+            {
+                Debug.LogError($"NetworkObject not found on prefab: {prefab.name}");
+                return null;
+            }
+            
+            return NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(
+                networkObject,
+                clientId,
+                destroyWithScene,
+                isPlayerObject,
+                forceOverride,
+                position.position);
         }
 
         #endregion
