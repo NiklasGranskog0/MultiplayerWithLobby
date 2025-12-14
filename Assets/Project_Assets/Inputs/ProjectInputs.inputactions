@@ -16,7 +16,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Camera",
+                    "name": "MousePosition",
                     "type": "Value",
                     "id": "a0f656b4-fb28-4bbf-84b0-49641bbdd959",
                     "expectedControlType": "Vector2",
@@ -25,13 +25,22 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "MoveCamera",
+                    "name": "MouseClick",
                     "type": "Button",
                     "id": "55a60079-bbec-4348-b211-f9e0d61aaed3",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "MouseAxis",
+                    "type": "Value",
+                    "id": "7829980b-73db-459d-9709-a0432e5e9f71",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -97,18 +106,40 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Camera",
+                    "action": "MousePosition",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "b4300f9b-d28d-4d5a-aa05-de1714ee6e99",
-                    "path": "<Mouse>/{PrimaryAction}",
-                    "interactions": "Hold",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MoveCamera",
+                    "action": "MouseClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2421325c-1674-49e8-b9c0-718301e1e09a",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MouseClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bc702e70-c9df-4353-bdbf-db75299d3322",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MouseAxis",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

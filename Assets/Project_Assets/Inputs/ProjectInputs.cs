@@ -102,7 +102,7 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Camera"",
+                    ""name"": ""MousePosition"",
                     ""type"": ""Value"",
                     ""id"": ""a0f656b4-fb28-4bbf-84b0-49641bbdd959"",
                     ""expectedControlType"": ""Vector2"",
@@ -111,13 +111,22 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""MoveCamera"",
+                    ""name"": ""MouseClick"",
                     ""type"": ""Button"",
                     ""id"": ""55a60079-bbec-4348-b211-f9e0d61aaed3"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MouseAxis"",
+                    ""type"": ""Value"",
+                    ""id"": ""7829980b-73db-459d-9709-a0432e5e9f71"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -183,18 +192,40 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Camera"",
+                    ""action"": ""MousePosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
                     ""id"": ""b4300f9b-d28d-4d5a-aa05-de1714ee6e99"",
-                    ""path"": ""<Mouse>/{PrimaryAction}"",
-                    ""interactions"": ""Hold"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""MoveCamera"",
+                    ""action"": ""MouseClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2421325c-1674-49e8-b9c0-718301e1e09a"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bc702e70-c9df-4353-bdbf-db75299d3322"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseAxis"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -734,8 +765,9 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
-        m_Player_Camera = m_Player.FindAction("Camera", throwIfNotFound: true);
-        m_Player_MoveCamera = m_Player.FindAction("MoveCamera", throwIfNotFound: true);
+        m_Player_MousePosition = m_Player.FindAction("MousePosition", throwIfNotFound: true);
+        m_Player_MouseClick = m_Player.FindAction("MouseClick", throwIfNotFound: true);
+        m_Player_MouseAxis = m_Player.FindAction("MouseAxis", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -830,8 +862,9 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Movement;
-    private readonly InputAction m_Player_Camera;
-    private readonly InputAction m_Player_MoveCamera;
+    private readonly InputAction m_Player_MousePosition;
+    private readonly InputAction m_Player_MouseClick;
+    private readonly InputAction m_Player_MouseAxis;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -848,13 +881,17 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Movement => m_Wrapper.m_Player_Movement;
         /// <summary>
-        /// Provides access to the underlying input action "Player/Camera".
+        /// Provides access to the underlying input action "Player/MousePosition".
         /// </summary>
-        public InputAction @Camera => m_Wrapper.m_Player_Camera;
+        public InputAction @MousePosition => m_Wrapper.m_Player_MousePosition;
         /// <summary>
-        /// Provides access to the underlying input action "Player/MoveCamera".
+        /// Provides access to the underlying input action "Player/MouseClick".
         /// </summary>
-        public InputAction @MoveCamera => m_Wrapper.m_Player_MoveCamera;
+        public InputAction @MouseClick => m_Wrapper.m_Player_MouseClick;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/MouseAxis".
+        /// </summary>
+        public InputAction @MouseAxis => m_Wrapper.m_Player_MouseAxis;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -884,12 +921,15 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
             @Movement.started += instance.OnMovement;
             @Movement.performed += instance.OnMovement;
             @Movement.canceled += instance.OnMovement;
-            @Camera.started += instance.OnCamera;
-            @Camera.performed += instance.OnCamera;
-            @Camera.canceled += instance.OnCamera;
-            @MoveCamera.started += instance.OnMoveCamera;
-            @MoveCamera.performed += instance.OnMoveCamera;
-            @MoveCamera.canceled += instance.OnMoveCamera;
+            @MousePosition.started += instance.OnMousePosition;
+            @MousePosition.performed += instance.OnMousePosition;
+            @MousePosition.canceled += instance.OnMousePosition;
+            @MouseClick.started += instance.OnMouseClick;
+            @MouseClick.performed += instance.OnMouseClick;
+            @MouseClick.canceled += instance.OnMouseClick;
+            @MouseAxis.started += instance.OnMouseAxis;
+            @MouseAxis.performed += instance.OnMouseAxis;
+            @MouseAxis.canceled += instance.OnMouseAxis;
         }
 
         /// <summary>
@@ -904,12 +944,15 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
             @Movement.started -= instance.OnMovement;
             @Movement.performed -= instance.OnMovement;
             @Movement.canceled -= instance.OnMovement;
-            @Camera.started -= instance.OnCamera;
-            @Camera.performed -= instance.OnCamera;
-            @Camera.canceled -= instance.OnCamera;
-            @MoveCamera.started -= instance.OnMoveCamera;
-            @MoveCamera.performed -= instance.OnMoveCamera;
-            @MoveCamera.canceled -= instance.OnMoveCamera;
+            @MousePosition.started -= instance.OnMousePosition;
+            @MousePosition.performed -= instance.OnMousePosition;
+            @MousePosition.canceled -= instance.OnMousePosition;
+            @MouseClick.started -= instance.OnMouseClick;
+            @MouseClick.performed -= instance.OnMouseClick;
+            @MouseClick.canceled -= instance.OnMouseClick;
+            @MouseAxis.started -= instance.OnMouseAxis;
+            @MouseAxis.performed -= instance.OnMouseAxis;
+            @MouseAxis.canceled -= instance.OnMouseAxis;
         }
 
         /// <summary>
@@ -1166,19 +1209,26 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMovement(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Camera" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "MousePosition" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnCamera(InputAction.CallbackContext context);
+        void OnMousePosition(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "MoveCamera" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "MouseClick" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnMoveCamera(InputAction.CallbackContext context);
+        void OnMouseClick(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MouseAxis" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMouseAxis(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
