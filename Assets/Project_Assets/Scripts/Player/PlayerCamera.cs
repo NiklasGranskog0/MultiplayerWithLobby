@@ -15,8 +15,8 @@ namespace Project_Assets.Scripts.Player
         [SerializeField] private Transform cameraTarget;
         [SerializeField] private float rotationSpeed = 10f;
         
-        [SerializeField] private float minPitch = 5f;   // slightly above ground
-        [SerializeField] private float maxPitch = 80f;  // not straight overhead
+        // [SerializeField] private float minPitch = 5f; slightly above ground
+        // [SerializeField] private float maxPitch = 80f; not straight overhead
         
         private PlayerInputs m_PlayerInputs;
 
