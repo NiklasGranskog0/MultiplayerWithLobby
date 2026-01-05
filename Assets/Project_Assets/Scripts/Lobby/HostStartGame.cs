@@ -6,13 +6,13 @@ namespace Project_Assets.Scripts.Lobby
 {
     public class HostStartGame : NetworkBehaviour
     {
-        [SerializeField] private Button startGameButton;
+        [SerializeField] private Button m_startGameButton;
 
         private void Start()
         {
-            if (startGameButton) startGameButton = GetComponent<Button>();
+            if (m_startGameButton) m_startGameButton = GetComponent<Button>();
             
-            if (!IsHost) startGameButton.interactable = false;
+            if (!IsHost) m_startGameButton.interactable = false;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Project_Assets.Scripts.Lobby
 {
     public class ErrorMessageText : MonoBehaviour
     {
-        [SerializeField] private List<ErrorPanels> errorPanels;
+        [SerializeField] private List<ErrorPanels> m_errorPanels;
         
         private void Awake()
         {
@@ -22,14 +22,16 @@ namespace Project_Assets.Scripts.Lobby
             switch (panel)
             {
                 case LobbyPanel.GamePanel:
-                    StartCoroutine(errorPanels[0].SetText(errorMessage).FadeOut(errorPanels[0].fadeDuration));
+                    StartCoroutine(m_errorPanels[0].SetText(errorMessage).FadeOut(m_errorPanels[0].FadeDuration));
                     break;
                 case LobbyPanel.CreatePanel:
-                    StartCoroutine(errorPanels[1].SetText(errorMessage).FadeOut(errorPanels[1].fadeDuration));
+                    StartCoroutine(m_errorPanels[1].SetText(errorMessage).FadeOut(m_errorPanels[1].FadeDuration));
                     break;
                 case LobbyPanel.Lobby:
-                    StartCoroutine(errorPanels[2].SetText(errorMessage).FadeOut(errorPanels[2].fadeDuration));
+                    StartCoroutine(m_errorPanels[2].SetText(errorMessage).FadeOut(m_errorPanels[2].FadeDuration));
                     break;
+                case LobbyPanel.Loading:
+                case LobbyPanel.Game:
                 default:
                     throw new ArgumentOutOfRangeException(nameof(panel), panel, null);
             }

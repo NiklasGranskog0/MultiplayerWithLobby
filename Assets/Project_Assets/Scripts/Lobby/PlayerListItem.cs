@@ -1,11 +1,10 @@
 using Project_Assets.Scripts.Enums;
-using Project_Assets.Scripts.Framework_TempName;
 using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
 using TMPro;
 using Unity.Services.Authentication;
-using Unity.Services.Lobbies.Models;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Project_Assets.Scripts.Lobby
@@ -19,70 +18,70 @@ namespace Project_Assets.Scripts.Lobby
 
     public class PlayerListItem : MonoBehaviour
     {
-        public TMP_Text playerName;
-        public Button kickButton;
-        public Button readyButton;
-        public TMP_Text readyButtonText;
+        public TMP_Text PlayerName;
+        public Button KickButton;
+        public Button ReadyButton;
+        public TMP_Text ReadyButtonText;
 
-        public TMP_Dropdown teamDropdown;
-        private PlayerConfiguration m_PlayerConfiguration;
+        public TMP_Dropdown TeamDropdown;
+        private PlayerConfiguration m_playerConfiguration;
 
         private string PlayerId { get; set; }
-        public bool PlayerReady { get; set; }
+        private bool PlayerReady { get; set; }
 
-        private LobbyManager m_LobbyManager;
-        private ErrorMessageText m_ErrorMessageText;
+        private LobbyManager m_lobbyManager;
+        private ErrorMessageText m_errorMessageText;
 
         public void Initialize(string pName, string playerId, PlayerConfiguration config)
         {
-            ServiceLocator.ForSceneOf(this).Get(out m_LobbyManager);
-            ServiceLocator.ForSceneOf(this).Get(out m_ErrorMessageText);
+            ServiceLocator.ForSceneOf(this).Get(out m_lobbyManager);
+            ServiceLocator.ForSceneOf(this).Get(out m_errorMessageText);
 
             PlayerId = playerId;
-            m_PlayerConfiguration = config;
+            m_playerConfiguration = config;
 
-            if (m_PlayerConfiguration.IsHostPlayer)
+            if (m_playerConfiguration.IsHostPlayer)
             {
-                playerName.text = pName + " [Host]";
+                PlayerName.text = pName + " [Host]";
             }
-            else playerName.text = pName;
+            else PlayerName.text = pName;
 
 
             ShowKickButton();
-            kickButton.onClick.AddListener(OnClickKickButton);
+            KickButton.onClick.AddListener(OnClickKickButton);
 
-            teamDropdown.onValueChanged.AddListener(OnTeamSelectionChanged);
-            teamDropdown.interactable = m_PlayerConfiguration.IsLocalPlayer;
+            TeamDropdown.onValueChanged.AddListener(OnTeamSelectionChanged);
+            TeamDropdown.interactable = m_playerConfiguration.IsLocalPlayer;
 
-            readyButton.onClick.AddListener(OnReadyClick);
-            readyButton.interactable = m_PlayerConfiguration.IsLocalPlayer;
+            ReadyButton.onClick.AddListener(OnReadyClick);
+            ReadyButton.interactable = m_playerConfiguration.IsLocalPlayer;
 
-            if (m_PlayerConfiguration.IsHostPlayer)
+            if (m_playerConfiguration.IsHostPlayer)
             {
-                readyButton.gameObject.SetActive(false);
+                ReadyButton.gameObject.SetActive(false);
                 PlayerReady = true;
-                m_PlayerConfiguration.Player.Data[KeyConstants.k_PlayerReady].Value = "true";
+                m_playerConfiguration.Player.Data[KeyConstants.k_PlayerReady].Value = "true";
             }
            
             // Initialize dropdown from player data without triggering callbacks
-            if (m_PlayerConfiguration.Player.Data != null &&
-                m_PlayerConfiguration.Player.Data.ContainsKey(KeyConstants.k_PlayerTeam) &&
-                int.TryParse(m_PlayerConfiguration.Player.Data[KeyConstants.k_PlayerTeam].Value, out var teamIndex))
+            if (m_playerConfiguration.Player.Data != null &&
+                m_playerConfiguration.Player.Data.ContainsKey(KeyConstants.k_PlayerTeam) &&
+                int.TryParse(m_playerConfiguration.Player.Data[KeyConstants.k_PlayerTeam].Value, out var teamIndex))
             {
-                teamDropdown.SetValueWithoutNotify(teamIndex);
+                TeamDropdown.SetValueWithoutNotify(teamIndex);
             }
             else
             {
-                teamDropdown.SetValueWithoutNotify(0);
+                TeamDropdown.SetValueWithoutNotify(0);
             }
 
             // Initialize ready state visuals based on player data
-            if (!m_PlayerConfiguration.IsHostPlayer)
+            if (!m_playerConfiguration.IsHostPlayer)
             {
                 bool ready = false;
-                if (m_PlayerConfiguration.Player.Data != null &&
-                    m_PlayerConfiguration.Player.Data.ContainsKey(KeyConstants.k_PlayerReady) &&
-                    bool.TryParse(m_PlayerConfiguration.Player.Data[KeyConstants.k_PlayerReady].Value,
+                if (m_playerConfiguration.Player.Data != null &&
+                    m_playerConfiguration.Player.Data.ContainsKey(KeyConstants.k_PlayerReady) &&
+                    bool.TryParse(m_playerConfiguration.Player.Data[KeyConstants.k_PlayerReady].Value,
                         out var parsedReady))
                 {
                     ready = parsedReady;
@@ -90,13 +89,13 @@ namespace Project_Assets.Scripts.Lobby
 
                 if (ready)
                 {
-                    if (readyButton.targetGraphic != null) readyButton.targetGraphic.color = Color.green;
-                    if (readyButtonText != null) readyButtonText.text = "Ready";
+                    if (ReadyButton.targetGraphic != null) ReadyButton.targetGraphic.color = Color.green;
+                    if (ReadyButtonText != null) ReadyButtonText.text = "Ready";
                 }
                 else
                 {
-                    if (readyButton.targetGraphic != null) readyButton.targetGraphic.color = Color.red;
-                    if (readyButtonText != null) readyButtonText.text = "Not Ready";
+                    if (ReadyButton.targetGraphic != null) ReadyButton.targetGraphic.color = Color.red;
+                    if (ReadyButtonText != null) ReadyButtonText.text = "Not Ready";
                 }
 
                 PlayerReady = ready;
@@ -107,24 +106,24 @@ namespace Project_Assets.Scripts.Lobby
         {
             PlayerReady = !PlayerReady;
 
-            var report = await m_LobbyManager.UpdateReadyButton(PlayerId, PlayerReady);
+            var report = await m_lobbyManager.UpdateReadyButton(PlayerId, PlayerReady);
 
             if (!report.Success)
             {
                 // Revert on failure
-                m_ErrorMessageText.ShowError(report.Message, LobbyPanel.Lobby);
+                m_errorMessageText.ShowError(report.Message, LobbyPanel.Lobby);
 
                 PlayerReady = !PlayerReady;
 
                 if (PlayerReady)
                 {
-                    if (readyButton.targetGraphic != null) readyButton.targetGraphic.color = Color.green;
-                    if (readyButtonText != null) readyButtonText.text = "Ready";
+                    if (ReadyButton.targetGraphic != null) ReadyButton.targetGraphic.color = Color.green;
+                    if (ReadyButtonText != null) ReadyButtonText.text = "Ready";
                 }
                 else
                 {
-                    if (readyButton.targetGraphic != null) readyButton.targetGraphic.color = Color.red;
-                    if (readyButtonText != null) readyButtonText.text = "Not Ready";
+                    if (ReadyButton.targetGraphic != null) ReadyButton.targetGraphic.color = Color.red;
+                    if (ReadyButtonText != null) ReadyButtonText.text = "Not Ready";
                 }
             }
             else
@@ -137,40 +136,40 @@ namespace Project_Assets.Scripts.Lobby
         {
             // Only the local host should see kick buttons for other players
             bool localIsHost = false;
-            if (m_LobbyManager != null && m_LobbyManager.ActiveLobby != null)
+            if (m_lobbyManager != null && m_lobbyManager.ActiveLobby != null)
             {
-                localIsHost = AuthenticationService.Instance.PlayerId == m_LobbyManager.ActiveLobby.HostId;
+                localIsHost = AuthenticationService.Instance.PlayerId == m_lobbyManager.ActiveLobby.HostId;
             }
 
             if (!localIsHost)
             {
-                kickButton.gameObject.SetActive(false);
+                KickButton.gameObject.SetActive(false);
                 return;
             }
 
             // Local host shouldn't see a kick button on themselves
-            kickButton.gameObject.SetActive(!m_PlayerConfiguration.IsLocalPlayer);
+            KickButton.gameObject.SetActive(!m_playerConfiguration.IsLocalPlayer);
         }
 
         private async void OnTeamSelectionChanged(int index)
         {
-            var report = await m_LobbyManager.UpdatePlayerTeamAsync(PlayerId, index);
+            var report = await m_lobbyManager.UpdatePlayerTeamAsync(PlayerId, index);
 
-            if (!report.Success) m_ErrorMessageText.ShowError(report.Message, LobbyPanel.Lobby);
+            if (!report.Success) m_errorMessageText.ShowError(report.Message, LobbyPanel.Lobby);
             else report.Log();
         }
 
         private async void OnClickKickButton()
         {
-            var report = await m_LobbyManager.KickPlayerAsync(PlayerId);
-            if (!report.Success) m_ErrorMessageText.ShowError(report.Message, LobbyPanel.Lobby);
+            var report = await m_lobbyManager.KickPlayerAsync(PlayerId);
+            if (!report.Success) m_errorMessageText.ShowError(report.Message, LobbyPanel.Lobby);
             else report.Log();
         }
 
         public void Reset()
         {
-            kickButton.onClick.RemoveListener(OnClickKickButton);
-            teamDropdown.onValueChanged.RemoveListener(OnTeamSelectionChanged);
+            KickButton.onClick.RemoveListener(OnClickKickButton);
+            TeamDropdown.onValueChanged.RemoveListener(OnTeamSelectionChanged);
             PlayerId = null;
         }
     }

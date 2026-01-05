@@ -53,8 +53,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 829866846a54288499a2551a492d1a61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameListName: {fileID: 1090894765803982209}
-  joinButton: {fileID: 9180276513749104915}
+  m_gameListName: {fileID: 1090894765803982209}
+  m_imagesDictionary: {fileID: 11400000, guid: 4963505476519e940bb7f2f5dcaf6af3, type: 2}
+  JoinButton: {fileID: 9180276513749104915}
 --- !u!114 &4713817416225064184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -367,6 +368,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0

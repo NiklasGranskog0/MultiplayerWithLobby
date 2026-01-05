@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Project_Assets.Scripts.Framework_TempName.SerializedDictionaries
+namespace Project_Assets.Scripts.ScriptableObjects.SerializedDictionaries
 {
     [CreateAssetMenu(fileName = "Images", menuName = "Scriptable Objects/Images")]
     public class ImagesDictionary : ScriptableObject
@@ -10,28 +10,28 @@ namespace Project_Assets.Scripts.Framework_TempName.SerializedDictionaries
         [Serializable]
         public struct NameAndTexture
         {
-            public string name;
-            public Texture2D texture;
+            public string Name;
+            public Texture2D Texture;
         }
         
-        public NameAndTexture[] nameAndTextures;
-        private readonly Dictionary<string, Texture2D> m_Dictionary = new();
+        public NameAndTexture[] NameAndTextures;
+        private readonly Dictionary<string, Texture2D> m_dictionary = new();
 
         public Texture2D this[string textureName]
         {
             get
             {
                 Init();
-                return m_Dictionary[textureName];
+                return m_dictionary[textureName];
             }
             
         }
 
         private void Init()
         {
-            foreach (var nameAndTexture in nameAndTextures)
+            foreach (var nameAndTexture in NameAndTextures)
             {
-                m_Dictionary[nameAndTexture.name] = nameAndTexture.texture;
+                m_dictionary[nameAndTexture.Name] = nameAndTexture.Texture;
             }
         }
     }

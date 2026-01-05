@@ -7,6 +7,6 @@ namespace Project_Assets.Scripts.ScriptableObjects
     [CreateAssetMenu(fileName = "SceneGroupAsset", menuName = "Scriptable Objects/Scene Group Asset")]
     public class SceneGroupAsset : ScriptableObject
     {
-        public List<SceneGroup> sceneGroups;
+        public List<SceneGroup> SceneGroups;
     }
 }

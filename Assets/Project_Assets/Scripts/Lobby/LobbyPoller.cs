@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using Project_Assets.Scripts.Events;
-using Project_Assets.Scripts.Framework_TempName;
 using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
-using Project_Assets.Scripts.Network.Relay;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using UnityEngine;
@@ -13,37 +11,37 @@ namespace Project_Assets.Scripts.Lobby
 {
     public class LobbyPoller : MonoBehaviour
     {
-        public float pollingInterval = 1f; // The fastest polling rate is 1f
+        public float PollingInterval = 1f; // The fastest polling rate is 1f
         private Unity.Services.Lobbies.Models.Lobby CurrentLobby { get; set; }
 
         public event Action<LobbyEventArgs> OnShouldBeenKicked;
 
-        private Coroutine m_PollingCoroutine;
+        private Coroutine m_pollingCoroutine;
 
-        private LobbyManager m_LobbyManager;
+        private LobbyManager m_lobbyManager;
 
         private void Start()
         {
-            ServiceLocator.Global.Get(out m_LobbyManager);
+            ServiceLocator.Global.Get(out m_lobbyManager);
         }
 
         public void StartLobbyPolling(Unity.Services.Lobbies.Models.Lobby lobby)
         {
-            if (m_PollingCoroutine != null)
+            if (m_pollingCoroutine != null)
             {
-                StopCoroutine(m_PollingCoroutine);
+                StopCoroutine(m_pollingCoroutine);
             }
 
             CurrentLobby = lobby;
-            m_PollingCoroutine = StartCoroutine(PollLobbyCoroutine());
+            m_pollingCoroutine = StartCoroutine(PollLobbyCoroutine());
         }
 
         public void StopLobbyPolling()
         {
-            if (m_PollingCoroutine != null)
+            if (m_pollingCoroutine != null)
             {
-                StopCoroutine(m_PollingCoroutine);
-                m_PollingCoroutine = null;
+                StopCoroutine(m_pollingCoroutine);
+                m_pollingCoroutine = null;
             }
 
             CurrentLobby = null;
@@ -53,7 +51,7 @@ namespace Project_Assets.Scripts.Lobby
         {
             while (CurrentLobby != null)
             {
-                yield return new WaitForSeconds(pollingInterval);
+                yield return new WaitForSeconds(PollingInterval);
                 yield return FetchLobbyUpdate();
             }
         }
@@ -132,11 +130,11 @@ namespace Project_Assets.Scripts.Lobby
             else
             {
                 Debug.Log($"Host reassignment succeeded {selectedHostId}".Color("green"));
-                m_LobbyManager.ActiveLobby = task.Result;
+                m_lobbyManager.ActiveLobby = task.Result;
 
                 if (selectedHostId == myId)
                 {
-                    m_LobbyManager.heartbeat.StartHeartBeat(m_LobbyManager.ActiveLobby.Id);
+                    m_lobbyManager.Heartbeat.StartHeartBeat(m_lobbyManager.ActiveLobby.Id);
                     Debug.Log("Started heartbeat (new host)".Color("cyan"));
                 }
             }

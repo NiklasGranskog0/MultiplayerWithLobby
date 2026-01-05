@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
-using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
 namespace Project_Assets.Scripts.Lobby

@@ -10,10 +10,10 @@ namespace Project_Assets.Scripts.TextChat
 {
     public class VivoxManager : MonoBehaviour
     {
-        public string CurrentChannelName { get; set; }
+        public string CurrentChannelName { get; private set; }
         private static StatusReport s_statusReport;
         
-        private LobbyManager m_LobbyManager;
+        private LobbyManager m_lobbyManager;
 
         private void Awake()
         {
@@ -22,10 +22,10 @@ namespace Project_Assets.Scripts.TextChat
 
         private void Start()
         {
-            ServiceLocator.Global.Get(out m_LobbyManager);
+            ServiceLocator.Global.Get(out m_lobbyManager);
 
-            m_LobbyManager.OnJoinedTextChannel += OnJoinedLobbyChannel;
-            m_LobbyManager.OnLeftTextChannel += OnLeftLobbyChannel;
+            m_lobbyManager.OnJoinedTextChannel += OnJoinedLobbyChannel;
+            m_lobbyManager.OnLeftTextChannel += OnLeftLobbyChannel;
         }
 
         private async void OnLeftLobbyChannel(string obj)

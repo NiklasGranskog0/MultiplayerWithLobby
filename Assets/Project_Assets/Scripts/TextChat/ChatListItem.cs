@@ -6,11 +6,11 @@ namespace Project_Assets.Scripts.TextChat
 {
     public class ChatListItem : MonoBehaviour
     {
-        [SerializeField] private TMP_Text chatMessage;
+        [SerializeField] private TMP_Text m_chatMessage;
 
         public void SetMessage(VivoxMessage message)
         {
-            chatMessage.text = $"[{message.SenderDisplayName}] {message.MessageText}";
+            m_chatMessage.text = $"[{message.SenderDisplayName}] {message.MessageText}";
             gameObject.SetActive(true);
         }
     }

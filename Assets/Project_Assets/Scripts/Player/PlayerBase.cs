@@ -6,30 +6,31 @@ namespace Project_Assets.Scripts.Player
 {
     public class PlayerBase : NetworkBehaviour
     {
-        [SerializeField] private PlayerInputs playerInputs;
-        [SerializeField] private PlayerAnimations playerAnimations;
-        [SerializeField] private PlayerMovement playerMovement;
-        [SerializeField] private PlayerCamera playerCamera;
+        [SerializeField] private PlayerInputs m_playerInputs;
+        [SerializeField] private PlayerAnimations m_playerAnimations;
+        [SerializeField] private PlayerMovement m_playerMovement;
+        [SerializeField] private PlayerCamera m_playerCamera;
 
         
         private void Awake()
         {
-            playerAnimations.Initialize();
-            playerMovement.Initialize(playerInputs);
+            m_playerAnimations.Initialize();
+            m_playerMovement.Initialize(m_playerInputs);
         }
 
         private void Start()
         {
-            playerCamera.Initialize(playerInputs, IsOwner);
+            m_playerCamera.Initialize(m_playerInputs, IsOwner);
         }
 
         private void Update()
         {
             if (!IsOwner) return;
 
-            playerMovement.OnUpdate();
-            playerCamera.OnUpdate();
-            playerAnimations.OnUpdate(playerMovement.Speed, playerMovement.Velocity);
+            // If the text chat window is open, don't update player movement
+            m_playerMovement.OnUpdate();
+            m_playerCamera.OnUpdate();
+            m_playerAnimations.OnUpdate(m_playerMovement.Speed, m_playerMovement.Velocity);
         }
     }
 }

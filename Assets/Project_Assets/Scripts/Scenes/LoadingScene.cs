@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Project_Assets.Scripts.Scenes
@@ -8,10 +9,10 @@ namespace Project_Assets.Scripts.Scenes
     [Serializable]
     public class LoadingScene
     {
-        public GameObject loadingScreen;
-        public Slider progressSlider;
-        public float fillSpeed;
-        public TMP_Text loadingText;
-        public TMP_Text loadingTitleText;
+        public GameObject LoadingScreen;
+        public Slider ProgressSlider;
+        public float FillSpeed;
+        public TMP_Text LoadingText;
+        public TMP_Text LoadingTitleText;
     }
 }

@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
 {
-    public class PersistentSingleton<T> : MonoBehaviour where T : Component
+    public sealed class PersistentSingleton<T> : MonoBehaviour where T : Component
     {
-        public bool unParentOnAwake = true;
+        public bool UnParentOnAwake = true;
         public static bool HasInstance => s_instance != null;
         public static T Current => s_instance;
 
@@ -32,13 +32,13 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
                 return s_instance;
             }
         }
-        
-        protected virtual void Awake() => InitSingleton();
 
-        protected virtual void InitSingleton()
+        private void Awake() => InitSingleton();
+
+        private void InitSingleton()
         {
             if (!Application.isPlaying) return;
-            if (unParentOnAwake) transform.SetParent(null);
+            if (UnParentOnAwake) transform.SetParent(null);
 
             if (s_instance == null)
             {

@@ -7,45 +7,45 @@ namespace Project_Assets.Scripts.Animations
     [Serializable]
     public class AnimationManager<T> where T : Enum
     {
-        public AnimationData data;
-        public Animator animator;
+        public AnimationData Data;
+        public Animator Animator;
 
-        public bool[] layerLocked;
-        public T[] currentAnimation;
+        public bool[] LayerLocked;
+        public T[] CurrentAnimation;
 
-        public T GetCurrentAnimation(int layer) => currentAnimation[layer];
+        public T GetCurrentAnimation(int layer) => CurrentAnimation[layer];
 
         public void Initialize(T startAnimation)
         {
-            var layers = animator.layerCount;
-            layerLocked = new bool[layers];
-            currentAnimation = new T[layers];
+            var layers = Animator.layerCount;
+            LayerLocked = new bool[layers];
+            CurrentAnimation = new T[layers];
 
             for (int i = 0; i < layers; i++)
             {
-                layerLocked[i] = false;
-                currentAnimation[i] = startAnimation;
+                LayerLocked[i] = false;
+                CurrentAnimation[i] = startAnimation;
             }
         }
 
         public void SetLocked(bool lockLayer, int layer)
         {
-            layerLocked[layer] = lockLayer;
+            LayerLocked[layer] = lockLayer;
         }
 
         public void Play(T animationEnum, int layer, bool lockLayer = false, bool overrideLock = false,
             float crossFade = 0.2f)
         {
-            if (layerLocked[layer] && !overrideLock) return;
+            if (LayerLocked[layer] && !overrideLock) return;
 
-            layerLocked[layer] = lockLayer;
+            LayerLocked[layer] = lockLayer;
 
-            if (currentAnimation[layer].Equals(animationEnum)) return;
+            if (CurrentAnimation[layer].Equals(animationEnum)) return;
 
-            currentAnimation[layer] = animationEnum;
+            CurrentAnimation[layer] = animationEnum;
 
-            var stateHash = data.EnumToStateHash(animationEnum);
-            animator.CrossFade(stateHash, crossFade, layer);
+            var stateHash = Data.EnumToStateHash(animationEnum);
+            Animator.CrossFade(stateHash, crossFade, layer);
         }
 
         public void DelayedPlay(MonoBehaviour coroutineStarter, T animationEnum, float delay, int layer,

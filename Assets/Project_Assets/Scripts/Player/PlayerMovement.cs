@@ -5,27 +5,27 @@ namespace Project_Assets.Scripts.Player
 {
     public class PlayerMovement : MonoBehaviour
     {
-        [SerializeField] private float movementSpeed = 5f;
-        private PlayerInputs m_PlayerInputs;
+        [SerializeField] private float m_movementSpeed = 5f;
+        private PlayerInputs m_playerInputs;
 
-        private Vector3 m_PlayerMoveDirection;
-        private Vector3 m_LastPosition;
-        private Vector3 m_Velocity;
+        private Vector3 m_playerMoveDirection;
+        private Vector3 m_lastPosition;
+        private Vector3 m_velocity;
 
-        public float Speed => new Vector3(m_Velocity.x, 0f, m_Velocity.z).magnitude;
-        public Vector3 Velocity => m_Velocity;
+        public float Speed => new Vector3(m_velocity.x, 0f, m_velocity.z).magnitude;
+        public Vector3 Velocity => m_velocity;
 
-        public void Initialize(PlayerInputs playerInputs) => m_PlayerInputs = playerInputs;
+        public void Initialize(PlayerInputs playerInputs) => m_playerInputs = playerInputs;
         
         private void Awake()
         {
-            m_PlayerInputs.OnMovementEvent += SetPlayerMoveDirection;
-            m_LastPosition = transform.position;
+            m_playerInputs.OnMovementEvent += SetPlayerMoveDirection;
+            m_lastPosition = transform.position;
         }
 
         public void OnUpdate()
         {
-            m_LastPosition = transform.position;
+            m_lastPosition = transform.position;
 
             MoveTransform();
             CalculateVelocity();
@@ -33,21 +33,21 @@ namespace Project_Assets.Scripts.Player
 
         private void CalculateVelocity()
         {
-            m_Velocity = (transform.position - m_LastPosition) / Time.deltaTime;
+            m_velocity = (transform.position - m_lastPosition) / Time.deltaTime;
         }
 
         private void MoveTransform()
         {
-            if (m_PlayerMoveDirection.sqrMagnitude > 0f)
+            if (m_playerMoveDirection.sqrMagnitude > 0f)
             {
-                transform.position += m_PlayerMoveDirection.normalized * (movementSpeed * Time.deltaTime);
+                transform.position += m_playerMoveDirection.normalized * (m_movementSpeed * Time.deltaTime);
             }
         }
         
         private void SetPlayerMoveDirection(Vector2 direction)
         {
-            m_PlayerMoveDirection.x = direction.x;
-            m_PlayerMoveDirection.z = direction.y;
+            m_playerMoveDirection.x = direction.x;
+            m_playerMoveDirection.z = direction.y;
         }
     }
 }

@@ -7,12 +7,12 @@ namespace Project_Assets.Scripts.Structs
     [Serializable]
     public struct LobbyInfo
     {
-        public TMP_Text gameName;
-        public TMP_Text gameMode;
-        public TMP_Text gameSpeed;
-        public TMP_Text maxPlayers;
-        public TMP_Text mapName;
+        public TMP_Text GameName;
+        public TMP_Text GameMode;
+        public TMP_Text GameSpeed;
+        public TMP_Text MaxPlayers;
+        public TMP_Text MapName;
 
-        public RawImage gameImage;
+        public RawImage GameImage;
     }
 }

@@ -32,7 +32,7 @@ namespace Project_Assets.Scripts.Authentication
         {
             if (UnityServices.State == ServicesInitializationState.Uninitialized)
             {
-                InitializationOptions options = new InitializationOptions();
+                var options = new InitializationOptions();
                 options.SetProfile(playerName);
 
                 await UnityServices.InitializeAsync(options);

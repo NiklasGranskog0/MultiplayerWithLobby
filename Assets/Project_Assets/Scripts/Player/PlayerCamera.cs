@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 
 namespace Project_Assets.Scripts.Player
 {
+    // TODO: Move to enums folder
     public enum CameraFollowMode
     {
         Never,
@@ -11,28 +12,28 @@ namespace Project_Assets.Scripts.Player
     
     public class PlayerCamera : MonoBehaviour
     {
-        [SerializeField] private Camera playerCamera;
-        [SerializeField] private Transform cameraTarget;
-        [SerializeField] private float rotationSpeed = 10f;
+        [SerializeField] private Camera m_playerCamera;
+        [SerializeField] private Transform m_cameraTarget;
+        [SerializeField] private float m_rotationSpeed = 10f;
         
         // [SerializeField] private float minPitch = 5f; slightly above ground
         // [SerializeField] private float maxPitch = 80f; not straight overhead
         
-        private PlayerInputs m_PlayerInputs;
+        private PlayerInputs m_playerInputs;
 
         public CameraFollowMode FollowMode { get; set; }
 
-        private Vector2 m_MousePosition;
-        private Vector2 m_MouseDelta;
+        private Vector2 m_mousePosition;
+        private Vector2 m_mouseDelta;
         
         public void Initialize(PlayerInputs playerInputs, bool isOwner)
         {
-            m_PlayerInputs = playerInputs;
-            m_PlayerInputs.OnMouseMovedEvent += OnMouseMoved;
-            m_PlayerInputs.OnMouseClickEvent += OnMouseClickEvent;
-            m_PlayerInputs.OnMouseAxisEvent += OnMouseAxisEvent;
+            m_playerInputs = playerInputs;
+            m_playerInputs.OnMouseMovedEvent += OnMouseMoved;
+            m_playerInputs.OnMouseClickEvent += OnMouseClickEvent;
+            m_playerInputs.OnMouseAxisEvent += OnMouseAxisEvent;
             
-            playerCamera.gameObject.SetActive(isOwner);
+            m_playerCamera.gameObject.SetActive(isOwner);
         }
 
         private void OnMouseClickEvent()
@@ -42,29 +43,29 @@ namespace Project_Assets.Scripts.Player
 
         private void OnMouseAxisEvent(Vector2 vector2)
         {
-            m_MouseDelta = vector2;
+            m_mouseDelta = vector2;
         }
 
         private void OnMouseMoved(Vector2 vector2)
         {
-            m_MousePosition = vector2.normalized;
+            m_mousePosition = vector2.normalized;
         }
         
         public void OnUpdate()
         {
-            if (playerCamera != null && cameraTarget != null)
+            if (m_playerCamera != null && m_cameraTarget != null)
             {
-                playerCamera.transform.LookAt(cameraTarget.position);
+                m_playerCamera.transform.LookAt(m_cameraTarget.position);
             }
 
             // Rotate camera around target
             if (Mouse.current != null && Mouse.current.rightButton.isPressed)
             {
-                var dy = m_MouseDelta.y * rotationSpeed * Time.deltaTime;
-                var dx = m_MouseDelta.x * rotationSpeed * Time.deltaTime;
+                var dy = m_mouseDelta.y * m_rotationSpeed * Time.deltaTime;
+                var dx = m_mouseDelta.x * m_rotationSpeed * Time.deltaTime;
                 
-                cameraTarget.Rotate(Vector3.right, dy);
-                cameraTarget.Rotate(Vector3.up, dx, Space.World);
+                m_cameraTarget.Rotate(Vector3.right, dy);
+                m_cameraTarget.Rotate(Vector3.up, dx, Space.World);
             }
         }
     }

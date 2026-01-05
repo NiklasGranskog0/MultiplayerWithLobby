@@ -7,8 +7,8 @@ namespace Project_Assets.Scripts.Structs
     [Serializable]
     public struct SceneData
     {
-        public SceneReference sceneReference;
-        public string Name => sceneReference.Name;
-        public SceneType sceneType;
+        public SceneReference SceneReference;
+        public string Name => SceneReference.Name;
+        public SceneType SceneType;
     }
 }

@@ -6,11 +6,11 @@ namespace Project_Assets.Scripts.Player
 {
     public class PlayerAnimations : MonoBehaviour
     {
-        [SerializeField] private AnimationManager<PlayerAnim> playerAnimManager;
+        [SerializeField] private AnimationManager<PlayerAnim> m_playerAnimManager;
         
         public void Initialize()
         {
-            playerAnimManager.Initialize(PlayerAnim.IdleBattleSwordAndShield);
+            m_playerAnimManager.Initialize(PlayerAnim.IdleBattleSwordAndShield);
         }
 
         public void OnUpdate(float speed, Vector3 velocity)
@@ -22,7 +22,7 @@ namespace Project_Assets.Scripts.Player
         {
             if (speed < 0.1f)
             {
-                playerAnimManager.Play(PlayerAnim.IdleBattleSwordAndShield, 0);
+                m_playerAnimManager.Play(PlayerAnim.IdleBattleSwordAndShield, 0);
                 return;
             }
 
@@ -31,16 +31,16 @@ namespace Project_Assets.Scripts.Player
                 switch (velocity)
                 {
                     case { x: > 0f, z: > 0f }: // Right up
-                        playerAnimManager.Play(PlayerAnim.MoveRGTBattleRMSwordAndShield, 0);
+                        m_playerAnimManager.Play(PlayerAnim.MoveRgtBattleRmSwordAndShield, 0);
                         break;
                     case { x: < 0f, z: < 0f }: // Back left
-                        playerAnimManager.Play(PlayerAnim.MoveLFTBattleRMSwordAndShield, 0);
+                        m_playerAnimManager.Play(PlayerAnim.MoveLftBattleRmSwordAndShield, 0);
                         break;
                     case { x: > 0f, z: < 0f }: // Right down
-                        playerAnimManager.Play(PlayerAnim.MoveRGTBattleRMSwordAndShield, 0);
+                        m_playerAnimManager.Play(PlayerAnim.MoveRgtBattleRmSwordAndShield, 0);
                         break;
                     case { x: < 0f, z: > 0f }: // Left up
-                        playerAnimManager.Play(PlayerAnim.MoveLFTBattleRMSwordAndShield, 0);
+                        m_playerAnimManager.Play(PlayerAnim.MoveLftBattleRmSwordAndShield, 0);
                         break;
                 }
             }
@@ -49,20 +49,20 @@ namespace Project_Assets.Scripts.Player
                 switch (velocity.z)
                 {
                     case > 0f: // Forwards 
-                        playerAnimManager.Play(PlayerAnim.MoveFWDNormalRMSwordAndShield, 0);
+                        m_playerAnimManager.Play(PlayerAnim.MoveFwdNormalRmSwordAndShield, 0);
                         break;
                     case < 0f: // Backwards
-                        playerAnimManager.Play(PlayerAnim.MoveBWDBattleRMSwordAndShield, 0);
+                        m_playerAnimManager.Play(PlayerAnim.MoveBwdBattleRmSwordAndShield, 0);
                         break;
                 }
 
                 switch (velocity.x)
                 {
                     case > 0f: // Right
-                        playerAnimManager.Play(PlayerAnim.MoveRGTBattleRMSwordAndShield, 0);
+                        m_playerAnimManager.Play(PlayerAnim.MoveRgtBattleRmSwordAndShield, 0);
                         break;
                     case < 0f: // Left
-                        playerAnimManager.Play(PlayerAnim.MoveLFTBattleRMSwordAndShield, 0);
+                        m_playerAnimManager.Play(PlayerAnim.MoveLftBattleRmSwordAndShield, 0);
                         break;
                 }
             }

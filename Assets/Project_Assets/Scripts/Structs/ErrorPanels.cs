@@ -6,13 +6,13 @@ namespace Project_Assets.Scripts.Structs
     [Serializable]
     public struct ErrorPanels
     {
-        public TMP_Text errorText;
-        public float fadeDuration;
+        public TMP_Text ErrorText;
+        public float FadeDuration;
 
         public TMP_Text SetText(string errorMessage)
         {
-            errorText.text = errorMessage;
-            return errorText;
+            ErrorText.text = errorMessage;
+            return ErrorText;
         }
     }
 }

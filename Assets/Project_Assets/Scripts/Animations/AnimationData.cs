@@ -11,7 +11,7 @@ namespace Project_Assets.Scripts.Animations
         {
             return animationEnum switch
             {
-                PlayerAnim => m_PlayerAnimations,
+                PlayerAnim => m_playerAnimations,
                 _ => throw new ArgumentOutOfRangeException(nameof(animationEnum), animationEnum, null)
             };
         }
@@ -24,7 +24,7 @@ namespace Project_Assets.Scripts.Animations
             return animationArray[index];
         }
 
-        private readonly int[] m_PlayerAnimations =
+        private readonly int[] m_playerAnimations =
         {
             // String name in the Animator Controller
             Animator.StringToHash("Attack01_SwordAndShiled"),

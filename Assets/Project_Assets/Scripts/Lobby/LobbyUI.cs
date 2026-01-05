@@ -1,17 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Events;
 using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
-using Project_Assets.Scripts.Framework_TempName.SerializedDictionaries;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
+using Project_Assets.Scripts.ScriptableObjects.SerializedDictionaries;
 using Project_Assets.Scripts.Structs;
 using TMPro;
 using Unity.Services.Authentication;
-using Unity.Services.Lobbies.Models;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,65 +16,27 @@ namespace Project_Assets.Scripts.Lobby
 {
     public class LobbyUI : MonoBehaviour
     {
-        public static Action onStartGame;
+        public static Action OnStartGame;
         
-        public Unity.Services.Lobbies.Models.Lobby CurrentSelectedLobby { get; set; }
         public Unity.Services.Lobbies.Models.Lobby CurrentLobby { get; set; }
-
-        [Header("Panels")] 
-        [SerializeField] private GameObject gamesListPanel;
-        [SerializeField] private GameObject createGamePanel;
-        [SerializeField] private GameObject lobbyPanel;
-
-        [Header("List Items")] 
-        [SerializeField] private GameObject lobbyEntryPrefab;
-        [SerializeField] private Transform lobbyListContainer;
-
-        [Space(5)] 
         
-        [SerializeField] private GameObject playerEntryPrefab;
-        [SerializeField] private Transform playerListContainer;
-
-        [Space] [Header("Create Game Panel Elements")] 
-        [SerializeField] private TMP_InputField gameNameInputField;
-        [SerializeField] private TMP_Dropdown gameModeDropdown;
-        [SerializeField] private TMP_Dropdown maxPlayersDropdown;
-        [SerializeField] private TMP_Dropdown mapDropdown;
-        [SerializeField] private TMP_Dropdown visibilityDropdown;
-        [SerializeField] private TMP_Dropdown gameSpeedDropdown;
-        [SerializeField] private TMP_InputField createGamePasswordInputField;
-        [SerializeField] private Button createLobbyButton;
-        [SerializeField] private Button cancelCreateButton;
-        [SerializeField] private Button setMapImageButton;
-        [SerializeField] private RawImage previewGameImage;
-
-        [Header("Games Panel Elements")] 
-        public TMP_InputField gameCodeInputField;
-        [SerializeField] private TMP_InputField gamePasswordInputField;
-        [SerializeField] private Button createGameButton;
-        [SerializeField] private Button joinGameButton;
-        [SerializeField] private Button refreshGamesButton;
-        public LobbyInfo lobbyInfoGames;
-
+        [SerializeField] private GameObject m_playerListItemPrefab;
+        [SerializeField] private Transform m_playerListItemContainer;
+        
         [Header("Lobby Panel Elements")] 
-        [SerializeField] public Button startGameButton;
-        [SerializeField] private Button leaveLobbyButton;
-        [SerializeField] private TMP_Text gameCodeText;
-        [SerializeField] private LobbyInfo lobbyInfo;
-
-        private int MaxPlayers => maxPlayersDropdown.value + 1;
-        private int GameSpeedIndex => gameSpeedDropdown.value;
-        private int GameModeIndex => gameModeDropdown.value;
-        private int GameMapIndex => mapDropdown.value;
-        private string GameName => gameNameInputField.text;
-        private readonly Dictionary<Unity.Services.Lobbies.Models.Player, string> m_PlayersReadyValues = new();
-
-        private LobbyManager m_LobbyManager;
-        private ErrorMessageText m_ErrorMessage;
-
-        public ImagesDictionary gameImagesDictionary;
-        private string m_GameImageName;
-        [SerializeField] private Button tempQuitButton;
+        [SerializeField] public Button StartGameButton;
+        [SerializeField] private Button m_leaveLobbyButton;
+        [SerializeField] private TMP_Text m_gameCodeText;
+        [SerializeField] private ImagesDictionary m_gameImagesDictionary;
+        [SerializeField] private LobbyInfo m_lobbyInfo;
+        public LobbyInfo LobbyInfo => m_lobbyInfo;
+        
+        private readonly Dictionary<Unity.Services.Lobbies.Models.Player, string> m_playersReadyValues = new();
+        
+        private LobbyManager m_lobbyManager;
+        private ErrorMessageText m_errorMessage;
+        private PanelSwitcher m_panelSwitcher;
+        private AvailableGamesUI m_availableGamesUI;
 
         private void Awake()
         {
@@ -86,156 +45,48 @@ namespace Project_Assets.Scripts.Lobby
 
         private void Start()
         {
-            ServiceLocator.ForSceneOf(this).Get(out m_LobbyManager);
-            ServiceLocator.ForSceneOf(this).Get(out m_ErrorMessage);
-
-            // Value == index
-            maxPlayersDropdown.value = 3; // (Set default value to 4 players)
-
-            createGameButton.onClick.AddListener(OnCreateLobbySettings);
-            cancelCreateButton.onClick.AddListener(OnCancelCreateLobby);
-            refreshGamesButton.onClick.AddListener(OnRefreshLobbies);
-            createLobbyButton.onClick.AddListener(OnCreateLobby);
-            leaveLobbyButton.onClick.AddListener(OnLeaveLobby);
-
-            joinGameButton.onClick.AddListener(JoinSelectedGame);
-
-            setMapImageButton.onClick.AddListener(OnSetMapImagePreview);
-
-            visibilityDropdown.onValueChanged.AddListener(GameVisibilityChanged);
-            createGamePasswordInputField.interactable = false;
-
-            m_LobbyManager.OnPlayerJoinedLobbyAsync += OnPlayerJoinedLobbyAsync;
-            m_LobbyManager.OnPlayerLeftLobbyAsync += OnPlayerLeftLobbyAsync;
-            m_LobbyManager.OnLobbyPlayerUpdate += OnLobbyPlayerUpdate;
-            m_LobbyManager.OnLobbyListChanged += OnLobbyListChanged;
-            m_LobbyManager.OnCreateLobbyAsync += OnCreateLobbyAsync;
-            m_LobbyManager.OnSettingsUpdate += OnUpdateLobbyInfo;
-            m_LobbyManager.OnSetGameCode += OnSetGameCode;
-
-            tempQuitButton.onClick.AddListener(QuitLobby);
-            startGameButton.onClick.AddListener(OnHostStartGame);
-            startGameButton.interactable = false;
-            leaveLobbyButton.interactable = true;
+            ServiceLocator.ForSceneOf(this).Get(out m_lobbyManager);
+            ServiceLocator.ForSceneOf(this).Get(out m_errorMessage);
+            ServiceLocator.ForSceneOf(this).Get(out m_panelSwitcher);
+            ServiceLocator.ForSceneOf(this).Get(out m_availableGamesUI);
             
-            OnRefreshLobbies();
+            m_lobbyManager.OnCreateLobbyAsync += OnCreateLobbyAsync;
+            m_lobbyManager.OnSetGameCode += OnSetGameCode;
+            m_lobbyManager.OnSettingsUpdate += OnUpdateLobbyInfo;
+            m_lobbyManager.OnLobbyPlayerUpdate += OnLobbyPlayerUpdate;
+            m_lobbyManager.OnPlayerJoinedLobbyAsync += OnPlayerJoinedLobbyAsync;
+            m_lobbyManager.OnPlayerLeftLobbyAsync += OnPlayerLeftLobbyAsync;
+            
+            StartGameButton.onClick.AddListener(OnHostStartGame);
+            m_leaveLobbyButton.onClick.AddListener(OnLeaveLobby);
+            
+            StartGameButton.interactable = false;
+            m_leaveLobbyButton.interactable = true;
+        }
+        
+        private void OnCreateLobbyAsync(LobbyEventArgs obj)
+        {
+            m_panelSwitcher.SwitchPanel(LobbyPanel.Lobby);
+            CurrentLobby = obj.Lobby;
         }
 
         private void OnHostStartGame()
         {
             // TODO: Lobby players leave button still active during game starting countdown
-            leaveLobbyButton.interactable = false;
-            onStartGame?.Invoke();
-        }
-
-        private void QuitLobby()
-        {
-            Application.Quit();
-        }
-
-        private void OnSetMapImagePreview()
-        {
-            m_GameImageName = "B";
-            previewGameImage.color = Color.white;
-            previewGameImage.texture = gameImagesDictionary[m_GameImageName];
-        }
-
-        private void GameVisibilityChanged(int arg0)
-        {
-            createGamePasswordInputField.interactable = visibilityDropdown.value == 1;
+            m_leaveLobbyButton.interactable = false;
+            OnStartGame?.Invoke();
         }
 
         private void OnSetGameCode(string obj)
         {
-            gameCodeText.text = obj;
-        }
-
-        private async void JoinSelectedGame()
-        {
-            bool joinedByCode = false;
-
-            if (CurrentSelectedLobby == null)
-            {
-                joinedByCode = await TryJoinByCode();
-            }
-
-            if (!string.IsNullOrEmpty(CurrentSelectedLobby?.Id) && !joinedByCode)
-            {
-                var task = await m_LobbyManager.JoinLobbyByIdAsync(CurrentSelectedLobby?.Id, gamePasswordInputField.text);
-                PrintStatusLog(task, LobbyPanel.GamePanel);
-            }
-        }
-
-        private async Task<bool> TryJoinByCode()
-        {
-            if (!string.IsNullOrWhiteSpace(gameCodeInputField.text))
-            {
-                var task =
-                    await m_LobbyManager.JoinLobbyByCodeAsync(gameCodeInputField.text, gamePasswordInputField.text);
-                PrintStatusLog(task, LobbyPanel.GamePanel);
-
-                return task.Success;
-            }
-
-            return false;
-        }
-
-        private async void OnCreateLobby()
-        {
-            var settings = new CreateLobbySettings
-            {
-                IsLocked = false,
-                IsPrivate = visibilityDropdown.value == 1,
-                Password = createGamePasswordInputField.text,
-
-                GameImage = (previewGameImage, m_GameImageName, DataObject.VisibilityOptions.Public),
-                GameMode = ((GameMode)GameModeIndex, DataObject.VisibilityOptions.Public),
-                GameMap = ((Map)GameMapIndex, DataObject.VisibilityOptions.Public),
-                MaxPlayers = (MaxPlayers, DataObject.VisibilityOptions.Public),
-                GameName = (GameName, DataObject.VisibilityOptions.Public),
-                GameSpeed = ((GameSpeed)GameSpeedIndex, DataObject.VisibilityOptions.Public),
-            };
-
-            settings.SetData();
-
-            lobbyInfo.gameName.text = settings.GameName.name;
-            lobbyInfo.maxPlayers.text = settings.MaxPlayers.max.ToString();
-            lobbyInfo.gameSpeed.text = settings.GameSpeed.speed.GameSpeedToString();
-            lobbyInfo.gameMode.text = settings.GameMode.mode.GameModeToString();
-            lobbyInfo.mapName.text = settings.GameMap.map.GameMapToString();
-
-            lobbyInfo.gameImage.color = Color.white;
-            lobbyInfo.gameImage.texture = settings.GameImage.image.texture;
-
-            if (createGamePasswordInputField.text.Length < 8 && visibilityDropdown.value == 1)
-            {
-                m_ErrorMessage.ShowError("Password must be at least 8 characters long", LobbyPanel.CreatePanel);
-                return;
-            }
-            
-            var task = await m_LobbyManager.CreateLobbyAsync(settings, createGamePasswordInputField.interactable);
-            PrintStatusLog(task, LobbyPanel.CreatePanel);
-        }
-
-        // Temp
-        private async void OnRefreshLobbies()
-        {
-            var task = await m_LobbyManager.GetAllActiveLobbiesAsync();
-            PopulateLobbyList(task.Lobbies);
-            PrintStatusLog(task.Status, LobbyPanel.GamePanel);
+            m_gameCodeText.text = obj;
         }
 
         private async void OnLeaveLobby()
         {
-            var task = await m_LobbyManager.LeaveLobbyAsync();
+            var task = await m_lobbyManager.LeaveLobbyAsync();
             PrintStatusLog(task, LobbyPanel.GamePanel);
-            CurrentSelectedLobby = null;
-        }
-
-        private void OnLobbyListChanged(LobbyListChangedEventArgs e)
-        {
-            PopulateLobbyList(e.Lobbies);
-            Debug.Log("Populate Lobby List (LobbyListChanged)".Color("cyan"));
+            m_availableGamesUI.CurrentSelectedLobby = null;
         }
 
         private void OnLobbyPlayerUpdate(LobbyEventArgs e)
@@ -246,33 +97,18 @@ namespace Project_Assets.Scripts.Lobby
 
         private void OnPlayerJoinedLobbyAsync(LobbyEventArgs obj)
         {
-            SwitchPanel(LobbyPanel.Lobby);
+            m_panelSwitcher.SwitchPanel(LobbyPanel.Lobby);
             CurrentLobby = obj.Lobby;
             Debug.Log("Player Joined Lobby".Color("cyan"));
         }
 
-        private void OnCreateLobbyAsync(LobbyEventArgs obj)
-        {
-            SwitchPanel(LobbyPanel.Lobby);
-            CurrentLobby = obj.Lobby;
-        }
-
         private void OnPlayerLeftLobbyAsync(LobbyEventArgs obj)
         {
-            SwitchPanel(LobbyPanel.GamePanel);
+            m_panelSwitcher.SwitchPanel(LobbyPanel.GamePanel);
             Debug.Log($"Player Left; Lobby Id: {obj.Lobby.Id}");
-            CurrentSelectedLobby = null;
+            m_availableGamesUI.CurrentSelectedLobby = null;
+            m_availableGamesUI.GameNameText.text = string.Empty;
             CurrentLobby = null;
-        }
-
-        private void OnCreateLobbySettings()
-        {
-            SwitchPanel(LobbyPanel.CreatePanel);
-        }
-
-        private void OnCancelCreateLobby()
-        {
-            SwitchPanel(LobbyPanel.GamePanel);
         }
 
         private void UpdatePlayerList(Unity.Services.Lobbies.Models.Lobby lobby)
@@ -280,11 +116,11 @@ namespace Project_Assets.Scripts.Lobby
             if (lobby?.Players == null)
             {
                 Debug.LogWarning("Lobby players is null or empty".Color("red"));
-                ClearContainer(playerListContainer);
+                m_playerListItemContainer.ClearContainer();
                 return;
             }
 
-            ClearContainer(playerListContainer);
+            m_playerListItemContainer.ClearContainer();
             
             RemoveKickedPlayerFromReadyValues(lobby);
             
@@ -294,27 +130,27 @@ namespace Project_Assets.Scripts.Lobby
 
                 string playerId = player.Data[KeyConstants.k_PlayerId].Value;
 
-                var entry = Instantiate(playerEntryPrefab, playerListContainer).GetComponent<PlayerListItem>();
+                var entry = Instantiate(m_playerListItemPrefab, m_playerListItemContainer).GetComponent<PlayerListItem>();
                 
-                entry.Initialize(playerName, playerId, new PlayerConfiguration
-                {
-                    Player = player,
-                    IsHostPlayer = playerId == lobby.HostId,
-                    IsLocalPlayer = playerId == AuthenticationService.Instance.PlayerId,
-                });
+                 entry.Initialize(playerName, playerId, new PlayerConfiguration
+                 {
+                     Player = player,
+                     IsHostPlayer = playerId == lobby.HostId,
+                     IsLocalPlayer = playerId == AuthenticationService.Instance.PlayerId,
+                 });
                 
-                entry.gameObject.SetActive(true);
+                 entry.gameObject.SetActive(true);
                 
                 var localIsHost = AuthenticationService.Instance.PlayerId == lobby.HostId;
-                startGameButton.gameObject.SetActive(localIsHost);
+                StartGameButton.gameObject.SetActive(localIsHost);
                 
                 var readyValue = player.Data[KeyConstants.k_PlayerReady].Value;
 
                 if (localIsHost)
                 {
-                    if (!m_PlayersReadyValues.TryAdd(player, readyValue))
+                    if (!m_playersReadyValues.TryAdd(player, readyValue))
                     {
-                        m_PlayersReadyValues[player] = readyValue;
+                        m_playersReadyValues[player] = readyValue;
                     }
                 }
             }
@@ -324,67 +160,39 @@ namespace Project_Assets.Scripts.Lobby
 
         private void RemoveKickedPlayerFromReadyValues(Unity.Services.Lobbies.Models.Lobby lobby)
         {
-            foreach (var player in m_PlayersReadyValues.Keys.ToList().Where(player => !lobby.Players.Contains(player)))
+            foreach (var player in m_playersReadyValues.Keys.ToList().Where(player => !lobby.Players.Contains(player)))
             {
-                m_PlayersReadyValues.Remove(player);
+                m_playersReadyValues.Remove(player);
             }
         }
 
         private void UpdateStartGameButton()
         {
-            if (m_PlayersReadyValues.Where(playerReady => playerReady.Value != "true").Any(player => player.Value == "false"))
+            if (m_playersReadyValues.Where(playerReady => playerReady.Value != "true").Any(player => player.Value == "false"))
             {
-                startGameButton.interactable = false;
+                StartGameButton.interactable = false;
                 return;
             }
 
-            startGameButton.interactable = true;
-        }
-
-        private void PopulateLobbyList(List<Unity.Services.Lobbies.Models.Lobby> lobbies)
-        {
-            if (lobbies == null || lobbies.Count == 0)
-            {
-                Debug.Log("No lobbies found".Color("red"));
-                ClearContainer(lobbyListContainer);
-                return;
-            }
-
-            ClearContainer(lobbyListContainer);
-
-            foreach (var lobby in lobbies)
-            {
-                var entry = Instantiate(lobbyEntryPrefab, lobbyListContainer).GetComponent<GameListItem>();
-                entry.UpdateLobby(lobby);
-                entry.gameObject.SetActive(true);
-            }
+            StartGameButton.interactable = true;
         }
 
         private void OnUpdateLobbyInfo(LobbyEventArgs lobbyEventArgs)
         {
             Debug.Log("On Update Lobby Info".Color("cyan"));
 
-            lobbyInfo.gameName.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_GameName].Value;
-            lobbyInfo.maxPlayers.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_MaxPlayers].Value;
-            lobbyInfo.gameSpeed.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_GameSpeed].Value;
-            lobbyInfo.gameMode.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_GameMode].Value;
-            lobbyInfo.mapName.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_Map].Value;
+            m_lobbyInfo.GameName.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_GameName].Value;
+            m_lobbyInfo.MaxPlayers.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_MaxPlayers].Value;
+            m_lobbyInfo.GameSpeed.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_GameSpeed].Value;
+            m_lobbyInfo.GameMode.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_GameMode].Value;
+            m_lobbyInfo.MapName.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_Map].Value;
 
-            lobbyInfo.gameImage.color = Color.white;
+            m_lobbyInfo.GameImage.color = Color.white;
 
             if (lobbyEventArgs.Lobby.Data[KeyConstants.k_GameImage].Value != null)
             {
-                lobbyInfo.gameImage.texture =
-                    gameImagesDictionary[lobbyEventArgs.Lobby.Data[KeyConstants.k_GameImage].Value];
-            }
-        }
-
-        private void ClearContainer(Transform container)
-        {
-            foreach (Transform child in container)
-            {
-                if (child != null)
-                    Destroy(child.gameObject);
+                m_lobbyInfo.GameImage.texture =
+                    m_gameImagesDictionary[lobbyEventArgs.Lobby.Data[KeyConstants.k_GameImage].Value];
             }
         }
 
@@ -392,42 +200,11 @@ namespace Project_Assets.Scripts.Lobby
         {
             if (!task.Success)
             {
-                m_ErrorMessage.ShowError(task.Message, panel);
+                m_errorMessage.ShowError(task.Message, panel);
                 return;
             }
 
             task.Log();
-        }
-
-        private void SwitchPanel(LobbyPanel panel)
-        {
-            gamesListPanel.SetActive(false);
-            createGamePanel.SetActive(false);
-            lobbyPanel.SetActive(false);
-
-            gamePasswordInputField.text = string.Empty;
-            gameCodeInputField.text = string.Empty;
-
-            switch (panel)
-            {
-                case LobbyPanel.GamePanel:
-                    gamesListPanel.SetActive(true);
-                    break;
-                case LobbyPanel.CreatePanel:
-                    createGamePanel.SetActive(true);
-                    break;
-                case LobbyPanel.Lobby:
-                    lobbyPanel.SetActive(true);
-                    break;
-                case LobbyPanel.Loading:
-                    lobbyPanel.SetActive(false);
-                    break;
-                case LobbyPanel.Game:
-                    lobbyPanel.SetActive(false);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(panel), panel, null);
-            }
         }
     }
 }

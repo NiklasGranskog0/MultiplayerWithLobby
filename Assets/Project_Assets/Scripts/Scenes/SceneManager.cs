@@ -11,100 +11,73 @@ namespace Project_Assets.Scripts.Scenes
 {
     public class SceneManager : MonoBehaviour
     {
-        private LoadingProgress m_LoadingProgress;
-        private SceneGroupManager m_SceneGroupManager;
+        private LoadingProgress m_loadingProgress;
+        private SceneGroupManager m_sceneGroupManager;
 
-        [SerializeField] private LoadingScene defaultLoadingScreen;
-        [SerializeField] private LoadingScene gameLoadingScreen;
-        [SerializeField] private SceneGroupAsset sceneGroupAssets;
-        [SerializeField] private SceneGroupToLoad sceneGroupToLoad;
+        [SerializeField] private LoadingScene m_defaultLoadingScreen;
+        [SerializeField] private LoadingScene m_gameLoadingScreen;
+        [SerializeField] private SceneGroupAsset m_sceneGroupAssets;
+        [SerializeField] private SceneGroupToLoad m_sceneGroupToLoad;
 
-        private LoadingScene CurrentLoadingScreen { get; set; }
+        private LoadingScene m_currentLoadingScreen { get; set; }
 
-        private const float k_TargetProgress = 1f;
-        public bool IsLoading { get; private set; }
+        private const float k_targetProgress = 1f;
+        private bool m_isLoading { get; set; }
 
         private void Awake()
         {
-            CurrentLoadingScreen = defaultLoadingScreen;
-            
+            m_currentLoadingScreen = m_defaultLoadingScreen;
+
             ServiceLocator.Global.Register(this, ServiceLevel.Global);
 
-            m_LoadingProgress = new LoadingProgress();
-            m_SceneGroupManager = new SceneGroupManager();
+            m_loadingProgress = new LoadingProgress();
+            m_sceneGroupManager = new SceneGroupManager();
 
-            m_SceneGroupManager.OnSceneLoaded +=
+            m_sceneGroupManager.OnSceneLoaded +=
                 sceneName => Debug.Log("SceneGroupManager OnSceneLoaded: " + sceneName);
 
-            m_SceneGroupManager.OnSceneUnloaded +=
+            m_sceneGroupManager.OnSceneUnloaded +=
                 sceneName => Debug.Log("SceneGroupManager OnSceneUnloaded: " + sceneName);
 
-            m_SceneGroupManager.OnSceneGroupLoaded += FinishedLoading;
+            m_sceneGroupManager.OnSceneGroupLoaded += FinishedLoading;
         }
 
         private async void Start()
         {
-            m_LoadingProgress.ProgressChanged += ProgressReport;
-            await LoadSceneGroupByEnum(sceneGroupToLoad);
+            m_loadingProgress.OnProgressChanged += ProgressReport;
+            await LoadSceneGroupByEnum(m_sceneGroupToLoad);
         }
 
         private void Update()
         {
-            if (!IsLoading) return;
+            if (!m_isLoading) return;
 
-            UpdateLoadingProgress(CurrentLoadingScreen);
-        }
-
-        private async Task LoadSceneGroupByIndex(int index)
-        {
-            ResetProgressSlider(CurrentLoadingScreen);
-
-            Debug.Log(
-                "SceneLoader: ".Color("red") + $"Loading scene group {(SceneGroupToLoad)index}".Color("lightblue"));
-
-            if (index < 0 || index >= sceneGroupAssets.sceneGroups.Count)
-            {
-                Debug.LogError($"Invalid scene group index: {index}");
-            }
-
-            EnableLoadingCanvas(true);
-            await m_SceneGroupManager.LoadScenes(sceneGroupAssets.sceneGroups[index], m_LoadingProgress);
+            UpdateLoadingProgress(m_currentLoadingScreen);
         }
 
         public async Task LoadSceneGroupByEnum(SceneGroupToLoad sceneGroup)
         {
-            ResetProgressSlider(CurrentLoadingScreen);
+            ResetProgressSlider(m_currentLoadingScreen);
 
             Debug.Log("SceneLoader: ".Color("red") + $"Loading scene group {sceneGroup.ToString()}".Color("red"));
             EnableLoadingCanvas(true);
-            await m_SceneGroupManager.LoadScenes(sceneGroupAssets.sceneGroups[(int)sceneGroup], m_LoadingProgress);
+
+            await m_sceneGroupManager.LoadScenes(m_sceneGroupAssets.SceneGroups[(int)sceneGroup], m_loadingProgress);
         }
 
-        public async Task LoadSceneGroupByName(string groupName)
-        {
-            ResetProgressSlider(CurrentLoadingScreen);
-
-            foreach (var sceneGroup in sceneGroupAssets.sceneGroups.Where(sceneGroup =>
-                         groupName.Equals(sceneGroup.groupName)))
-            {
-                EnableLoadingCanvas(true);
-                await m_SceneGroupManager.LoadScenes(sceneGroup, m_LoadingProgress);
-            }
-        }
-        
         private void UpdateLoadingProgress(LoadingScene loadingScene)
         {
-            var currentFillAmount = loadingScene.progressSlider.value;
-            
-            loadingScene.progressSlider.value = Mathf.Lerp(currentFillAmount, k_TargetProgress,
-                Time.deltaTime * loadingScene.fillSpeed);
-            
-            loadingScene.loadingText.text = $"{(int)(loadingScene.progressSlider.value * 100)}%";
+            var currentFillAmount = loadingScene.ProgressSlider.value;
+
+            loadingScene.ProgressSlider.value = Mathf.Lerp(currentFillAmount, k_targetProgress,
+                Time.deltaTime * loadingScene.FillSpeed);
+
+            loadingScene.LoadingText.text = $"{(int)(loadingScene.ProgressSlider.value * 100)}%";
         }
 
         private void ResetProgressSlider(LoadingScene loadingScene)
         {
-            loadingScene.progressSlider.value = 0f;
+            loadingScene.ProgressSlider.value = 0f;
         }
 
         private void ProgressReport(float value) { }
@@ -119,23 +92,23 @@ namespace Project_Assets.Scripts.Scenes
 
         private void EnableLoadingCanvas(bool enable)
         {
-            IsLoading = enable;
-            CurrentLoadingScreen.loadingScreen.SetActive(enable);
+            m_isLoading = enable;
+            m_currentLoadingScreen.LoadingScreen.SetActive(enable);
         }
 
         public void SwitchLoadingScreen(LoadingScreenEnum loadingScreenEnum)
         {
-            CurrentLoadingScreen = loadingScreenEnum switch
+            m_currentLoadingScreen = loadingScreenEnum switch
             {
-                LoadingScreenEnum.Default => defaultLoadingScreen,
-                LoadingScreenEnum.Game => gameLoadingScreen,
+                LoadingScreenEnum.Default => m_defaultLoadingScreen,
+                LoadingScreenEnum.Game => m_gameLoadingScreen,
                 _ => throw new ArgumentOutOfRangeException(nameof(loadingScreenEnum), loadingScreenEnum, null)
             };
         }
 
         public void SetLoadingScreenTitle(string title)
         {
-            CurrentLoadingScreen.loadingText.text = title;
+            m_currentLoadingScreen.LoadingText.text = title;
         }
     }
 }

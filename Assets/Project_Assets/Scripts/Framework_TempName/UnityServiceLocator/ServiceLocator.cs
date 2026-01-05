@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 
 namespace Project_Assets.Scripts.Framework_TempName.UnityServiceLocator
 {
+    // TODO: Move to enums folder
     public enum ServiceLevel
     {
         Global,
@@ -21,10 +22,10 @@ namespace Project_Assets.Scripts.Framework_TempName.UnityServiceLocator
         private static Dictionary<Scene, ServiceLocator> s_sceneContainers;
         private static List<GameObject> s_tempSceneGameObjects;
 
-        private readonly ServiceManager m_Services = new();
+        private readonly ServiceManager m_services = new();
 
-        private const string k_GlobalServiceLocatorName = "ServiceLocator [Global]";
-        private const string k_SceneServiceLocatorName = "ServiceLocator [Scene]";
+        private const string k_globalServiceLocatorName = "ServiceLocator [Global]";
+        private const string k_sceneServiceLocatorName = "ServiceLocator [Scene]";
 
         internal void ConfigureAsGlobal(bool dontDestroyOnLoad)
         {
@@ -70,7 +71,7 @@ namespace Project_Assets.Scripts.Framework_TempName.UnityServiceLocator
                     return s_global;
                 }
 
-                var container = new GameObject(k_GlobalServiceLocatorName, typeof(ServiceLocator));
+                var container = new GameObject(k_globalServiceLocatorName, typeof(ServiceLocator));
                 container.AddComponent<ServiceLocatorGlobalBootstrapper>().BootstrapOnDemand();
 
                 return s_global;
@@ -110,21 +111,23 @@ namespace Project_Assets.Scripts.Framework_TempName.UnityServiceLocator
 
         public ServiceLocator Register<T>(T service, ServiceLevel level, string sceneName = null)
         {
-            m_Services.Register(service);
+            m_services.Register(service);
             LogRegisterService(service, level, sceneName);
             return this;
         }
 
         public ServiceLocator Register(Type type, object service, ServiceLevel level, string sceneName = null)
         {
-            m_Services.Register(type, service);
+            m_services.Register(type, service);
             LogRegisterService(service, level, sceneName);
             return this;
         }
 
         public ServiceLocator Get<T>(out T service) where T : class
         {
-            if (TryGetService(out service)) return this;
+            if (TryGetService(out service))
+            { return this;
+            }
 
             if (TryGetNextInHierarchy(out ServiceLocator container))
             {
@@ -139,7 +142,7 @@ namespace Project_Assets.Scripts.Framework_TempName.UnityServiceLocator
 
         private bool TryGetService<T>(out T service) where T : class
         {
-            return m_Services.TryGet(out service);
+            return m_services.TryGet(out service);
         }
 
         private bool TryGetNextInHierarchy(out ServiceLocator container)
@@ -168,21 +171,21 @@ namespace Project_Assets.Scripts.Framework_TempName.UnityServiceLocator
         private static void ResetStatics()
         {
             s_global = null;
-            s_sceneContainers = new();
-            s_tempSceneGameObjects = new();
+            s_sceneContainers = new Dictionary<Scene, ServiceLocator>();
+            s_tempSceneGameObjects = new List<GameObject>();
         }
 
 #if UNITY_EDITOR
         [MenuItem("GameObject/ServiceLocator/Add Global")]
         private static void AddGlobal()
         {
-            var go = new GameObject(k_GlobalServiceLocatorName, typeof(ServiceLocatorGlobalBootstrapper));
+            var go = new GameObject(k_globalServiceLocatorName, typeof(ServiceLocatorGlobalBootstrapper));
         }
 
         [MenuItem("GameObject/ServiceLocator/Add Scene")]
         private static void AddScene()
         {
-            var go = new GameObject(k_SceneServiceLocatorName, typeof(ServiceLocatorSceneBootstrapper));
+            var go = new GameObject(k_sceneServiceLocatorName, typeof(ServiceLocatorSceneBootstrapper));
         }
 #endif
 

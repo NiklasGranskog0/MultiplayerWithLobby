@@ -4,11 +4,11 @@ namespace Project_Assets.Scripts.Scenes
 {
     public class LoadingProgress : IProgress<float>
     {
-        public event Action<float> ProgressChanged;
-        private const float k_Ratio = 0.9f;
+        public event Action<float> OnProgressChanged;
+        private const float k_ratio = 0.9f;
         public void Report(float value)
         {
-            ProgressChanged?.Invoke(value / k_Ratio);
+            OnProgressChanged?.Invoke(value / k_ratio);
         }
     }
 }

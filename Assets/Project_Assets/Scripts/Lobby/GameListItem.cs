@@ -1,7 +1,6 @@
-using System.Text;
-using Project_Assets.Scripts.Framework_TempName;
 using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
+using Project_Assets.Scripts.ScriptableObjects.SerializedDictionaries;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,44 +9,47 @@ namespace Project_Assets.Scripts.Lobby
 {
     public class GameListItem : MonoBehaviour
     {
-        [SerializeField] private TMP_Text gameListName;
-        public Button joinButton;
+        [SerializeField] private TMP_Text m_gameListName;
+        [SerializeField] private ImagesDictionary m_imagesDictionary;
+        public Button JoinButton;
 
-        private Unity.Services.Lobbies.Models.Lobby m_Lobby;
-        private LobbyManager m_LobbyManager;
-        private LobbyUI m_LobbyUI;
+        private Unity.Services.Lobbies.Models.Lobby m_lobby;
+        private AvailableGamesUI m_availableGamesUI;
 
         private void Awake()
         {
-            ServiceLocator.Global.Get(out m_LobbyManager);
-            ServiceLocator.Global.Get(out m_LobbyUI);
+            JoinButton.onClick.AddListener(OnGameListItemClick);
+        }
 
-            joinButton.onClick.AddListener(OnGameListItemClick);
+        private void Start()
+        {
+            ServiceLocator.Global.Get(out m_availableGamesUI);
         }
 
         public void UpdateLobby(Unity.Services.Lobbies.Models.Lobby lobby)
         {
-            m_Lobby = lobby;
-            gameListName.text = m_Lobby.Name;
+            m_lobby = lobby;
+            m_gameListName.text = m_lobby.Name;
         }
 
         private void OnGameListItemClick()
         {
-            m_LobbyUI.CurrentSelectedLobby = m_Lobby;
-            m_LobbyUI.gameCodeInputField.text = m_Lobby.Name;
-            
-            m_LobbyUI.lobbyInfoGames.gameName.text = m_Lobby.Data[KeyConstants.k_GameName].Value;
-            m_LobbyUI.lobbyInfoGames.maxPlayers.text = m_Lobby.Data[KeyConstants.k_MaxPlayers].Value;
-            m_LobbyUI.lobbyInfoGames.gameMode.text = m_Lobby.Data[KeyConstants.k_GameMode].Value;
-            m_LobbyUI.lobbyInfoGames.gameSpeed.text = m_Lobby.Data[KeyConstants.k_GameSpeed].Value;
-            m_LobbyUI.lobbyInfoGames.mapName.text = m_Lobby.Data[KeyConstants.k_Map].Value;
-            
-            m_LobbyUI.lobbyInfoGames.gameImage.color = Color.white;
-            
-            if (m_Lobby.Data[KeyConstants.k_GameImage].Value != null)
+            m_availableGamesUI.CurrentSelectedLobby = m_lobby;
+            m_availableGamesUI.GameCodeInputField.text = m_lobby.Name;
+            m_availableGamesUI.GameNameText.text = m_lobby.Name;
+
+            m_availableGamesUI.GameInfo.GameName.text = m_lobby.Data[KeyConstants.k_GameName].Value;
+            m_availableGamesUI.GameInfo.MaxPlayers.text = m_lobby.Data[KeyConstants.k_MaxPlayers].Value;
+            m_availableGamesUI.GameInfo.GameMode.text = m_lobby.Data[KeyConstants.k_GameMode].Value;
+            m_availableGamesUI.GameInfo.GameSpeed.text = m_lobby.Data[KeyConstants.k_GameSpeed].Value;
+            m_availableGamesUI.GameInfo.MapName.text = m_lobby.Data[KeyConstants.k_Map].Value;
+
+            m_availableGamesUI.GameInfo.GameImage.color = Color.white;
+
+            if (m_lobby.Data[KeyConstants.k_GameImage].Value != null)
             {
-                m_LobbyUI.lobbyInfoGames.gameImage.texture =
-                    m_LobbyUI.gameImagesDictionary[m_Lobby.Data[KeyConstants.k_GameImage].Value];
+                m_availableGamesUI.GameInfo.GameImage.texture =
+                    m_imagesDictionary[m_lobby.Data[KeyConstants.k_GameImage].Value];
             }
         }
     }

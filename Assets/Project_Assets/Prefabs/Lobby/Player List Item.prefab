@@ -178,6 +178,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -561,6 +562,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -895,6 +897,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1170,6 +1173,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1665,11 +1669,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aad4d8d1fc59d6544beeeb5baad3236b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerName: {fileID: 8542442535086177505}
-  kickButton: {fileID: 5916272673275333323}
-  readyButton: {fileID: 6698215448529071955}
-  readyButtonText: {fileID: 7565444452442440970}
-  teamDropdown: {fileID: 6376791943262958518}
+  PlayerName: {fileID: 8542442535086177505}
+  KickButton: {fileID: 5916272673275333323}
+  ReadyButton: {fileID: 6698215448529071955}
+  ReadyButtonText: {fileID: 7565444452442440970}
+  TeamDropdown: {fileID: 6376791943262958518}
 --- !u!1 &7623046027574312478
 GameObject:
   m_ObjectHideFlags: 0
@@ -1965,6 +1969,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0

@@ -1,9 +1,10 @@
 namespace Project_Assets.Scripts.Enums
 {
+    // Enum order is important, can set index values if reorder
     public enum SceneGroupToLoad
     {
-        MainMenu,
         Lobby,
         Game,
+        MainMenu,
     }
 }

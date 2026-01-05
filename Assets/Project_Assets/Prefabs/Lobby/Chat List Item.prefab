@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bc07ab3d10f2db489b282ca82ea1689, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chatMessage: {fileID: 1230228325794659216}
+  m_chatMessage: {fileID: 1230228325794659216}
 --- !u!1 &8020991822332874655
 GameObject:
   m_ObjectHideFlags: 0
@@ -207,6 +207,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0

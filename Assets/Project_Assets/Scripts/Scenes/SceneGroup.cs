@@ -9,13 +9,12 @@ namespace Project_Assets.Scripts.Scenes
     [Serializable]
     public class SceneGroup
     {
-        public string groupName = "New Scene Group";
-        public List<SceneData> scenes;
+        public string GroupName = "Scene Group Name";
+        public List<SceneData> Scenes;
 
         public string FindSceneByType(SceneType sceneType)
         {
-            return scenes.FirstOrDefault(scene => scene.sceneType == sceneType).Name;
+            return Scenes.FirstOrDefault(scene => scene.SceneType == sceneType).Name;
         }
     }
-
 }

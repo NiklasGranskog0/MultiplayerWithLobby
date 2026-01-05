@@ -6,13 +6,13 @@ namespace Project_Assets.Scripts.Framework_TempName.UnityServiceLocator
 {
     public class ServiceManager
     {
-        private readonly Dictionary<Type, object> m_Services = new();
-        public IEnumerable<object> RegisteredServices => m_Services.Values;
+        private readonly Dictionary<Type, object> m_services = new();
+        public IEnumerable<object> RegisteredServices => m_services.Values;
 
         public bool TryGet<T>(out T service) where T : class
         {
             var type = typeof(T);
-            if (m_Services.TryGetValue(type, out object obj))
+            if (m_services.TryGetValue(type, out object obj))
             {
                 service = obj as T;
                 return true;
@@ -25,7 +25,7 @@ namespace Project_Assets.Scripts.Framework_TempName.UnityServiceLocator
         public T Get<T>() where T : class
         {
             var type = typeof(T);
-            if (m_Services.TryGetValue(type, out object obj)) return obj as T;
+            if (m_services.TryGetValue(type, out object obj)) return obj as T;
             
             throw new ArgumentException($"ServiceManager.Get<T>(): Service of type {type.FullName} not registered.");
         }
@@ -33,7 +33,7 @@ namespace Project_Assets.Scripts.Framework_TempName.UnityServiceLocator
         public ServiceManager Register<T>(T service)
         {
             var type = typeof(T);
-            if (!m_Services.TryAdd(type, service)) Debug.LogError($"Service {type} already registered");
+            if (!m_services.TryAdd(type, service)) Debug.LogError($"Service {type} already registered");
             
             return this;
         }
@@ -42,7 +42,7 @@ namespace Project_Assets.Scripts.Framework_TempName.UnityServiceLocator
         {
             if (!type.IsInstanceOfType(service)) throw new ArgumentException($"Service {type} is not of type {type}");
 
-            if (!m_Services.TryAdd(type, service)) Debug.LogError($"Service {type} already registered");
+            if (!m_services.TryAdd(type, service)) Debug.LogError($"Service {type} already registered");
             
             return this;
         }

@@ -4,15 +4,16 @@ using UnityEngine;
 
 namespace Project_Assets.Scripts.Game
 {
+    // Player spawn manager
     public class GameSpawnManager : MonoBehaviour
     {
-        [SerializeField] private Transform[] spawnPoints;
-        private Dictionary<ulong, Transform> m_AvailableSpawnPoints;
+        [SerializeField] private Transform[] m_spawnPoints;
+        private Dictionary<ulong, Transform> m_availableSpawnPoints;
 
         private void Awake()
         {
             ServiceLocator.ForSceneOf(this).Register(this, ServiceLevel.Scene, gameObject.scene.name);
-            m_AvailableSpawnPoints = new Dictionary<ulong, Transform>();
+            m_availableSpawnPoints = new Dictionary<ulong, Transform>();
         }
 
         public Dictionary<ulong, Transform> SetPlayersSpawnPoint(List<ulong> players)
@@ -21,10 +22,10 @@ namespace Project_Assets.Scripts.Game
             // TODO: Bind the spawn point to the player
             for (int i = 0; i < players.Count; i++)
             {
-                m_AvailableSpawnPoints.Add(players[i], spawnPoints[i]);
+                m_availableSpawnPoints.Add(players[i], m_spawnPoints[i]);
             }
 
-            return m_AvailableSpawnPoints;
+            return m_availableSpawnPoints;
         }
     }
 }

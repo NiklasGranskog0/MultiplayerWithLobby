@@ -9,10 +9,10 @@ namespace Project_Assets.Scripts.Game
 {
     public class GameManager : MonoBehaviour
     {
-        [SerializeField] private GameObject playerPrefab; // TODO: TEMP
+        [SerializeField] private GameObject m_playerPrefab; // TODO: TEMP
 
-        private GameSpawnManager m_GameSpawnManager;
-        private Dictionary<ulong, Transform> m_PlayersSpawnPoints;
+        private GameSpawnManager m_gameSpawnManager;
+        private Dictionary<ulong, Transform> m_playersSpawnPoints;
 
         private void Awake()
         {
@@ -23,7 +23,7 @@ namespace Project_Assets.Scripts.Game
         {
             if (!NetworkManager.Singleton.IsHost) return;
 
-            ServiceLocator.ForSceneOf(this).Get(out m_GameSpawnManager);
+            ServiceLocator.ForSceneOf(this).Get(out m_gameSpawnManager);
             SetPlayersSpawnPoint();
 
             CreateAndSpawnPlayers();
@@ -32,14 +32,14 @@ namespace Project_Assets.Scripts.Game
         private void SetPlayersSpawnPoint()
         {
             var ids = NetworkManager.Singleton.ConnectedClients.Select(player => player.Key).ToList();
-            m_PlayersSpawnPoints = m_GameSpawnManager.SetPlayersSpawnPoint(ids);
+            m_playersSpawnPoints = m_gameSpawnManager.SetPlayersSpawnPoint(ids);
         }
 
         private void CreateAndSpawnPlayers()
         {
-            foreach (var id in m_PlayersSpawnPoints)
+            foreach (var id in m_playersSpawnPoints)
             {
-                Extensions.CreateNetworkObject(playerPrefab, id.Value, id.Key);
+                Extensions.CreateNetworkObject(m_playerPrefab, id.Value, id.Key);
             }
         }
     }

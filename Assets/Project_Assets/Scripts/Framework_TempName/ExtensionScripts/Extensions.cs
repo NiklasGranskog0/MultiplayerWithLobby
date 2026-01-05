@@ -8,7 +8,6 @@ using Unity.Netcode;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
 {
@@ -16,13 +15,28 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
     {
         #region GameObjects
 
-        public static T OrNull<T>(this T obj) where T : Object => obj ? obj : null;
+        public static T OrNull<T>(this T obj) where T : UnityEngine.Object => obj ? obj : null;
 
         public static T GetOrAdd<T>(this GameObject gameObject) where T : Component
         {
             return gameObject.TryGetComponent<T>(out var component) ? component : gameObject.AddComponent<T>();
         }
 
+        #endregion
+        
+        #region Transform
+        
+        public static void ClearContainer(this Transform container)
+        {
+            foreach (Transform child in container)
+            {
+                if (child != null)
+                {
+                    UnityEngine.Object.Destroy(child.gameObject);
+                }
+            }
+        }
+        
         #endregion
 
         #region color

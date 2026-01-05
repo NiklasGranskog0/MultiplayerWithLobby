@@ -1,6 +1,6 @@
 using System.Collections;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
-using Project_Assets.Scripts.Lobby;
+using Project_Assets.Scripts.ScriptableObjects;
 using TMPro;
 using Unity.Services.Vivox;
 using UnityEngine;
@@ -11,54 +11,54 @@ namespace Project_Assets.Scripts.TextChat
 {
     public class GameTextChatUI : MonoBehaviour
     {
-        [SerializeField] private GameObject chatListItem;
-        [SerializeField] private Transform chatContainer;
-        [SerializeField] private TMP_InputField chatInputField;
-        [SerializeField] private ScrollRect chatScrollRect;
-        
-        private VivoxManager m_VivoxManager;
-        
+        [SerializeField] private GameObject m_chatListItem;
+        [SerializeField] private Transform m_chatContainer;
+        [SerializeField] private TMP_InputField m_chatInputField;
+        [SerializeField] private ScrollRect m_chatScrollRect;
+        [SerializeField] private UIInputs m_uiInputs;
+
+        private VivoxManager m_vivoxManager;
+
         private void Start()
         {
-            ServiceLocator.Global.Get(out m_VivoxManager);
-            chatScrollRect.onValueChanged.AddListener(ScrollRectChange);
-            
+            ServiceLocator.Global.Get(out m_vivoxManager);
+            m_chatScrollRect.onValueChanged.AddListener(ScrollRectChange);
+
             VivoxService.Instance.ChannelMessageReceived += OnChannelMessageReceived;
             VivoxService.Instance.ChannelLeft += OnChannelLeft;
+
+            m_uiInputs.OnReturnKeyEvent += HandleChatInput;
         }
 
         private void OnDisable()
         {
-            OnChannelLeft(null);
+            OnChannelLeft(string.Empty);
         }
 
-        private async void OnChannelLeft(string obj)
+        private async void OnChannelLeft(string channelName)
         {
             await VivoxService.Instance.LeaveAllChannelsAsync();
         }
 
         // TODO: Wrap text message so text doesn't get smaller
-        private void Update()
+        private void HandleChatInput()
         {
-            if (Input.GetKeyDown(KeyCode.Return))
-            {
-                chatInputField.gameObject.SetActive(true);
-                EventSystem.current.SetSelectedGameObject(chatInputField.gameObject, null);
-                chatInputField.ActivateInputField();
-                
-                if (string.IsNullOrEmpty(chatInputField.text)) return;
-                SendMessage();
-            }
+            m_chatInputField.gameObject.SetActive(true);
+            EventSystem.current.SetSelectedGameObject(m_chatInputField.gameObject, null);
+            m_chatInputField.ActivateInputField();
+
+            if (string.IsNullOrEmpty(m_chatInputField.text)) return;
+            SendMessage();
         }
 
         private void ScrollRectChange(Vector2 arg0)
         {
-            if (chatScrollRect.verticalNormalizedPosition >= 0.95f)
+            if (m_chatScrollRect.verticalNormalizedPosition >= 0.95f)
             {
-                chatScrollRect.normalizedPosition = new Vector2(0, 0.8f);
+                m_chatScrollRect.normalizedPosition = new Vector2(0, 0.8f);
             }
         }
-        
+
         private void OnChannelMessageReceived(VivoxMessage message)
         {
             AddMessageToChat(message, true);
@@ -66,32 +66,33 @@ namespace Project_Assets.Scripts.TextChat
 
         private async void SendMessage()
         {
-            if (string.IsNullOrEmpty(chatInputField.text)) return;
-            
-            await VivoxService.Instance.SendChannelTextMessageAsync(m_VivoxManager.CurrentChannelName, chatInputField.text);
+            if (string.IsNullOrEmpty(m_chatInputField.text)) return;
+
+            await VivoxService.Instance.SendChannelTextMessageAsync(m_vivoxManager.CurrentChannelName,
+                m_chatInputField.text);
             ClearTextInput();
         }
-        
+
         private void AddMessageToChat(VivoxMessage message, bool scrollToBottom = false)
         {
-            var newMessageObj = Instantiate(chatListItem, chatContainer).GetComponent<ChatListItem>();
+            var newMessageObj = Instantiate(m_chatListItem, m_chatContainer).GetComponent<ChatListItem>();
 
             newMessageObj.SetMessage(message);
-            
+
             if (scrollToBottom) StartCoroutine(ScrollToBottom());
         }
-        
+
         private IEnumerator ScrollToBottom()
         {
             yield return new WaitForEndOfFrame();
-            chatScrollRect.verticalNormalizedPosition = 0;
+            m_chatScrollRect.verticalNormalizedPosition = 0;
             yield return null;
         }
 
         private void ClearTextInput()
         {
-            chatInputField.text = string.Empty;
-            chatInputField.gameObject.SetActive(false);
+            m_chatInputField.text = string.Empty;
+            m_chatInputField.gameObject.SetActive(false);
         }
     }
 }

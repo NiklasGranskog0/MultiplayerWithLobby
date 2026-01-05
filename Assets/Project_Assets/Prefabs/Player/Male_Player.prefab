@@ -103,10 +103,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Player.PlayerBase
   ShowTopMostFoldoutHeaderGroup: 1
-  playerInputs: {fileID: 11400000, guid: 2f42087214b976b41902f162fa41bfb8, type: 2}
-  playerAnimations: {fileID: 1981519173124256410}
-  playerMovement: {fileID: 4229821249715826934}
-  playerCamera: {fileID: 8395766864216543137}
+  m_playerInputs: {fileID: 11400000, guid: 2f42087214b976b41902f162fa41bfb8, type: 2}
+  m_playerAnimations: {fileID: 1981519173124256410}
+  m_playerMovement: {fileID: 4229821249715826934}
+  m_playerCamera: {fileID: 8395766864216543137}
 --- !u!114 &-7131759201153768744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,11 +209,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7f0c397a0dff5144be863d4f5e7bb35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Player.PlayerAnimations
-  playerAnimManager:
-    data: {fileID: 11400000, guid: 4f9a4d486441e364ca54091bf3b50277, type: 2}
-    animator: {fileID: 3004899218081003225}
-    layerLocked: 
-    currentAnimation: 
+  m_playerAnimManager:
+    Data: {fileID: 11400000, guid: 4f9a4d486441e364ca54091bf3b50277, type: 2}
+    Animator: {fileID: 3004899218081003225}
+    LayerLocked: 
+    CurrentAnimation: 
 --- !u!95 &3004899218081003225
 Animator:
   serializedVersion: 7
@@ -248,7 +248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 968624b9f60729e49877877ee951b818, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Player.PlayerMovement
-  movementSpeed: 5
+  m_movementSpeed: 5
 --- !u!114 &5646962731801522647
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -276,9 +276,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d57ec287652086b42ac3045c03a07068, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Player.PlayerCamera
-  playerCamera: {fileID: 5122298130303505448}
-  cameraTarget: {fileID: 3817577129735169392}
-  rotationSpeed: 10
+  m_playerCamera: {fileID: 5122298130303505448}
+  m_cameraTarget: {fileID: 3817577129735169392}
+  m_rotationSpeed: 10
 --- !u!1 &4276372458949139848
 GameObject:
   m_ObjectHideFlags: 0

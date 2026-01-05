@@ -1,5 +1,4 @@
 using System.Collections;
-using Project_Assets.Scripts.Framework_TempName;
 using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
 using Unity.Services.Lobbies;
 using UnityEngine;
@@ -8,44 +7,44 @@ namespace Project_Assets.Scripts.Lobby
 {
     public class LobbyHeartbeat : MonoBehaviour
     {
-        public float heartBeatInterval = 15f; // Cannot be higher than 30
-        private Coroutine m_HeartBeatCoroutine;
-        private string m_LobbyId;
+        public float HeartBeatInterval = 15f; // Cannot be higher than 30
+        private Coroutine m_heartBeatCoroutine;
+        private string m_lobbyId;
     
         public void StartHeartBeat(string newLobbyId)
         {
-            if (m_HeartBeatCoroutine != null)
+            if (m_heartBeatCoroutine != null)
             {
-                StopCoroutine(m_HeartBeatCoroutine);
+                StopCoroutine(m_heartBeatCoroutine);
             }
 
-            m_LobbyId = newLobbyId;
-            m_HeartBeatCoroutine = StartCoroutine(HeartbeatCoroutine());
+            m_lobbyId = newLobbyId;
+            m_heartBeatCoroutine = StartCoroutine(HeartbeatCoroutine());
         }
 
         public void StopHeartBeat()
         {
-            if (m_HeartBeatCoroutine != null)
+            if (m_heartBeatCoroutine != null)
             {
-                StopCoroutine(m_HeartBeatCoroutine);
-                m_HeartBeatCoroutine = null;
+                StopCoroutine(m_heartBeatCoroutine);
+                m_heartBeatCoroutine = null;
             }
 
-            m_LobbyId = null;
+            m_lobbyId = null;
         }
 
         private IEnumerator HeartbeatCoroutine()
         {
-            while (!string.IsNullOrWhiteSpace(m_LobbyId))
+            while (!string.IsNullOrWhiteSpace(m_lobbyId))
             {
-                yield return new WaitForSeconds(heartBeatInterval);
+                yield return new WaitForSeconds(HeartBeatInterval);
                 yield return SendHeartbeat();
             }
         }
 
         private IEnumerator SendHeartbeat()
         {
-            var task = LobbyService.Instance.SendHeartbeatPingAsync(m_LobbyId);
+            var task = LobbyService.Instance.SendHeartbeatPingAsync(m_lobbyId);
             while (!task.IsCompleted)
             {
                 yield return null;

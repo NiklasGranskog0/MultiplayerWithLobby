@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Project_Assets.Scripts.Framework_TempName;
 using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
 using Project_Assets.Scripts.Interfaces;
 using UnityEngine;
@@ -8,18 +7,18 @@ namespace Project_Assets.Scripts.Structs
 {
     public struct RelayStatus : ILog
     {
-        public StatusReport Status;
+        private StatusReport m_status;
         public string JoinCode;
         
         public void MakeReport(bool success, string message)
         {
-            Status.Message = message;
-            Status.Success = success;
+            m_status.Message = message;
+            m_status.Success = success;
         }
         
         public void Log()
         {
-            Debug.Log($"Success: {Status.Success} :  Message: {Status.Message}".Color(Status.Success ? "green" : "red"));
+            Debug.Log($"Success: {m_status.Success} :  Message: {m_status.Message}".Color(m_status.Success ? "green" : "red"));
         }
     }
     
@@ -43,18 +42,18 @@ namespace Project_Assets.Scripts.Structs
     public struct LobbyStatusReport : ILog
     {
         public Unity.Services.Lobbies.Models.Lobby Lobby;
-        private StatusReport m_Status;
+        private StatusReport m_status;
         
         public void MakeReport(Unity.Services.Lobbies.Models.Lobby lobby, bool success, string message)
         {
             Lobby = lobby;
-            m_Status.Message = message;
-            m_Status.Success = success;
+            m_status.Message = message;
+            m_status.Success = success;
         }
 
         public void Log()
         {
-            Debug.Log($"Success: {m_Status.Success} :  Message: {m_Status.Message}".Color(m_Status.Success ? "green" : "red"));
+            Debug.Log($"Success: {m_status.Success} :  Message: {m_status.Message}".Color(m_status.Success ? "green" : "red"));
         }
     }
 

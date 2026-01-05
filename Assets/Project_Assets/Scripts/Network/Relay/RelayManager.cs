@@ -12,8 +12,8 @@ namespace Project_Assets.Scripts.Network.Relay
     public class RelayManager : MonoBehaviour
     {
         private static RelayStatus s_statusReport;
-        private Coroutine m_RelayCoroutine;
-        private bool m_ClientJoinStarted;
+        private Coroutine m_relayCoroutine;
+        private bool m_clientJoinStarted;
 
         private void Awake()
         {

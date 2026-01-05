@@ -7,17 +7,17 @@ namespace Project_Assets.Scripts.Framework_TempName.UnityServiceLocator
     [RequireComponent(typeof(ServiceLocator))]
     public abstract class Bootstrapper : MonoBehaviour
     {
-        private ServiceLocator m_Container;
-        internal ServiceLocator Container => m_Container.OrNull() ?? (m_Container = GetComponent<ServiceLocator>());
+        private ServiceLocator m_container;
+        internal ServiceLocator Container => m_container.OrNull() ?? (m_container = GetComponent<ServiceLocator>());
         
-        private bool m_IsInitialized;
+        private bool m_isInitialized;
 
         private void Awake() => BootstrapOnDemand();
 
         public void BootstrapOnDemand()
         {
-            if (m_IsInitialized) return;
-            m_IsInitialized = true;
+            if (m_isInitialized) return;
+            m_isInitialized = true;
             Bootstrap();
         }
         
@@ -27,11 +27,11 @@ namespace Project_Assets.Scripts.Framework_TempName.UnityServiceLocator
     [AddComponentMenu("ServiceLocator/ServiceLocator Global")]
     public class ServiceLocatorGlobalBootstrapper : Bootstrapper
     {
-        [SerializeField] private bool dontDestroyOnLoad = true;
+        [SerializeField] private bool m_dontDestroyOnLoad = true;
 
         protected override void Bootstrap()
         {
-           Container.ConfigureAsGlobal(dontDestroyOnLoad);
+           Container.ConfigureAsGlobal(m_dontDestroyOnLoad);
         }
     }
     

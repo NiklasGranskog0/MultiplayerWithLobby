@@ -21,17 +21,17 @@ namespace Project_Assets.Scripts.Lobby
     {
         public Unity.Services.Lobbies.Models.Lobby ActiveLobby;
 
-        [SerializeField] public LobbyHeartbeat heartbeat;
-        [SerializeField] public LobbyPoller poller;
-        [SerializeField] public GameStartTimer gameStartTimer;
-        private string m_LastSystemMessageSeen;
+        [SerializeField] public LobbyHeartbeat Heartbeat;
+        [SerializeField] public LobbyPoller Poller;
+        [SerializeField] public GameStartTimer GameStartTimer;
+        private string m_lastSystemMessageSeen;
 
         public event Action<LobbyEventArgs> OnCreateLobbyAsync;
         public event Action<LobbyEventArgs> OnPlayerLeftLobbyAsync;
         public event Action<LobbyEventArgs> OnPlayerJoinedLobbyAsync;
         public event Action<LobbyEventArgs> OnLobbyPlayerUpdate;
         public event Action<LobbyEventArgs> OnSettingsUpdate;
-        public event Action<LobbyListChangedEventArgs> OnLobbyListChanged;
+        public event Action<LobbyListChangedEventArgs> LobbyListChanged;
         public event Action<string> OnJoinedTextChannel;
         public event Action<string> OnLeftTextChannel;
         public event Action<string> OnSetGameCode;
@@ -39,30 +39,30 @@ namespace Project_Assets.Scripts.Lobby
 
         private static StatusReport s_statusReport;
         private static LobbiesStatusReport s_lobbiesStatusReport;
-        private CreateLobbySettings m_CreateLobbySettings;
+        private CreateLobbySettings m_createLobbySettings;
 
-        private readonly LobbyEventCallbacks m_EventCallbacks = new();
-        private PlayerAuthentication m_PlayerAuthentication;
-        private SceneManager m_SceneManager;
-        private LobbyUI m_LobbyUI;
-        private RelayManager m_RelayManager;
+        private readonly LobbyEventCallbacks m_eventCallbacks = new();
+        private PlayerAuthentication m_playerAuthentication;
+        private SceneManager m_sceneManager;
+        private LobbyUI m_lobbyUI;
+        private RelayManager m_relayManager;
 
         private void Awake()
         {
             ServiceLocator.ForSceneOf(this).Register(this, ServiceLevel.Scene, gameObject.scene.name);
-            LobbyUI.onStartGame += StartCountdownTimer;
+            LobbyUI.OnStartGame += StartCountdownTimer;
 
-            poller.OnShouldBeenKicked += PollerOnOnShouldBeenKicked;
-            gameStartTimer.OnTimerLeft += SendTimerLeftMessage;
-            gameStartTimer.OnTimerFinished += StartGame;
+            Poller.OnShouldBeenKicked += PollerOnOnShouldBeenKicked;
+            GameStartTimer.OnTimerLeft += SendTimerLeftMessage;
+            GameStartTimer.OnTimerFinished += StartGame;
         }
 
         private void Start()
         {
-            ServiceLocator.Global.Get(out m_PlayerAuthentication);
-            ServiceLocator.Global.Get(out m_SceneManager);
-            ServiceLocator.ForSceneOf(this).Get(out m_LobbyUI);
-            ServiceLocator.ForSceneOf(this).Get(out m_RelayManager);
+            ServiceLocator.Global.Get(out m_playerAuthentication);
+            ServiceLocator.Global.Get(out m_sceneManager);
+            ServiceLocator.ForSceneOf(this).Get(out m_lobbyUI);
+            ServiceLocator.ForSceneOf(this).Get(out m_relayManager);
         }
 
         private async void LobbyUpdate(ILobbyChanges obj)
@@ -79,15 +79,15 @@ namespace Project_Assets.Scripts.Lobby
                     ActiveLobby.Data.TryGetValue(KeyConstants.k_SystemMessage, out var sysMsgObj))
                 {
                     var msg = sysMsgObj?.Value;
-                    if (!string.IsNullOrEmpty(msg) && msg != m_LastSystemMessageSeen)
+                    if (!string.IsNullOrEmpty(msg) && msg != m_lastSystemMessageSeen)
                     {
                         // This message will always be called on game start, which means we want to load the game scene
-                        m_LastSystemMessageSeen = msg;
+                        m_lastSystemMessageSeen = msg;
 
                         // Only need to do this if we're not the host, because host will load game scene in StartGame()
                         if (AuthenticationService.Instance.PlayerId != ActiveLobby.HostId)
                         {
-                            await m_SceneManager.LoadSceneGroupByEnum(SceneGroupToLoad.Game);
+                            await m_sceneManager.LoadSceneGroupByEnum(SceneGroupToLoad.Game);
                         }
                     }
                 }
@@ -109,7 +109,7 @@ namespace Project_Assets.Scripts.Lobby
                     IsLocked = true
                 });
 
-                m_LobbyUI.startGameButton.interactable = false;
+                m_lobbyUI.StartGameButton.interactable = false;
                 s_statusReport.MakeReport(true, "Lobby locked, Starting countdown timer...");
             }
             catch (LobbyServiceException e)
@@ -119,7 +119,7 @@ namespace Project_Assets.Scripts.Lobby
             }
 
             s_statusReport.Log();
-            gameStartTimer.StartTimer();
+            GameStartTimer.StartTimer();
         }
 
         private void SendTimerLeftMessage(float obj)
@@ -131,12 +131,12 @@ namespace Project_Assets.Scripts.Lobby
         {
             OnPlayerLeftLobbyAsync?.Invoke(obj);
             OnLeftTextChannel?.Invoke(obj.Lobby.Id);
-            poller.StopLobbyPolling();
+            Poller.StopLobbyPolling();
         }
 
         public async Task<StatusReport> CreateLobbyAsync(CreateLobbySettings settings, bool password)
         {
-            var player = m_PlayerAuthentication.Player;
+            var player = m_playerAuthentication.Player;
 
             var lobbyOptions = new CreateLobbyOptions
             {
@@ -166,15 +166,15 @@ namespace Project_Assets.Scripts.Lobby
 
                 OnLobbyPlayerUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
 
-                var relay = await m_RelayManager.CreateRelay(settings.MaxPlayers.max - 1);
+                var relay = await m_relayManager.CreateRelay(settings.MaxPlayers.max - 1);
                 relay.Log();
 
                 var relayCodeUpdate = await UpdateRelayJoinCode(relay.JoinCode);
                 relayCodeUpdate.Log();
 
-                await LobbyService.Instance.SubscribeToLobbyEventsAsync(ActiveLobby.Id, m_EventCallbacks);
-                m_EventCallbacks.LobbyChanged -= LobbyUpdate;
-                m_EventCallbacks.LobbyChanged += LobbyUpdate;
+                await LobbyService.Instance.SubscribeToLobbyEventsAsync(ActiveLobby.Id, m_eventCallbacks);
+                m_eventCallbacks.LobbyChanged -= LobbyUpdate;
+                m_eventCallbacks.LobbyChanged += LobbyUpdate;
 
                 s_statusReport.MakeReport(true, $"Lobby '{ActiveLobby.Name}' created with ID: {ActiveLobby.Id}");
             }
@@ -183,8 +183,8 @@ namespace Project_Assets.Scripts.Lobby
                 s_statusReport.MakeReport(false, $"CreateLobbyAsync error (Failed to create lobby): {e.Message}");
             }
 
-            heartbeat.StartHeartBeat(ActiveLobby.Id);
-            poller.StartLobbyPolling(ActiveLobby);
+            Heartbeat.StartHeartBeat(ActiveLobby.Id);
+            Poller.StartLobbyPolling(ActiveLobby);
 
             OnJoinedTextChannel?.Invoke(ActiveLobby.Id);
             OnSetGameCode?.Invoke(ActiveLobby.LobbyCode);
@@ -203,13 +203,13 @@ namespace Project_Assets.Scripts.Lobby
             string playerId = AuthenticationService.Instance.PlayerId;
             bool isHost = playerId == ActiveLobby.HostId;
 
-            if (isHost && heartbeat != null)
+            if (isHost && Heartbeat != null)
             {
-                heartbeat.StopHeartBeat();
+                Heartbeat.StopHeartBeat();
                 Debug.Log("Stopped heartbeat (was host)".Color("red"));
             }
 
-            poller.StopLobbyPolling();
+            Poller.StopLobbyPolling();
 
             try
             {
@@ -238,7 +238,7 @@ namespace Project_Assets.Scripts.Lobby
         {
             try
             {
-                var player = m_PlayerAuthentication.Player;
+                var player = m_playerAuthentication.Player;
 
                 var joinOptions = new JoinLobbyByCodeOptions
                 {
@@ -248,12 +248,12 @@ namespace Project_Assets.Scripts.Lobby
                 if (!string.IsNullOrWhiteSpace(password)) joinOptions.Password = password;
 
                 ActiveLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code, joinOptions);
-                poller.StartLobbyPolling(ActiveLobby);
+                Poller.StartLobbyPolling(ActiveLobby);
 
                 // Subscribe to lobby events to receive changes (e.g., player data updates)
-                await LobbyService.Instance.SubscribeToLobbyEventsAsync(ActiveLobby.Id, m_EventCallbacks);
-                m_EventCallbacks.LobbyChanged -= LobbyUpdate;
-                m_EventCallbacks.LobbyChanged += LobbyUpdate;
+                await LobbyService.Instance.SubscribeToLobbyEventsAsync(ActiveLobby.Id, m_eventCallbacks);
+                m_eventCallbacks.LobbyChanged -= LobbyUpdate;
+                m_eventCallbacks.LobbyChanged += LobbyUpdate;
 
                 OnLobbyPlayerUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnPlayerJoinedLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
@@ -268,6 +268,8 @@ namespace Project_Assets.Scripts.Lobby
                 s_statusReport.MakeReport(false, $"Lobby joined failed {e.Message}");
             }
 
+            // TODO: When trying to join a lobby by typing in the name and there is no lobby already selected,
+            // TODO: the active lobby instance is null and user won't join the relay or lobby
             JoinRelay(ActiveLobby.Data[KeyConstants.k_RelayCode].Value);
             return s_statusReport;
         }
@@ -276,7 +278,7 @@ namespace Project_Assets.Scripts.Lobby
         {
             try
             {
-                var player = m_PlayerAuthentication.Player;
+                var player = m_playerAuthentication.Player;
 
                 var joinOptions = new JoinLobbyByIdOptions
                 {
@@ -286,12 +288,12 @@ namespace Project_Assets.Scripts.Lobby
                 if (!string.IsNullOrWhiteSpace(password)) joinOptions.Password = password;
 
                 ActiveLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId, joinOptions);
-                poller.StartLobbyPolling(ActiveLobby);
+                Poller.StartLobbyPolling(ActiveLobby);
 
                 // Subscribe to lobby events to receive changes (e.g., player data updates)
-                await LobbyService.Instance.SubscribeToLobbyEventsAsync(ActiveLobby.Id, m_EventCallbacks);
-                m_EventCallbacks.LobbyChanged -= LobbyUpdate;
-                m_EventCallbacks.LobbyChanged += LobbyUpdate;
+                await LobbyService.Instance.SubscribeToLobbyEventsAsync(ActiveLobby.Id, m_eventCallbacks);
+                m_eventCallbacks.LobbyChanged -= LobbyUpdate;
+                m_eventCallbacks.LobbyChanged += LobbyUpdate;
 
                 OnPlayerJoinedLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 OnLobbyPlayerUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
@@ -449,9 +451,9 @@ namespace Project_Assets.Scripts.Lobby
                     }
                 });
 
-                m_SceneManager.SwitchLoadingScreen(LoadingScreenEnum.Game);
-                m_SceneManager.SetLoadingScreenTitle(ActiveLobby.Name);
-                await m_SceneManager.LoadSceneGroupByEnum(SceneGroupToLoad.Game);
+                m_sceneManager.SwitchLoadingScreen(LoadingScreenEnum.Game);
+                m_sceneManager.SetLoadingScreenTitle(ActiveLobby.Name);
+                await m_sceneManager.LoadSceneGroupByEnum(SceneGroupToLoad.Game);
             }
             catch (LobbyServiceException e)
             {
@@ -461,7 +463,7 @@ namespace Project_Assets.Scripts.Lobby
 
         private async void JoinRelay(string code)
         {
-            var relay = await m_RelayManager.JoinRelay(code);
+            var relay = await m_relayManager.JoinRelay(code);
             relay.Log();
         }
 
@@ -488,7 +490,7 @@ namespace Project_Assets.Scripts.Lobby
 
                 var response = await LobbyService.Instance.QueryLobbiesAsync(queryOptions);
 
-                OnLobbyListChanged?.Invoke(new LobbyListChangedEventArgs { Lobbies = response.Results });
+                LobbyListChanged?.Invoke(new LobbyListChangedEventArgs { Lobbies = response.Results });
 
                 s_lobbiesStatusReport.MakeReport(response.Results, true,
                     $"Found {response.Results.Count} active lobbies.");

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
 using Project_Assets.Scripts.Lobby;
+using Project_Assets.Scripts.ScriptableObjects;
 using Project_Assets.Scripts.Structs;
 using TMPro;
 using Unity.Services.Vivox;
@@ -16,55 +17,53 @@ namespace Project_Assets.Scripts.TextChat
 {
     public class TextChatUI : MonoBehaviour
     {
-        [SerializeField] private GameObject chatListItem;
-        [SerializeField] private Transform chatContainer;
-        [SerializeField] private TMP_InputField chatInputField;
-        [SerializeField] private ScrollRect chatScrollRect;
+        [SerializeField] private GameObject m_chatListItem;
+        [SerializeField] private Transform m_chatContainer;
+        [SerializeField] private TMP_InputField m_chatInputField;
+        [SerializeField] private ScrollRect m_chatScrollRect;
+        [SerializeField] private UIInputs m_uiInputs;
 
-        private readonly IList<KeyValuePair<string, ChatListItem>> m_MessageObjectPool =
+        private readonly IList<KeyValuePair<string, ChatListItem>> m_messageObjectPool =
             new List<KeyValuePair<string, ChatListItem>>();
 
-        private DateTime? m_OldestMessage;
+        private DateTime? m_oldestMessage;
 
-        private VivoxManager m_VivoxManager;
-        private LobbyManager m_LobbyManager;
+        private VivoxManager m_vivoxManager;
+        private LobbyManager m_lobbyManager;
         private static StatusReport s_statusReport;
 
         private void Start()
         {
-            ServiceLocator.Global.Get(out m_VivoxManager);
-            ServiceLocator.ForSceneOf(this).Get(out m_LobbyManager);
+            ServiceLocator.Global.Get(out m_vivoxManager);
+            ServiceLocator.ForSceneOf(this).Get(out m_lobbyManager);
             
-            chatScrollRect.verticalScrollbar.gameObject.SetActive(false);
-            chatScrollRect.horizontalScrollbar.gameObject.SetActive(false);
-            chatScrollRect.enabled = false;
+            m_chatScrollRect.verticalScrollbar.gameObject.SetActive(false);
+            m_chatScrollRect.horizontalScrollbar.gameObject.SetActive(false);
+            m_chatScrollRect.enabled = false;
             
             VivoxService.Instance.ChannelJoined += OnChannelJoined;
             VivoxService.Instance.ChannelMessageReceived += OnChannelMessageReceived;
 
-            m_LobbyManager.OnLeftTextChannel += OnLeftTextChannel;
-            m_LobbyManager.OnSendSystemMessage += SystemSendMessage;
+            m_lobbyManager.OnLeftTextChannel += OnLeftTextChannel;
+            m_lobbyManager.OnSendSystemMessage += SystemSendMessage;
             
-            chatScrollRect.onValueChanged.AddListener(ScrollRectChange);
+            m_chatScrollRect.onValueChanged.AddListener(ScrollRectChange);
+            
+            m_uiInputs.OnReturnKeyEvent += EnterKeyOnTextField;
         }
 
         private void OnLeftTextChannel(string obj)
         {
             ClearMessagePool();
-            m_OldestMessage = null;
-        }
-
-        private void Update()
-        {
-            EnterKeyOnTextField();
+            m_oldestMessage = null;
         }
 
         private void OnEnable() => ClearTextInput();
 
         private void OnDisable()
         {
-            if (m_MessageObjectPool.Count > 0) ClearMessagePool();
-            m_OldestMessage = null;
+            if (m_messageObjectPool.Count > 0) ClearMessagePool();
+            m_oldestMessage = null;
             
             VivoxService.Instance.ChannelJoined -= OnChannelJoined;
             VivoxService.Instance.ChannelMessageReceived -= OnChannelMessageReceived;
@@ -76,11 +75,11 @@ namespace Project_Assets.Scripts.TextChat
             {
                 var chatHistoryOptions = new ChatHistoryQueryOptions
                 {
-                    TimeEnd = m_OldestMessage
+                    TimeEnd = m_oldestMessage
                 };
 
                 var historyMessages =
-                    await VivoxService.Instance.GetChannelTextMessageHistoryAsync(m_VivoxManager.CurrentChannelName, 10,
+                    await VivoxService.Instance.GetChannelTextMessageHistoryAsync(m_vivoxManager.CurrentChannelName, 10,
                         chatHistoryOptions);
 
                 var reversedMessages = historyMessages.Reverse();
@@ -90,7 +89,7 @@ namespace Project_Assets.Scripts.TextChat
                     AddMessageToChat(historyMessage, true, scrollToBottom);
                 }
 
-                m_OldestMessage = historyMessages.FirstOrDefault()?.ReceivedTime;
+                m_oldestMessage = historyMessages.FirstOrDefault()?.ReceivedTime;
                 s_statusReport.MakeReport(true, "Fetched Chat History");
             }
             catch (TaskCanceledException e)
@@ -108,34 +107,34 @@ namespace Project_Assets.Scripts.TextChat
 
         private void ClearMessagePool()
         {
-            foreach (var keyValuePair in m_MessageObjectPool)
+            foreach (var keyValuePair in m_messageObjectPool)
             {
                 if (keyValuePair.Value != null)
                     Destroy(keyValuePair.Value.gameObject);
             }
             
-            m_MessageObjectPool.Clear();
+            m_messageObjectPool.Clear();
         }
 
         private void ClearTextInput()
         {
-            chatInputField.text = string.Empty;
-            chatInputField.Select();
-            chatInputField.ActivateInputField();
+            m_chatInputField.text = string.Empty;
+            m_chatInputField.Select();
+            m_chatInputField.ActivateInputField();
         }
 
         private IEnumerator ScrollToBottom()
         {
             yield return new WaitForEndOfFrame();
-            chatScrollRect.verticalNormalizedPosition = 0;
+            m_chatScrollRect.verticalNormalizedPosition = 0;
             yield return null;
         }
 
         private async void ScrollRectChange(Vector2 vector)
         {
-            if (chatScrollRect.verticalNormalizedPosition >= 0.95f)
+            if (m_chatScrollRect.verticalNormalizedPosition >= 0.95f)
             {
-                chatScrollRect.normalizedPosition = new Vector2(0, 0.8f);
+                m_chatScrollRect.normalizedPosition = new Vector2(0, 0.8f);
                 var getMessages = await GetChatHistory(false);
                 getMessages.Log();
             }
@@ -143,22 +142,22 @@ namespace Project_Assets.Scripts.TextChat
 
         private void EnterKeyOnTextField()
         {
-            if (!Input.GetKeyDown(KeyCode.Return)) return;
+            // if (!Input.GetKeyDown(KeyCode.Return)) return;
             
             SendMessage();
         }
 
         private async void SendMessage()
         {
-            if (string.IsNullOrEmpty(chatInputField.text)) return;
+            if (string.IsNullOrEmpty(m_chatInputField.text)) return;
             
-            await VivoxService.Instance.SendChannelTextMessageAsync(m_VivoxManager.CurrentChannelName, chatInputField.text);
+            await VivoxService.Instance.SendChannelTextMessageAsync(m_vivoxManager.CurrentChannelName, m_chatInputField.text);
             ClearTextInput();
         }
 
         private async void SystemSendMessage(string message)
         {
-            await VivoxService.Instance.SendChannelTextMessageAsync(m_VivoxManager.CurrentChannelName, message);
+            await VivoxService.Instance.SendChannelTextMessageAsync(m_vivoxManager.CurrentChannelName, message);
         }
 
         private async void OnChannelJoined(string s)
@@ -174,16 +173,16 @@ namespace Project_Assets.Scripts.TextChat
 
         private void AddMessageToChat(VivoxMessage message, bool isHistory = false, bool scrollToBottom = false)
         {
-            var newMessageObj = Instantiate(chatListItem, chatContainer).GetComponent<ChatListItem>();
+            var newMessageObj = Instantiate(m_chatListItem, m_chatContainer).GetComponent<ChatListItem>();
 
             if (isHistory)
             {
-                m_MessageObjectPool.Insert(0, new KeyValuePair<string, ChatListItem>(message.MessageId, newMessageObj));
+                m_messageObjectPool.Insert(0, new KeyValuePair<string, ChatListItem>(message.MessageId, newMessageObj));
                 newMessageObj.transform.SetSiblingIndex(0);
             }
             else
             {
-                m_MessageObjectPool.Add(new KeyValuePair<string, ChatListItem>(message.MessageId, newMessageObj));
+                m_messageObjectPool.Add(new KeyValuePair<string, ChatListItem>(message.MessageId, newMessageObj));
             }
             
             newMessageObj.SetMessage(message);

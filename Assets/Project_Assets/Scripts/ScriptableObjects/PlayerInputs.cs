@@ -4,10 +4,10 @@ using UnityEngine.InputSystem;
 
 namespace Project_Assets.Scripts.ScriptableObjects
 {
-    [CreateAssetMenu(fileName = "InputManager", menuName = "Scriptable Objects/Input Reader")]
+    [CreateAssetMenu(fileName = "InputManager", menuName = "Scriptable Objects/Player Input Reader")]
     public class PlayerInputs : ScriptableObject, ProjectInputs.IPlayerActions
     {
-        private ProjectInputs m_Actions;
+        private ProjectInputs m_actions;
         
         public event Action<Vector2> OnMovementEvent;
         public event Action<Vector2> OnMouseAxisEvent;
@@ -16,14 +16,14 @@ namespace Project_Assets.Scripts.ScriptableObjects
         
         private void OnEnable()
         {
-            m_Actions ??= new();
-            m_Actions.Player.SetCallbacks(this);
-            m_Actions.Enable();
+            m_actions ??= new ProjectInputs();
+            m_actions.Player.SetCallbacks(this);
+            m_actions.Enable();
         }
         
         private void OnDisable()
         {
-            m_Actions.Disable();
+            m_actions.Disable();
         }
         
         public void OnMovement(InputAction.CallbackContext context)

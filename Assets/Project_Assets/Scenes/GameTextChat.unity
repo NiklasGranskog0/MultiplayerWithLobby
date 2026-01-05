@@ -243,10 +243,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62966b84779ce264dbccbb2a7358cf17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chatListItem: {fileID: 1663815204}
-  chatContainer: {fileID: 1663815203}
-  chatInputField: {fileID: 1663815206}
-  chatScrollRect: {fileID: 1663815205}
+  m_chatListItem: {fileID: 1663815204}
+  m_chatContainer: {fileID: 1663815203}
+  m_chatInputField: {fileID: 1663815206}
+  m_chatScrollRect: {fileID: 1663815205}
+  m_uiInputs: {fileID: 11400000, guid: f57425f75b40eac47bdfe3f0147e2a8d, type: 2}
 --- !u!1001 &1663815199
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -283,6 +284,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2533196304229770072, guid: 6748fb24c2d4fa84aa460675abf6eff2, type: 3}
+      propertyPath: m_chatMessage
+      value: 
+      objectReference: {fileID: 1663815201}
     - target: {fileID: 3661739574779846934, guid: 6748fb24c2d4fa84aa460675abf6eff2, type: 3}
       propertyPath: m_Value
       value: 1
@@ -455,6 +460,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4506876820366655579, guid: 6748fb24c2d4fa84aa460675abf6eff2, type: 3}
   m_PrefabInstance: {fileID: 1663815199}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1663815201 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1462678137355536224, guid: 6748fb24c2d4fa84aa460675abf6eff2, type: 3}
+  m_PrefabInstance: {fileID: 1663815199}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1663815203 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6329283187362344112, guid: 6748fb24c2d4fa84aa460675abf6eff2, type: 3}
