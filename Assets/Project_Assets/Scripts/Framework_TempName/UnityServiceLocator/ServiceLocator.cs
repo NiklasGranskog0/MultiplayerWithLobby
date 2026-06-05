@@ -65,7 +65,7 @@ namespace Project_Assets.Scripts.Framework_TempName.UnityServiceLocator
             {
                 if (s_global != null) return s_global;
 
-                if (FindFirstObjectByType<ServiceLocatorGlobalBootstrapper>() is { } found)
+                if (FindAnyObjectByType<ServiceLocatorGlobalBootstrapper>() is { } found)
                 {
                     found.BootstrapOnDemand();
                     return s_global;
@@ -203,8 +203,6 @@ namespace Project_Assets.Scripts.Framework_TempName.UnityServiceLocator
                     Debug.Log(globalString + endString);
                     break;
                 case ServiceLevel.Scene:
-                    Debug.Log(localOrScene + endString);
-                    break;
                 case ServiceLevel.Local:
                     Debug.Log(localOrScene + endString);
                     break;

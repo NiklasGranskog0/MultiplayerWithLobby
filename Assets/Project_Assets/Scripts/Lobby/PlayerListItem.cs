@@ -4,7 +4,6 @@ using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
 using TMPro;
 using Unity.Services.Authentication;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Project_Assets.Scripts.Lobby

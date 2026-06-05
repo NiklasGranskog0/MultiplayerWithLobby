@@ -16,7 +16,7 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
             {
                 if (s_instance != null) return s_instance;
                 
-                s_instance = FindFirstObjectByType<T>();
+                s_instance = FindAnyObjectByType<T>();
 
                 if (s_instance == null)
                 {

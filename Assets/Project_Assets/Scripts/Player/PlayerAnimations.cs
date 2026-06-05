@@ -13,6 +13,7 @@ namespace Project_Assets.Scripts.Player
             m_playerAnimManager.Initialize(PlayerAnim.IdleBattleSwordAndShield);
         }
 
+        // TODO: Get velocity / Speed from NavmeshAgent
         public void OnUpdate(float speed, Vector3 velocity)
         {
             UpdatePlayerAnimation(speed, velocity);

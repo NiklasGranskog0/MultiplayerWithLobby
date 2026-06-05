@@ -25,7 +25,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "MouseClick",
+                    "name": "RightMouseClick",
                     "type": "Button",
                     "id": "55a60079-bbec-4348-b211-f9e0d61aaed3",
                     "expectedControlType": "",
@@ -112,23 +112,12 @@
                 },
                 {
                     "name": "",
-                    "id": "b4300f9b-d28d-4d5a-aa05-de1714ee6e99",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "MouseClick",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "2421325c-1674-49e8-b9c0-718301e1e09a",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MouseClick",
+                    "action": "RightMouseClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
