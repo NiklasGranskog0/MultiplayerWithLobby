@@ -157,7 +157,7 @@ namespace Project_Assets.Scripts.Lobby
                 return s_statusReport;
             }
 
-            OnCreateLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
+            // OnCreateLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
 
             try
             {
@@ -187,11 +187,13 @@ namespace Project_Assets.Scripts.Lobby
             Poller.StartLobbyPolling(ActiveLobby);
 
             OnJoinedTextChannel?.Invoke(ActiveLobby.Id);
+            OnCreateLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
             OnSetGameCode?.Invoke(ActiveLobby.LobbyCode);
 
             return s_statusReport;
         }
 
+        // TODO: When leaving a lobby, the leaving user is still connected to the relay
         public async Task<StatusReport> LeaveLobbyAsync()
         {
             if (ActiveLobby == null)

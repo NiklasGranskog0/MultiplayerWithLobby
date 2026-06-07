@@ -8,6 +8,8 @@ using Unity.Netcode;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
 {
@@ -35,6 +37,17 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
                     UnityEngine.Object.Destroy(child.gameObject);
                 }
             }
+        }
+        
+        #endregion
+        
+        #region Agents
+
+        // TODO: This is a hack to get the NavMeshAgent to work. (When agent is spawned it does not find navmesh)
+        public static void FixNavMeshNotFound(this NavMeshAgent agent)
+        {
+            agent.enabled = false;
+            agent.enabled = true;
         }
         
         #endregion

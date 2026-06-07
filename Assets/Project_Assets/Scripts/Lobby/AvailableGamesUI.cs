@@ -26,7 +26,7 @@ namespace Project_Assets.Scripts.Lobby
         [SerializeField] private Button m_joinGameButton;
         [SerializeField] private Button m_refreshGamesButton;
 
-        // TODO: This is probably gonna be the logout button in the future
+        // TODO: This is probably gonna be the logout button
         [SerializeField] private Button m_quitButton;
 
         [Header("Game Info")]
@@ -73,12 +73,15 @@ namespace Project_Assets.Scripts.Lobby
             m_panelSwitcher.SwitchPanel(LobbyPanel.CreatePanel);
         }
         
+        // TODO: When OnRefreshGameList is called, the LobbyListChanged event is fired, which makes this redundant
+        // When querying for lobbies, populate the list with them
         private void OnLobbyListChanged(LobbyListChangedEventArgs obj)
         {
             PopulateLobbyList(obj.Lobbies);
             Debug.Log("Populate Lobby List (LobbyListChanged)".Color("cyan"));
         }
         
+        // When refreshing, get all the active lobbies and populate the game list
         private async void OnRefreshGameList()
         {
             var task = await m_lobbyManager.GetAllActiveLobbiesAsync();
@@ -86,16 +89,16 @@ namespace Project_Assets.Scripts.Lobby
             PrintStatusLog(task.Status, LobbyPanel.GamePanel);
         }
         
+        // Clear the game list and populate it with new lobbies if there are any
         private void PopulateLobbyList(List<Unity.Services.Lobbies.Models.Lobby> lobbies)
         {
+            m_gameListItemContainer.ClearContainer();
+            
             if (lobbies == null || lobbies.Count == 0)
             {
                 Debug.Log("No lobbies found".Color("red"));
-                m_gameListItemContainer.ClearContainer();
                 return;
             }
-
-            m_gameListItemContainer.ClearContainer();
 
             foreach (var lobby in lobbies)
             {
@@ -105,6 +108,7 @@ namespace Project_Assets.Scripts.Lobby
             }
         }
         
+        // Join the selected game
         private async void JoinSelectedGame()
         {
             bool joinedByCode = false;
@@ -115,6 +119,7 @@ namespace Project_Assets.Scripts.Lobby
                 joinedByCode = await TryJoinByCode();
             }
         
+            // If we could not join by code, try joining by lobby id
             if (!string.IsNullOrEmpty(CurrentSelectedLobby?.Id) && !joinedByCode)
             {
                 var task = await m_lobbyManager.JoinLobbyByIdAsync(CurrentSelectedLobby?.Id, m_gamePasswordInputField.text);
@@ -122,6 +127,7 @@ namespace Project_Assets.Scripts.Lobby
             }
         }
         
+        // Try joining by code
         private async Task<bool> TryJoinByCode()
         {
             if (!string.IsNullOrWhiteSpace(m_gameCodeInputField.text))
@@ -136,13 +142,14 @@ namespace Project_Assets.Scripts.Lobby
             return false;
         }
         
+        // Print the status log
         private void PrintStatusLog(StatusReport task, LobbyPanel panel)
         {
-            if (!task.Success)
-            {
-                m_errorMessage.ShowError(task.Message, panel);
-                return;
-            }
+            // if (!task.Success)
+            // {
+            //     m_errorMessage.ShowError(task.Message, panel);
+            //     return;
+            // }
 
             task.Log();
         }

@@ -7,15 +7,21 @@ namespace Project_Assets.Scripts.Framework_TempName.HelperScripts.NavMesh
     {
         // Layer mask for navmesh
         public LayerMask NavMeshLayer;
-        
-        // Re bake all navmeshes with the same layer mask
+
+        // This will rebake all navmeshes in the scene.
+        // It will also set the layer of the navmeshes to the given layer mask in the inspector,
+        // except for the player plane navmesh.
         public void ReBake()
         {
             var allNavMeshes = FindObjectsByType<NavMeshSurface>();
-            
+
             foreach (var navmesh in allNavMeshes)
             {
-                navmesh.layerMask = NavMeshLayer;
+                if (navmesh.layerMask != LayerMask.NameToLayer("PlayerPlane"))
+                {
+                    navmesh.layerMask = NavMeshLayer;
+                }
+
                 navmesh.BuildNavMesh();
             }
         }

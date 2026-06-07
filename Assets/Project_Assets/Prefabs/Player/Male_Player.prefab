@@ -205,7 +205,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3149431956
+  GlobalObjectIdHash: 3832411278
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -235,6 +235,7 @@ MonoBehaviour:
   m_playerAnimationsComponent: {fileID: 1981519173124256410}
   m_playerMovementComponent: {fileID: 4229821249715826934}
   m_playerCameraComponent: {fileID: 8685134871490229403}
+  PlayerId: 0
 --- !u!114 &-7131759201153768744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -380,7 +381,7 @@ MonoBehaviour:
   m_playerAgent: {fileID: 5236679953515986149}
   m_playerAgentLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 128
 --- !u!114 &5646962731801522647
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -411,10 +412,10 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
+  m_Speed: 10
+  m_Acceleration: 10
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 360
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -471,6 +472,7 @@ MonoBehaviour:
   m_playerCamera: {fileID: 1724558519648471210}
   m_cameraTarget: {fileID: 7206342114301655538}
   m_cameraMoveSpeed: 15
+  PlayerId: 0
 --- !u!1001 &751116366957411312
 PrefabInstance:
   m_ObjectHideFlags: 0

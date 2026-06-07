@@ -353,8 +353,16 @@ PrefabInstance:
       value: NetworkManager
       objectReference: {fileID: 0}
     - target: {fileID: 2476731932821127906, guid: 110b07d6a5f6c884fbb25f9700a17774, type: 3}
+      propertyPath: NetworkConfig.NetworkTopology
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2476731932821127906, guid: 110b07d6a5f6c884fbb25f9700a17774, type: 3}
       propertyPath: NetworkConfig.EnableSceneManagement
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7440141193389609598, guid: 110b07d6a5f6c884fbb25f9700a17774, type: 3}
+      propertyPath: m_ProtocolType
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7440141193389609598, guid: 110b07d6a5f6c884fbb25f9700a17774, type: 3}
       propertyPath: m_UseEncryption
