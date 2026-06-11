@@ -1158,6 +1158,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -7907,7 +7908,7 @@ MonoBehaviour:
   m_LeftClickAction: {fileID: -770583136395280656, guid: 70ff86ed5c58d6543a163bcd4f98a8ad, type: 3}
   m_MiddleClickAction: {fileID: 6176900843013425737, guid: 70ff86ed5c58d6543a163bcd4f98a8ad, type: 3}
   m_RightClickAction: {fileID: 8314886118865183301, guid: 70ff86ed5c58d6543a163bcd4f98a8ad, type: 3}
-  m_ScrollWheelAction: {fileID: 0}
+  m_ScrollWheelAction: {fileID: 5581500342354591664, guid: 70ff86ed5c58d6543a163bcd4f98a8ad, type: 3}
   m_TrackedDevicePositionAction: {fileID: 0}
   m_TrackedDeviceOrientationAction: {fileID: 0}
   m_DeselectOnBackgroundClick: 1
@@ -17364,6 +17365,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -19400,7 +19402,7 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2045384263}
   m_Enabled: 1
-  serializedVersion: 12
+  serializedVersion: 13
   m_Type: 1
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
@@ -19452,7 +19454,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
-  m_ShadowRadius: 0
+  m_ShapeRadius: 0
   m_ShadowAngle: 0
   m_LightUnit: 1
   m_LuxAtDistance: 1

@@ -9,7 +9,8 @@ namespace Project_Assets.Scripts.ScriptableObjects
     {
         private ProjectInputs m_actions;
 
-        public event Action OnReturnKeyEvent;
+        public event Action OnEnterKeyEvent;
+        public event Action OnRightClickEvent;
         public event Action<Vector2> OnScrollWheelEvent;
 
         private void OnEnable()
@@ -24,12 +25,15 @@ namespace Project_Assets.Scripts.ScriptableObjects
             m_actions.Disable();
         }
         
+        // TODO: Rename to OnEnterKey
         public void OnReturnKey(InputAction.CallbackContext context)
         {
-            if (context.performed) { OnReturnKeyEvent?.Invoke(); }
+            if (context.performed)
+                OnEnterKeyEvent?.Invoke();
         }
 
         public void OnNavigate(InputAction.CallbackContext context) { }
+
         public void OnSubmit(InputAction.CallbackContext context) { }
         public void OnCancel(InputAction.CallbackContext context) { }
         public void OnPoint(InputAction.CallbackContext context) { }
@@ -42,7 +46,14 @@ namespace Project_Assets.Scripts.ScriptableObjects
         }
         
         public void OnMiddleClick(InputAction.CallbackContext context) { }
-        public void OnRightClick(InputAction.CallbackContext context) { }
+
+        public void OnRightClick(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                OnRightClickEvent?.Invoke();
+        }
+        
+        
         public void OnTrackedDevicePosition(InputAction.CallbackContext context) { }
         public void OnTrackedDeviceOrientation(InputAction.CallbackContext context) { }
         

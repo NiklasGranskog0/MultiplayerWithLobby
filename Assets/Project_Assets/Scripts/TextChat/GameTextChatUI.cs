@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
 using Project_Assets.Scripts.ScriptableObjects;
 using TMPro;
@@ -11,6 +13,8 @@ namespace Project_Assets.Scripts.TextChat
 {
     public class GameTextChatUI : MonoBehaviour
     {
+        [SerializeField] private GameObject m_gameChatObject;
+        [SerializeField] private EventSystem m_eventSystem;
         [SerializeField] private GameObject m_chatListItem;
         [SerializeField] private Transform m_chatContainer;
         [SerializeField] private TMP_InputField m_chatInputField;
@@ -27,7 +31,7 @@ namespace Project_Assets.Scripts.TextChat
             VivoxService.Instance.ChannelMessageReceived += OnChannelMessageReceived;
             VivoxService.Instance.ChannelLeft += OnChannelLeft;
 
-            m_uiInputs.OnReturnKeyEvent += HandleChatInput;
+            m_uiInputs.OnEnterKeyEvent += HandleChatInput;
         }
 
         private void OnDisable()
@@ -37,17 +41,25 @@ namespace Project_Assets.Scripts.TextChat
 
         private async void OnChannelLeft(string channelName)
         {
-            await VivoxService.Instance.LeaveAllChannelsAsync();
+            try
+            {
+                await VivoxService.Instance.LeaveAllChannelsAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
-        // TODO: Wrap text message so text doesn't get smaller
+        // TODO: Wrap text message to a new line if it exceeds the max character limit
+        // TODO: Close chat window on enter if chat input field is empty
         private void HandleChatInput()
         {
+            // m_gameChatObject.SetActive(true);
             m_chatInputField.gameObject.SetActive(true);
-            EventSystem.current.SetSelectedGameObject(m_chatInputField.gameObject, null);
+            m_eventSystem.SetSelectedGameObject(m_chatInputField.gameObject, null);
             m_chatInputField.ActivateInputField();
-
-            if (string.IsNullOrEmpty(m_chatInputField.text)) return;
             SendMessage();
         }
 
@@ -67,7 +79,7 @@ namespace Project_Assets.Scripts.TextChat
         private async void SendMessage()
         {
             if (string.IsNullOrEmpty(m_chatInputField.text)) return;
-
+            
             await VivoxService.Instance.SendChannelTextMessageAsync(m_vivoxManager.CurrentChannelName,
                 m_chatInputField.text);
             ClearTextInput();

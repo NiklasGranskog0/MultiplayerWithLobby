@@ -13,7 +13,7 @@ namespace Project_Assets.Scripts.ScriptableObjects
         public event Action<Vector2> OnMouseAxisEvent;
         public event Action<Vector2> OnMouseMovedEvent;
         public event Action OnRightMouseClickEvent;
-        
+
         private void OnEnable()
         {
             m_actions ??= new ProjectInputs();

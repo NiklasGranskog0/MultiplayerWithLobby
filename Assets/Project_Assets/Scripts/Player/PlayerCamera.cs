@@ -20,7 +20,7 @@ namespace Project_Assets.Scripts.Player
             m_playerInputs.OnMovementEvent += SetCameraMoveDirection;
             
             m_playerCamera.gameObject.SetActive(isOwner);
-            transform.rotation = Quaternion.Euler(0, -90f, 0);
+            transform.rotation = Quaternion.Euler(-15f, -90f, 0);
             
             transform.SetParent(null, true);
         }

@@ -1,0 +1,35 @@
+using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using Button = UnityEngine.UI.Button;
+
+namespace Project_Assets.Scripts.Game.MenuButtons
+{
+    public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    {
+        [Header("Button Components")]
+        public Button ButtonComponent;
+        public Image ImageComponent;
+        public GameObject ButtonObject;
+        
+        [HideInInspector] public KeyCode ShortcutKey;
+        [HideInInspector] public string TextToolTip = "";
+        [HideInInspector] public bool HasToolTip = true;
+        
+        [Header("Tooltip Components")]
+        // Text to set in tooltip if hover over button
+        public GameObject TextAreaObject;
+        public TextMeshProUGUI TextArea;
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            if (!HasToolTip) return;
+            
+            TextArea.text = TextToolTip;
+            TextAreaObject.SetActive(true);
+        }
+        
+        public void OnPointerExit(PointerEventData eventData) => TextAreaObject.SetActive(false);
+    }
+}

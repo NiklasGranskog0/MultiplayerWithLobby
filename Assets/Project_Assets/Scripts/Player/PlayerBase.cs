@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 namespace Project_Assets.Scripts.Player
 {
     // TODO: Do the player actually need to be a NetworkBehaviour?
+    // TODO: Rename to PlayerCharacterBase
     public class PlayerBase : NetworkBehaviour
     {
         [SerializeField] private PlayerInputs m_playerInputsComponent;

@@ -49,7 +49,7 @@ namespace Project_Assets.Scripts.TextChat
             
             m_chatScrollRect.onValueChanged.AddListener(ScrollRectChange);
             
-            m_uiInputs.OnReturnKeyEvent += EnterKeyOnTextField;
+            m_uiInputs.OnEnterKeyEvent += EnterKeyOnTextField;
         }
 
         private void OnLeftTextChannel(string obj)
