@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 4229821249715826934}
   - component: {fileID: 5646962731801522647}
   - component: {fileID: 5236679953515986149}
+  - component: {fileID: 1852456190936114056}
   m_Layer: 0
   m_Name: Male_Player
   m_TagString: Untagged
@@ -377,7 +378,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 968624b9f60729e49877877ee951b818, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Player.PlayerMovement
-  m_playerCamera: {fileID: 1724558519648471210}
   m_playerAgent: {fileID: 5236679953515986149}
   m_playerAgentLayer:
     serializedVersion: 2
@@ -424,6 +424,20 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1852456190936114056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4229498176680890359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2552efceb8315c4d98294a01d649ed0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Player.PlayerMouseTarget
+  m_playerCamera: {fileID: 1724558519648471210}
+  m_playerInputs: {fileID: 11400000, guid: 2f42087214b976b41902f162fa41bfb8, type: 2}
 --- !u!1 &7755314885684838666
 GameObject:
   m_ObjectHideFlags: 0
