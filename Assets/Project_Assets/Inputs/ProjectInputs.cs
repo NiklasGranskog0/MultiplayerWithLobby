@@ -120,6 +120,15 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""LeftMouseClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""e1379a13-9835-4559-80f7-3222de7530db"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""MouseAxis"",
                     ""type"": ""Value"",
                     ""id"": ""7829980b-73db-459d-9709-a0432e5e9f71"",
@@ -204,6 +213,17 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""RightMouseClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2b0ede1f-0e44-4c2c-ad99-00258ba31f94"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftMouseClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -787,6 +807,7 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
         m_Player_MousePosition = m_Player.FindAction("MousePosition", throwIfNotFound: true);
         m_Player_RightMouseClick = m_Player.FindAction("RightMouseClick", throwIfNotFound: true);
+        m_Player_LeftMouseClick = m_Player.FindAction("LeftMouseClick", throwIfNotFound: true);
         m_Player_MouseAxis = m_Player.FindAction("MouseAxis", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
@@ -885,6 +906,7 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Movement;
     private readonly InputAction m_Player_MousePosition;
     private readonly InputAction m_Player_RightMouseClick;
+    private readonly InputAction m_Player_LeftMouseClick;
     private readonly InputAction m_Player_MouseAxis;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
@@ -909,6 +931,10 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/RightMouseClick".
         /// </summary>
         public InputAction @RightMouseClick => m_Wrapper.m_Player_RightMouseClick;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/LeftMouseClick".
+        /// </summary>
+        public InputAction @LeftMouseClick => m_Wrapper.m_Player_LeftMouseClick;
         /// <summary>
         /// Provides access to the underlying input action "Player/MouseAxis".
         /// </summary>
@@ -948,6 +974,9 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
             @RightMouseClick.started += instance.OnRightMouseClick;
             @RightMouseClick.performed += instance.OnRightMouseClick;
             @RightMouseClick.canceled += instance.OnRightMouseClick;
+            @LeftMouseClick.started += instance.OnLeftMouseClick;
+            @LeftMouseClick.performed += instance.OnLeftMouseClick;
+            @LeftMouseClick.canceled += instance.OnLeftMouseClick;
             @MouseAxis.started += instance.OnMouseAxis;
             @MouseAxis.performed += instance.OnMouseAxis;
             @MouseAxis.canceled += instance.OnMouseAxis;
@@ -971,6 +1000,9 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
             @RightMouseClick.started -= instance.OnRightMouseClick;
             @RightMouseClick.performed -= instance.OnRightMouseClick;
             @RightMouseClick.canceled -= instance.OnRightMouseClick;
+            @LeftMouseClick.started -= instance.OnLeftMouseClick;
+            @LeftMouseClick.performed -= instance.OnLeftMouseClick;
+            @LeftMouseClick.canceled -= instance.OnLeftMouseClick;
             @MouseAxis.started -= instance.OnMouseAxis;
             @MouseAxis.performed -= instance.OnMouseAxis;
             @MouseAxis.canceled -= instance.OnMouseAxis;
@@ -1254,6 +1286,13 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRightMouseClick(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "LeftMouseClick" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLeftMouseClick(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "MouseAxis" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

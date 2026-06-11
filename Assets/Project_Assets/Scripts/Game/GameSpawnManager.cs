@@ -27,12 +27,12 @@ namespace Project_Assets.Scripts.Game
         {
             ServiceLocator.Global.Get(out m_menuButtons);
             
-            m_menuButtons.BindButton(GameMenuButton.MiddleCenterLeft, TestFunction, TestImage, $"Test\nNewLineTest\nShortcut key: {nameof(KeyCode.C)}".Color("blue"), KeyCode.C);
+            m_menuButtons.BindButton(GameMenuButton.TopLeft, TestFunction, TestImage, $"Upgrades Base to tier 2: {nameof(KeyCode.C)}".Color("white"));
         }
 
         private void TestFunction()
         {
-            Debug.Log("Test Button Clicked".Color("orange"));
+            Debug.Log("Upgrade Button Clicked".Color("orange"));
         }
 
         public Dictionary<ulong, Transform> SetPlayersSpawnPoint(List<ulong> players)

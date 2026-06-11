@@ -13,6 +13,7 @@ namespace Project_Assets.Scripts.ScriptableObjects
         public event Action<Vector2> OnMouseAxisEvent;
         public event Action<Vector2> OnMouseMovedEvent;
         public event Action OnRightMouseClickEvent;
+        public event Action OnLeftMouseClickEvent;
 
         private void OnEnable()
         {
@@ -42,6 +43,12 @@ namespace Project_Assets.Scripts.ScriptableObjects
         {
             if (context.performed)
                 OnRightMouseClickEvent?.Invoke();
+        }
+
+        public void OnLeftMouseClick(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                OnLeftMouseClickEvent?.Invoke();
         }
 
         public void OnMouseAxis(InputAction.CallbackContext context)
