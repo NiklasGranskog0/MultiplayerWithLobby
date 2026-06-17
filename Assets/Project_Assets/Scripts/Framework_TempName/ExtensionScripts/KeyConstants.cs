@@ -1,5 +1,6 @@
 namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
 {
+    // TODO: StringConstants
     public static class KeyConstants
     {
         public const string k_PlayerName = "PlayerName";

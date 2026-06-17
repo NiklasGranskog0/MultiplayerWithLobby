@@ -32,6 +32,11 @@ namespace Project_Assets.Scripts.ScriptableObjects
             if (context.performed || context.canceled)
                 OnMovementEvent?.Invoke(context.ReadValue<Vector2>());
         }
+
+        public void InvokeMouseMoveEvent()
+        {
+            OnMouseMovedEvent?.Invoke(Mouse.current.position.ReadValue());
+        }
         
         public void OnMousePosition(InputAction.CallbackContext context)
         {

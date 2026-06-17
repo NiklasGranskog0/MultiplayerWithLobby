@@ -35,6 +35,7 @@ namespace Project_Assets.Scripts.Player
         {
             m_cameraMoveDirection.x = -direction.y;
             m_cameraMoveDirection.z = direction.x;
+            // m_playerInputs.InvokeMouseMoveEvent();
         }
     }
 }

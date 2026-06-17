@@ -8,6 +8,7 @@ using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
 using Project_Assets.Scripts.ScriptableObjects.SerializedDictionaries;
 using Project_Assets.Scripts.Structs;
 using TMPro;
+using Unity.Netcode;
 using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.UI;
@@ -72,7 +73,7 @@ namespace Project_Assets.Scripts.Lobby
 
         private void OnHostStartGame()
         {
-            // TODO: Lobby players leave button still active during game starting countdown
+            // TODO: Lobby players leave button still active during game-starting countdown
             m_leaveLobbyButton.interactable = false;
             OnStartGame?.Invoke();
         }

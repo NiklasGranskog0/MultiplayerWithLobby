@@ -36,6 +36,7 @@ namespace Project_Assets.Scripts.Lobby
         public event Action<string> OnLeftTextChannel;
         public event Action<string> OnSetGameCode;
         public event Action<string> OnSendSystemMessage;
+        public event Action<Unity.Services.Lobbies.Models.Lobby> OnSendLobbyPlayers;
 
         private static StatusReport s_statusReport;
         private static LobbiesStatusReport s_lobbiesStatusReport;
@@ -43,6 +44,7 @@ namespace Project_Assets.Scripts.Lobby
 
         private readonly LobbyEventCallbacks m_eventCallbacks = new();
         private PlayerAuthentication m_playerAuthentication;
+        private PlayersInLobby m_playersInLobby;
         private SceneManager m_sceneManager;
         private LobbyUI m_lobbyUI;
         private RelayManager m_relayManager;
@@ -61,6 +63,7 @@ namespace Project_Assets.Scripts.Lobby
         {
             ServiceLocator.Global.Get(out m_playerAuthentication);
             ServiceLocator.Global.Get(out m_sceneManager);
+            ServiceLocator.Global.Get(out m_playersInLobby);
             ServiceLocator.ForSceneOf(this).Get(out m_lobbyUI);
             ServiceLocator.ForSceneOf(this).Get(out m_relayManager);
         }
@@ -157,6 +160,8 @@ namespace Project_Assets.Scripts.Lobby
                 return s_statusReport;
             }
 
+            // TODO: invokes this event later to avoid to be able to click start button in lobby while
+            // TODO: other scripts are still loading, relay manager, etc
             // OnCreateLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
 
             try
@@ -455,6 +460,7 @@ namespace Project_Assets.Scripts.Lobby
 
                 m_sceneManager.SwitchLoadingScreen(LoadingScreenEnum.Game);
                 m_sceneManager.SetLoadingScreenTitle(ActiveLobby.Name);
+                OnSendLobbyPlayers?.Invoke(ActiveLobby);
                 await m_sceneManager.LoadSceneGroupByEnum(SceneGroupToLoad.Game);
             }
             catch (LobbyServiceException e)

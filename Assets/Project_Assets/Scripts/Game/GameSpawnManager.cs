@@ -23,7 +23,7 @@ namespace Project_Assets.Scripts.Game
 
 
         public Image TestImage;
-        private void Start()
+        private void Start() // TODO TEMP TEST
         {
             ServiceLocator.Global.Get(out m_menuButtons);
             
@@ -37,8 +37,7 @@ namespace Project_Assets.Scripts.Game
 
         public Dictionary<ulong, Transform> SetPlayersSpawnPoint(List<ulong> players)
         {
-            // TODO: Add an equal or more spawn points than players to prevent out of bounds
-            // TODO: Bind the spawn point to the player
+            // TODO: 0, and equal number spawn on left side, and odd number spawn on right side
             for (int i = 0; i < players.Count; i++)
             {
                 m_availableSpawnPoints.Add(players[i], m_spawnPoints[i]);

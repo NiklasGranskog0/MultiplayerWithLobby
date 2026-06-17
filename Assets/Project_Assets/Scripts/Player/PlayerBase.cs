@@ -13,7 +13,7 @@ namespace Project_Assets.Scripts.Player
         [SerializeField] private PlayerAnimations m_playerAnimationsComponent;
         [SerializeField] private PlayerMovement m_playerMovementComponent;
         [SerializeField] private PlayerCamera m_playerCameraComponent;
-        public ulong PlayerId;
+        public ulong PlayerId { get; private set; }
 
         private void Start()
         {
@@ -24,7 +24,7 @@ namespace Project_Assets.Scripts.Player
             m_playerMovementComponent.Initialize(m_playerInputsComponent);
             
             // Just to see if player object and camera object have the same ID 
-            PlayerId = m_playerCameraComponent.PlayerId = NetworkObjectId;
+            m_playerCameraComponent.PlayerId = PlayerId;
         }
 
         private void Update()
@@ -38,5 +38,7 @@ namespace Project_Assets.Scripts.Player
                 m_playerCameraComponent.OnUpdate();
             }
         }
+
+        public override void OnNetworkSpawn() => PlayerId = OwnerClientId;
     }
 }

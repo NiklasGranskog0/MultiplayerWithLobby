@@ -25,8 +25,8 @@ namespace Project_Assets.Scripts.Lobby
         public TMP_Dropdown TeamDropdown;
         private PlayerConfiguration m_playerConfiguration;
 
-        private string PlayerId { get; set; }
-        private bool PlayerReady { get; set; }
+        private string m_playerId { get; set; }
+        private bool m_playerReady { get; set; }
 
         private LobbyManager m_lobbyManager;
         private ErrorMessageText m_errorMessageText;
@@ -36,7 +36,7 @@ namespace Project_Assets.Scripts.Lobby
             ServiceLocator.ForSceneOf(this).Get(out m_lobbyManager);
             ServiceLocator.ForSceneOf(this).Get(out m_errorMessageText);
 
-            PlayerId = playerId;
+            m_playerId = playerId;
             m_playerConfiguration = config;
 
             if (m_playerConfiguration.IsHostPlayer)
@@ -58,7 +58,7 @@ namespace Project_Assets.Scripts.Lobby
             if (m_playerConfiguration.IsHostPlayer)
             {
                 ReadyButton.gameObject.SetActive(false);
-                PlayerReady = true;
+                m_playerReady = true;
                 m_playerConfiguration.Player.Data[KeyConstants.k_PlayerReady].Value = "true";
             }
            
@@ -97,24 +97,24 @@ namespace Project_Assets.Scripts.Lobby
                     if (ReadyButtonText != null) ReadyButtonText.text = "Not Ready";
                 }
 
-                PlayerReady = ready;
+                m_playerReady = ready;
             }
         }
 
         private async void OnReadyClick()
         {
-            PlayerReady = !PlayerReady;
+            m_playerReady = !m_playerReady;
 
-            var report = await m_lobbyManager.UpdateReadyButton(PlayerId, PlayerReady);
+            var report = await m_lobbyManager.UpdateReadyButton(m_playerId, m_playerReady);
 
             if (!report.Success)
             {
                 // Revert on failure
                 m_errorMessageText.ShowError(report.Message, LobbyPanel.Lobby);
 
-                PlayerReady = !PlayerReady;
+                m_playerReady = !m_playerReady;
 
-                if (PlayerReady)
+                if (m_playerReady)
                 {
                     if (ReadyButton.targetGraphic != null) ReadyButton.targetGraphic.color = Color.green;
                     if (ReadyButtonText != null) ReadyButtonText.text = "Ready";
@@ -152,7 +152,7 @@ namespace Project_Assets.Scripts.Lobby
 
         private async void OnTeamSelectionChanged(int index)
         {
-            var report = await m_lobbyManager.UpdatePlayerTeamAsync(PlayerId, index);
+            var report = await m_lobbyManager.UpdatePlayerTeamAsync(m_playerId, index);
 
             if (!report.Success) m_errorMessageText.ShowError(report.Message, LobbyPanel.Lobby);
             else report.Log();
@@ -160,7 +160,7 @@ namespace Project_Assets.Scripts.Lobby
 
         private async void OnClickKickButton()
         {
-            var report = await m_lobbyManager.KickPlayerAsync(PlayerId);
+            var report = await m_lobbyManager.KickPlayerAsync(m_playerId);
             if (!report.Success) m_errorMessageText.ShowError(report.Message, LobbyPanel.Lobby);
             else report.Log();
         }
@@ -169,7 +169,7 @@ namespace Project_Assets.Scripts.Lobby
         {
             KickButton.onClick.RemoveListener(OnClickKickButton);
             TeamDropdown.onValueChanged.RemoveListener(OnTeamSelectionChanged);
-            PlayerId = null;
+            m_playerId = null;
         }
     }
 }

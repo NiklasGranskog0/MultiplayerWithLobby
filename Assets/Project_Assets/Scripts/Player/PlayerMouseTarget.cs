@@ -1,6 +1,7 @@
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
 using Project_Assets.Scripts.ScriptableObjects;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Project_Assets.Scripts.Player
 {
@@ -9,16 +10,21 @@ namespace Project_Assets.Scripts.Player
         [SerializeField] private Camera m_playerCamera;
         [SerializeField] private PlayerInputs m_playerInputs;
         private Vector3 m_mousePosition;
-        private ulong m_playerId; // TODO: Temp
+        private ulong m_playerId; // TODO: Might be useful or not
         
-        public Ray MouseRay => m_playerCamera.ScreenPointToRay(m_mousePosition);
-
-        private void Awake()
+        public Ray MouseRay 
         {
-            ServiceLocator.Global.Register(this, ServiceLevel.Global, gameObject.scene.name);
-            m_playerInputs.OnMouseMovedEvent += UpdateMouseLocation;
-        }
+            get
+            {
+                if (Mouse.current != null)
+                {
+                    m_mousePosition = Mouse.current.position.ReadValue();
+                }
+                
+                return m_playerCamera.ScreenPointToRay(m_mousePosition);
+            }
+        } 
 
-        private void UpdateMouseLocation(Vector2 mousePosition) => m_mousePosition = mousePosition;
+        private void Awake() => ServiceLocator.Global.Register(this, ServiceLevel.Global, gameObject.scene.name);
     }
 }
