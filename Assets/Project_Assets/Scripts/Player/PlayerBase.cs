@@ -12,19 +12,25 @@ namespace Project_Assets.Scripts.Player
         [SerializeField] private PlayerInputs m_playerInputsComponent;
         [SerializeField] private PlayerAnimations m_playerAnimationsComponent;
         [SerializeField] private PlayerMovement m_playerMovementComponent;
-        [SerializeField] private PlayerCamera m_playerCameraComponent;
-        public ulong PlayerId { get; private set; }
+        [SerializeField] private Transform m_cameraStartPosition;
+        public PlayerCamera PlayerCameraComponent { get; set; }
+        private ulong m_playerId { get; set; }
 
         private void Start()
         {
             // Player object spawned in the Startup scene, so move it to the Game scene
             SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetSceneByName("Game"));
             
-            m_playerCameraComponent.Initialize(m_playerInputsComponent, IsOwner);
-            m_playerMovementComponent.Initialize(m_playerInputsComponent);
-            
-            // Just to see if player object and camera object have the same ID 
-            m_playerCameraComponent.PlayerId = PlayerId;
+            var playerCamera = FindObjectsByType<PlayerCamera>();
+            foreach (var cam in playerCamera)
+            {
+                if (cam.PlayerId != m_playerId) continue;
+
+                PlayerCameraComponent = cam;
+            }
+
+            PlayerCameraComponent.Initialize(m_playerInputsComponent, m_cameraStartPosition, IsOwner);
+            m_playerMovementComponent.Initialize(m_playerInputsComponent, PlayerCameraComponent);
         }
 
         private void Update()
@@ -33,12 +39,12 @@ namespace Project_Assets.Scripts.Player
             if (!IsOwner) return;
 
             // If the text chat window is open, don't update player movement
-            if (m_playerCameraComponent)
+            if (PlayerCameraComponent)
             {
-                m_playerCameraComponent.OnUpdate();
+                PlayerCameraComponent.OnUpdate();
             }
         }
 
-        public override void OnNetworkSpawn() => PlayerId = OwnerClientId;
+        public override void OnNetworkSpawn() => m_playerId = OwnerClientId;
     }
 }

@@ -27,12 +27,12 @@ namespace Project_Assets.Scripts.Structs
         {
             Data = new Dictionary<string, DataObject>
             {
-                {KeyConstants.k_GameMode, new DataObject(GameMode.visibilityOptions, GameMode.mode.GameModeToString())},
-                {KeyConstants.k_Map, new DataObject(GameMap.visibilityOptions, GameMap.map.GameMapToString())},
-                {KeyConstants.k_MaxPlayers, new DataObject(MaxPlayers.visibilityOptions, MaxPlayers.max.ToString())},
-                {KeyConstants.k_GameName, new DataObject(GameName.visibilityOptions, GameName.name)},
-                {KeyConstants.k_GameSpeed, new DataObject(GameSpeed.visibilityOptions, GameSpeed.speed.GameSpeedToString())},
-                {KeyConstants.k_GameImage, new DataObject(DataObject.VisibilityOptions.Public, GameImage.imageName)},
+                {StringConstants.k_GameMode, new DataObject(GameMode.visibilityOptions, GameMode.mode.GameModeToString())},
+                {StringConstants.k_Map, new DataObject(GameMap.visibilityOptions, GameMap.map.GameMapToString())},
+                {StringConstants.k_MaxPlayers, new DataObject(MaxPlayers.visibilityOptions, MaxPlayers.max.ToString())},
+                {StringConstants.k_GameName, new DataObject(GameName.visibilityOptions, GameName.name)},
+                {StringConstants.k_GameSpeed, new DataObject(GameSpeed.visibilityOptions, GameSpeed.speed.GameSpeedToString())},
+                {StringConstants.k_GameImage, new DataObject(DataObject.VisibilityOptions.Public, GameImage.imageName)},
             };
         }
     }

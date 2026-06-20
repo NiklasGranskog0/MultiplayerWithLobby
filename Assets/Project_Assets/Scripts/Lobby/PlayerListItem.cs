@@ -59,13 +59,13 @@ namespace Project_Assets.Scripts.Lobby
             {
                 ReadyButton.gameObject.SetActive(false);
                 m_playerReady = true;
-                m_playerConfiguration.Player.Data[KeyConstants.k_PlayerReady].Value = "true";
+                m_playerConfiguration.Player.Data[StringConstants.k_PlayerReady].Value = "true";
             }
            
             // Initialize dropdown from player data without triggering callbacks
             if (m_playerConfiguration.Player.Data != null &&
-                m_playerConfiguration.Player.Data.ContainsKey(KeyConstants.k_PlayerTeam) &&
-                int.TryParse(m_playerConfiguration.Player.Data[KeyConstants.k_PlayerTeam].Value, out var teamIndex))
+                m_playerConfiguration.Player.Data.ContainsKey(StringConstants.k_PlayerTeam) &&
+                int.TryParse(m_playerConfiguration.Player.Data[StringConstants.k_PlayerTeam].Value, out var teamIndex))
             {
                 TeamDropdown.SetValueWithoutNotify(teamIndex);
             }
@@ -79,8 +79,8 @@ namespace Project_Assets.Scripts.Lobby
             {
                 bool ready = false;
                 if (m_playerConfiguration.Player.Data != null &&
-                    m_playerConfiguration.Player.Data.ContainsKey(KeyConstants.k_PlayerReady) &&
-                    bool.TryParse(m_playerConfiguration.Player.Data[KeyConstants.k_PlayerReady].Value,
+                    m_playerConfiguration.Player.Data.ContainsKey(StringConstants.k_PlayerReady) &&
+                    bool.TryParse(m_playerConfiguration.Player.Data[StringConstants.k_PlayerReady].Value,
                         out var parsedReady))
                 {
                     ready = parsedReady;

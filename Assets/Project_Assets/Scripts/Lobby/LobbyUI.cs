@@ -127,9 +127,9 @@ namespace Project_Assets.Scripts.Lobby
             
             foreach (var player in lobby.Players)
             {
-                string playerName = player.Data[KeyConstants.k_PlayerName].Value;
+                string playerName = player.Data[StringConstants.k_PlayerName].Value;
 
-                string playerId = player.Data[KeyConstants.k_PlayerId].Value;
+                string playerId = player.Data[StringConstants.k_PlayerAuthenticationId].Value;
 
                 var entry = Instantiate(m_playerListItemPrefab, m_playerListItemContainer).GetComponent<PlayerListItem>();
                 
@@ -145,7 +145,7 @@ namespace Project_Assets.Scripts.Lobby
                 var localIsHost = AuthenticationService.Instance.PlayerId == lobby.HostId;
                 StartGameButton.gameObject.SetActive(localIsHost);
                 
-                var readyValue = player.Data[KeyConstants.k_PlayerReady].Value;
+                var readyValue = player.Data[StringConstants.k_PlayerReady].Value;
 
                 if (localIsHost)
                 {
@@ -182,18 +182,18 @@ namespace Project_Assets.Scripts.Lobby
         {
             Debug.Log("On Update Lobby Info".Color("cyan"));
 
-            m_lobbyInfo.GameName.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_GameName].Value;
-            m_lobbyInfo.MaxPlayers.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_MaxPlayers].Value;
-            m_lobbyInfo.GameSpeed.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_GameSpeed].Value;
-            m_lobbyInfo.GameMode.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_GameMode].Value;
-            m_lobbyInfo.MapName.text = lobbyEventArgs.Lobby.Data[KeyConstants.k_Map].Value;
+            m_lobbyInfo.GameName.text = lobbyEventArgs.Lobby.Data[StringConstants.k_GameName].Value;
+            m_lobbyInfo.MaxPlayers.text = lobbyEventArgs.Lobby.Data[StringConstants.k_MaxPlayers].Value;
+            m_lobbyInfo.GameSpeed.text = lobbyEventArgs.Lobby.Data[StringConstants.k_GameSpeed].Value;
+            m_lobbyInfo.GameMode.text = lobbyEventArgs.Lobby.Data[StringConstants.k_GameMode].Value;
+            m_lobbyInfo.MapName.text = lobbyEventArgs.Lobby.Data[StringConstants.k_Map].Value;
 
             m_lobbyInfo.GameImage.color = Color.white;
 
-            if (lobbyEventArgs.Lobby.Data[KeyConstants.k_GameImage].Value != null)
+            if (lobbyEventArgs.Lobby.Data[StringConstants.k_GameImage].Value != null)
             {
                 m_lobbyInfo.GameImage.texture =
-                    m_gameImagesDictionary[lobbyEventArgs.Lobby.Data[KeyConstants.k_GameImage].Value];
+                    m_gameImagesDictionary[lobbyEventArgs.Lobby.Data[StringConstants.k_GameImage].Value];
             }
         }
 

@@ -59,21 +59,25 @@ namespace Project_Assets.Scripts.Authentication
                 Data = new Dictionary<string, PlayerDataObject>
                 {
                     {
-                        KeyConstants.k_PlayerName, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public,
+                        StringConstants.k_PlayerName, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public,
                             AuthenticationService.Instance.Profile)
                     },
 
                     {
-                        KeyConstants.k_PlayerId, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public,
+                        StringConstants.k_PlayerAuthenticationId, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public,
                             AuthenticationService.Instance.PlayerId)
                     },
                     
                     { 
-                        KeyConstants.k_PlayerTeam, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, "0")  
+                        StringConstants.k_PlayerTeam, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, "0")  
                     },
 
                     {
-                       KeyConstants.k_PlayerReady, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, "false")  
+                       StringConstants.k_PlayerReady, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, "false")  
+                    },
+
+                    {
+                        StringConstants.k_PlayerNetworkId, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, "-1") 
                     },
                 }
             };

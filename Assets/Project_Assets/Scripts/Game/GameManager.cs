@@ -3,6 +3,7 @@ using System.Linq;
 using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
 using Project_Assets.Scripts.Lobby;
+using Project_Assets.Scripts.Player;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ namespace Project_Assets.Scripts.Game
     public class GameManager : MonoBehaviour
     {
         [SerializeField] private GameObject m_playerPrefab; // TODO: TEMP
+        [SerializeField] private GameObject m_playerCameraPrefab; // TODO: TEMP
 
         private GameSpawnManager m_gameSpawnManager;
         private Dictionary<ulong, Transform> m_playersSpawnPoints;
@@ -30,15 +32,14 @@ namespace Project_Assets.Scripts.Game
             // TODO: PlayerTeam value 0 => Team 1, 1 => Team 2
             foreach (var data in playersInLobby.Players.Select(player => player.Value.Data))
             {
-                Debug.Log($"Player: {data[KeyConstants.k_PlayerName].Value} - {data[KeyConstants.k_PlayerId].Value}\n" +
-                          $"Team: {data[KeyConstants.k_PlayerTeam].Value}");
+                Debug.Log($"Player: {data[StringConstants.k_PlayerName].Value} - {data[StringConstants.k_PlayerAuthenticationId].Value}\n" +
+                          $"Team: {data[StringConstants.k_PlayerTeam].Value}, NetworkId: {data[StringConstants.k_PlayerNetworkId].Value}");
             }
             
             SetPlayersSpawnPoint();
             CreateAndSpawnPlayers();
         }
 
-        // TODO: Can get NetworkClient from NetworkManager.Singleton.ConnectedClients 
         private void SetPlayersSpawnPoint()
         {
             var clientIds = NetworkManager.Singleton.ConnectedClientsIds.ToList();
@@ -50,6 +51,10 @@ namespace Project_Assets.Scripts.Game
             foreach (var (clientId, spawnPoint) in m_playersSpawnPoints)
             {
                 var playerObject = Extensions.CreateNetworkObject(m_playerPrefab, spawnPoint, clientId);
+                var playerCameraObject = Extensions.CreateNetworkObject(m_playerCameraPrefab, spawnPoint, clientId);
+                
+                // playerObject.GetComponent<PlayerBase>().PlayerCameraComponent = playerCameraObject.GetComponent<PlayerCamera>();
+                
                 // playerObject.gameObject.tag = nameof(Enums.Team.Team1);
             }
         }

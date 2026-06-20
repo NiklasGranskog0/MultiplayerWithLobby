@@ -38,18 +38,18 @@ namespace Project_Assets.Scripts.Lobby
             m_availableGamesUI.GameCodeInputField.text = m_lobby.Name;
             m_availableGamesUI.GameNameText.text = m_lobby.Name;
 
-            m_availableGamesUI.GameInfo.GameName.text = m_lobby.Data[KeyConstants.k_GameName].Value;
-            m_availableGamesUI.GameInfo.MaxPlayers.text = m_lobby.Data[KeyConstants.k_MaxPlayers].Value;
-            m_availableGamesUI.GameInfo.GameMode.text = m_lobby.Data[KeyConstants.k_GameMode].Value;
-            m_availableGamesUI.GameInfo.GameSpeed.text = m_lobby.Data[KeyConstants.k_GameSpeed].Value;
-            m_availableGamesUI.GameInfo.MapName.text = m_lobby.Data[KeyConstants.k_Map].Value;
+            m_availableGamesUI.GameInfo.GameName.text = m_lobby.Data[StringConstants.k_GameName].Value;
+            m_availableGamesUI.GameInfo.MaxPlayers.text = m_lobby.Data[StringConstants.k_MaxPlayers].Value;
+            m_availableGamesUI.GameInfo.GameMode.text = m_lobby.Data[StringConstants.k_GameMode].Value;
+            m_availableGamesUI.GameInfo.GameSpeed.text = m_lobby.Data[StringConstants.k_GameSpeed].Value;
+            m_availableGamesUI.GameInfo.MapName.text = m_lobby.Data[StringConstants.k_Map].Value;
 
             m_availableGamesUI.GameInfo.GameImage.color = Color.white;
 
-            if (m_lobby.Data[KeyConstants.k_GameImage].Value != null)
+            if (m_lobby.Data[StringConstants.k_GameImage].Value != null)
             {
                 m_availableGamesUI.GameInfo.GameImage.texture =
-                    m_imagesDictionary[m_lobby.Data[KeyConstants.k_GameImage].Value];
+                    m_imagesDictionary[m_lobby.Data[StringConstants.k_GameImage].Value];
             }
         }
     }
