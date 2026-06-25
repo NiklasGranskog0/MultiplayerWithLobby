@@ -12,7 +12,7 @@ namespace Project_Assets.Scripts.Lobby
     public class LobbyPoller : MonoBehaviour
     {
         public float PollingInterval = 1f; // The fastest polling rate is 1f
-        private Unity.Services.Lobbies.Models.Lobby CurrentLobby { get; set; }
+        private Unity.Services.Lobbies.Models.Lobby m_currentLobby { get; set; }
 
         public event Action<LobbyEventArgs> OnShouldBeenKicked;
 
@@ -32,7 +32,7 @@ namespace Project_Assets.Scripts.Lobby
                 StopCoroutine(m_pollingCoroutine);
             }
 
-            CurrentLobby = lobby;
+            m_currentLobby = lobby;
             m_pollingCoroutine = StartCoroutine(PollLobbyCoroutine());
         }
 
@@ -44,12 +44,12 @@ namespace Project_Assets.Scripts.Lobby
                 m_pollingCoroutine = null;
             }
 
-            CurrentLobby = null;
+            m_currentLobby = null;
         }
 
         private IEnumerator PollLobbyCoroutine()
         {
-            while (CurrentLobby != null)
+            while (m_currentLobby != null)
             {
                 yield return new WaitForSeconds(PollingInterval);
                 yield return FetchLobbyUpdate();
@@ -58,7 +58,7 @@ namespace Project_Assets.Scripts.Lobby
 
         private IEnumerator FetchLobbyUpdate()
         {
-            var task = LobbyService.Instance.GetLobbyAsync(CurrentLobby.Id);
+            var task = LobbyService.Instance.GetLobbyAsync(m_currentLobby.Id);
 
             while (!task.IsCompleted)
                 yield return null;
@@ -71,17 +71,17 @@ namespace Project_Assets.Scripts.Lobby
 
             if (CheckIfKicked())
             {
-                OnShouldBeenKicked?.Invoke(new LobbyEventArgs { Lobby = CurrentLobby });
+                OnShouldBeenKicked?.Invoke(new LobbyEventArgs { Lobby = m_currentLobby });
             }
 
-            if (CurrentLobby == null)
+            if (m_currentLobby == null)
             {
                 Debug.Log("Lobby not found, stopping lobby polling".Color("red"));
                 yield break;
             }
 
             var updatedLobby = task.Result;
-            string oldHostId = CurrentLobby.HostId;
+            string oldHostId = m_currentLobby.HostId;
             string newHostId = updatedLobby.HostId;
 
             if (oldHostId != newHostId)
@@ -90,14 +90,14 @@ namespace Project_Assets.Scripts.Lobby
                 yield return AssignNewHost(updatedLobby);
             }
 
-            CurrentLobby = updatedLobby;
-            Debug.Log($"Lobby polled. Host: {CurrentLobby.HostId}, Players: {CurrentLobby.Players.Count}"
+            m_currentLobby = updatedLobby;
+            Debug.Log($"Lobby polled. Host: {m_currentLobby.HostId}, Players: {m_currentLobby.Players.Count}"
                 .Color("cyan"));
         }
 
         private bool CheckIfKicked()
         {
-            return !CurrentLobby.Players.Exists(p => p.Id == AuthenticationService.Instance.PlayerId);
+            return !m_currentLobby.Players.Exists(p => p.Id == AuthenticationService.Instance.PlayerId);
         }
 
         // When new host has been assigned start a new heartbeat for the lobby

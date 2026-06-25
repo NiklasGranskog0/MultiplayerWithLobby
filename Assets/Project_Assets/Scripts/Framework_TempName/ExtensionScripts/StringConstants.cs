@@ -5,7 +5,7 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
     {
         public const string k_PlayerName = "PlayerName";
         public const string k_PlayerAuthenticationId = "PlayerId";
-        public const string k_PlayerNetworkId = "PlayerNetworkId";
+        public const string k_PlayerClientId = "PlayerNetworkId"; // Player Network id / client id
         public const string k_Host = "false";
         public const string k_PlayerTeam = "PlayerTeam";
         public const string k_PlayerReady = "PlayerReady";

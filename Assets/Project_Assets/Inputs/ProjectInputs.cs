@@ -136,6 +136,15 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""CameraReset"",
+                    ""type"": ""Button"",
+                    ""id"": ""0688634e-291b-4372-aca2-28749784a9f9"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -235,6 +244,28 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""MouseAxis"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""69e55a6f-5db4-403a-b207-e3e5cbd328a5"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraReset"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3f928da7-f88f-40ff-aa68-c77294230295"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraReset"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -809,6 +840,7 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
         m_Player_RightMouseClick = m_Player.FindAction("RightMouseClick", throwIfNotFound: true);
         m_Player_LeftMouseClick = m_Player.FindAction("LeftMouseClick", throwIfNotFound: true);
         m_Player_MouseAxis = m_Player.FindAction("MouseAxis", throwIfNotFound: true);
+        m_Player_CameraReset = m_Player.FindAction("CameraReset", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -908,6 +940,7 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_RightMouseClick;
     private readonly InputAction m_Player_LeftMouseClick;
     private readonly InputAction m_Player_MouseAxis;
+    private readonly InputAction m_Player_CameraReset;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -939,6 +972,10 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/MouseAxis".
         /// </summary>
         public InputAction @MouseAxis => m_Wrapper.m_Player_MouseAxis;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/CameraReset".
+        /// </summary>
+        public InputAction @CameraReset => m_Wrapper.m_Player_CameraReset;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -980,6 +1017,9 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
             @MouseAxis.started += instance.OnMouseAxis;
             @MouseAxis.performed += instance.OnMouseAxis;
             @MouseAxis.canceled += instance.OnMouseAxis;
+            @CameraReset.started += instance.OnCameraReset;
+            @CameraReset.performed += instance.OnCameraReset;
+            @CameraReset.canceled += instance.OnCameraReset;
         }
 
         /// <summary>
@@ -1006,6 +1046,9 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
             @MouseAxis.started -= instance.OnMouseAxis;
             @MouseAxis.performed -= instance.OnMouseAxis;
             @MouseAxis.canceled -= instance.OnMouseAxis;
+            @CameraReset.started -= instance.OnCameraReset;
+            @CameraReset.performed -= instance.OnCameraReset;
+            @CameraReset.canceled -= instance.OnCameraReset;
         }
 
         /// <summary>
@@ -1300,6 +1343,13 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMouseAxis(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "CameraReset" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCameraReset(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

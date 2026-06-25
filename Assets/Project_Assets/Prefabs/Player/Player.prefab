@@ -49,6 +49,7 @@ GameObject:
   - component: {fileID: 4229821249715826934}
   - component: {fileID: 5646962731801522647}
   - component: {fileID: 5236679953515986149}
+  - component: {fileID: 2659890748217213288}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -136,6 +137,7 @@ MonoBehaviour:
   m_playerAnimationsComponent: {fileID: 1981519173124256410}
   m_playerMovementComponent: {fileID: 4229821249715826934}
   m_cameraStartPosition: {fileID: 8649425317078063728}
+  m_objectTargeterComponent: {fileID: 2659890748217213288}
 --- !u!114 &-7131759201153768744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -237,7 +239,6 @@ MonoBehaviour:
   m_playerAgentLayer:
     serializedVersion: 2
     m_Bits: 128
-  m_playerMouseTarget: {fileID: 0}
 --- !u!114 &5646962731801522647
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,6 +281,21 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &2659890748217213288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4229498176680890359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c61fefe46ea4ec4aa36646fadaedb95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Player.ObjectTargeter
+  m_uiObjectSelectionLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1001 &751116366957411312
 PrefabInstance:
   m_ObjectHideFlags: 0

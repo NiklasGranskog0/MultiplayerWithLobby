@@ -1,4 +1,3 @@
-using System;
 using Project_Assets.Scripts.ScriptableObjects;
 using Unity.Netcode;
 using UnityEngine;
@@ -17,6 +16,7 @@ namespace Project_Assets.Scripts.Player
 
         private Vector3 m_cameraMoveDirection;
         private Vector3 m_mousePosition;
+        private Vector3 m_playerPosition;
         
         public Ray MouseRay 
         {
@@ -41,14 +41,16 @@ namespace Project_Assets.Scripts.Player
         {
             m_playerInputs = playerInputs;
             m_playerInputs.OnMovementEvent += SetCameraMoveDirection;
+            m_playerInputs.OnCameraResetEvent += ResetCameraPosition;
             
             m_playerCamera.gameObject.SetActive(isOwner);
             transform.rotation = Quaternion.Euler(-15f, -90f, 0);
             transform.position = startTransform.position;
         }
 
-        public void OnUpdate()
+        public void OnUpdate(Vector3 playerPosition)
         {
+            m_playerPosition = playerPosition;
             m_cameraTarget.position += m_cameraMoveDirection.normalized * (m_cameraMoveSpeed * Time.deltaTime);
         }
         
@@ -57,7 +59,11 @@ namespace Project_Assets.Scripts.Player
         {
             m_cameraMoveDirection.x = -direction.y;
             m_cameraMoveDirection.z = direction.x;
-            // m_playerInputs.InvokeMouseMoveEvent();
+        }
+
+        private void ResetCameraPosition()
+        {
+            m_cameraTarget.position = new Vector3(m_playerPosition.x + 7.8f, m_cameraTarget.position.y, m_playerPosition.z);
         }
 
         public override void OnNetworkSpawn() => PlayerId = OwnerClientId;

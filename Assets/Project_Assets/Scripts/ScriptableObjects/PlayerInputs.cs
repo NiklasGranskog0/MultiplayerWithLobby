@@ -14,6 +14,7 @@ namespace Project_Assets.Scripts.ScriptableObjects
         public event Action<Vector2> OnMouseMovedEvent;
         public event Action OnRightMouseClickEvent;
         public event Action OnLeftMouseClickEvent;
+        public event Action OnCameraResetEvent;
 
         private void OnEnable()
         {
@@ -60,6 +61,12 @@ namespace Project_Assets.Scripts.ScriptableObjects
         {
             if (context.performed || context.canceled)
                 OnMouseAxisEvent?.Invoke(context.ReadValue<Vector2>());
+        }
+
+        public void OnCameraReset(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                OnCameraResetEvent?.Invoke();
         }
     }
 }

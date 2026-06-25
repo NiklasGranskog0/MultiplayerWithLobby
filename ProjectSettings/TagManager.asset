@@ -4,8 +4,8 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Team 1
-  - Team 2
+  - Team1
+  - Team2
   layers:
   - Default
   - TransparentFX
@@ -22,7 +22,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - ObjectCamera
   - 
   - 
   - 

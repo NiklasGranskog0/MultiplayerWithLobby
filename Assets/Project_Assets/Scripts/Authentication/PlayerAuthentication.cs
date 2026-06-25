@@ -77,7 +77,7 @@ namespace Project_Assets.Scripts.Authentication
                     },
 
                     {
-                        StringConstants.k_PlayerNetworkId, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, "-1") 
+                        StringConstants.k_PlayerClientId, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, "-1") 
                     },
                 }
             };

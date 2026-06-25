@@ -27,17 +27,19 @@ namespace Project_Assets.Scripts.Lobby
 
         private string m_playerId { get; set; }
         private bool m_playerReady { get; set; }
+        private string m_playerNetworkId { get; set; }
 
         private LobbyManager m_lobbyManager;
         private ErrorMessageText m_errorMessageText;
 
-        public void Initialize(string pName, string playerId, PlayerConfiguration config)
+        public void Initialize(string pName, string playerId, PlayerConfiguration config, ulong playerNetworkId)
         {
             ServiceLocator.ForSceneOf(this).Get(out m_lobbyManager);
             ServiceLocator.ForSceneOf(this).Get(out m_errorMessageText);
 
             m_playerId = playerId;
             m_playerConfiguration = config;
+            m_playerNetworkId = playerNetworkId.ToString();
 
             if (m_playerConfiguration.IsHostPlayer)
             {

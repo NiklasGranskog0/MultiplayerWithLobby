@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
@@ -11,11 +12,13 @@ namespace Project_Assets.Scripts.Game
 {
     public class GameManager : MonoBehaviour
     {
-        [SerializeField] private GameObject m_playerPrefab; // TODO: TEMP
-        [SerializeField] private GameObject m_playerCameraPrefab; // TODO: TEMP
+        // TODO: Get scriptable object with prefabs (network prefabs for now)
+        [SerializeField] private GameObject m_playerPrefab;
+        [SerializeField] private GameObject m_playerCameraPrefab;
 
         private GameSpawnManager m_gameSpawnManager;
         private Dictionary<ulong, Transform> m_playersSpawnPoints;
+        private PlayersInLobby m_playersInLobby;
 
         private void Awake()
         {
@@ -27,14 +30,7 @@ namespace Project_Assets.Scripts.Game
             if (!NetworkManager.Singleton.IsHost) return;
 
             ServiceLocator.ForSceneOf(this).Get(out m_gameSpawnManager);
-            ServiceLocator.Global.Get(out PlayersInLobby playersInLobby);
-
-            // TODO: PlayerTeam value 0 => Team 1, 1 => Team 2
-            foreach (var data in playersInLobby.Players.Select(player => player.Value.Data))
-            {
-                Debug.Log($"Player: {data[StringConstants.k_PlayerName].Value} - {data[StringConstants.k_PlayerAuthenticationId].Value}\n" +
-                          $"Team: {data[StringConstants.k_PlayerTeam].Value}, NetworkId: {data[StringConstants.k_PlayerNetworkId].Value}");
-            }
+            ServiceLocator.Global.Get(out m_playersInLobby);
             
             SetPlayersSpawnPoint();
             CreateAndSpawnPlayers();
@@ -43,19 +39,27 @@ namespace Project_Assets.Scripts.Game
         private void SetPlayersSpawnPoint()
         {
             var clientIds = NetworkManager.Singleton.ConnectedClientsIds.ToList();
+            
+            // TODO: Only need 2 spawn points, left & right
+            // TODO: Could do spawn areas, and spawn players in a random position in that area
             m_playersSpawnPoints = m_gameSpawnManager.SetPlayersSpawnPoint(clientIds);
         }
 
         private void CreateAndSpawnPlayers()
         {
-            foreach (var (clientId, spawnPoint) in m_playersSpawnPoints)
+            // Creates a player and camera network object for each player in the lobby
+            foreach (var player in m_playersInLobby.Players)
             {
-                var playerObject = Extensions.CreateNetworkObject(m_playerPrefab, spawnPoint, clientId);
-                var playerCameraObject = Extensions.CreateNetworkObject(m_playerCameraPrefab, spawnPoint, clientId);
+                var data = player.Value.Data;
+                var id = ulong.Parse(data[StringConstants.k_PlayerClientId].Value);
+                var teamNb = ulong.Parse(data[StringConstants.k_PlayerTeam].Value);
                 
-                // playerObject.GetComponent<PlayerBase>().PlayerCameraComponent = playerCameraObject.GetComponent<PlayerCamera>();
+                var playerObj = Extensions.CreateNetworkObject(m_playerPrefab, m_playersSpawnPoints[teamNb].transform, id);
+                var playerCam = Extensions.CreateNetworkObject(m_playerCameraPrefab, m_playersSpawnPoints[teamNb].transform, id);
                 
-                // playerObject.gameObject.tag = nameof(Enums.Team.Team1);
+                // Set the player's and camera tag to their team number
+                playerObj.gameObject.tag = Enum.GetName(typeof(Enums.Team), teamNb);
+                playerCam.gameObject.tag = Enum.GetName(typeof(Enums.Team), teamNb);
             }
         }
     }

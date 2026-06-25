@@ -771,7 +771,7 @@ GameObject:
   m_Component:
   - component: {fileID: 448647745}
   - component: {fileID: 448647747}
-  - component: {fileID: 448647746}
+  - component: {fileID: 448647748}
   m_Layer: 5
   m_Name: SelectedObjectImage
   m_TagString: Untagged
@@ -798,36 +798,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 200, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &448647746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 448647744}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &448647747
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -836,6 +806,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 448647744}
   m_CullTransparentMesh: 1
+--- !u!114 &448647748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 448647744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RawImage
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 0}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
 --- !u!1001 &478975786
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2922,7 +2919,7 @@ GameObject:
   - component: {fileID: 1919729593}
   - component: {fileID: 1919729594}
   m_Layer: 5
-  m_Name: ObjectSelector
+  m_Name: UIObjects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2959,12 +2956,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a53dbdce909c772468e54d639598424e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Game.UIObjectSelector
-  m_selectedObjectName: {fileID: 182144976}
-  m_selectedObjectImage: {fileID: 448647746}
-  m_uiObjectSelectionLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  m_playerInputs: {fileID: 11400000, guid: 2f42087214b976b41902f162fa41bfb8, type: 2}
+  SelectedObjectName: {fileID: 182144976}
+  SelectedObjectRawImage: {fileID: 448647748}
 --- !u!1001 &1964519326
 PrefabInstance:
   m_ObjectHideFlags: 0

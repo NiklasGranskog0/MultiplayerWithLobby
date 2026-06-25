@@ -128,8 +128,8 @@ namespace Project_Assets.Scripts.Lobby
             foreach (var player in lobby.Players)
             {
                 string playerName = player.Data[StringConstants.k_PlayerName].Value;
-
                 string playerId = player.Data[StringConstants.k_PlayerAuthenticationId].Value;
+                // string playerNetworkId = player.Data[StringConstants.k_PlayerNetworkId].Value;
 
                 var entry = Instantiate(m_playerListItemPrefab, m_playerListItemContainer).GetComponent<PlayerListItem>();
                 
@@ -138,7 +138,7 @@ namespace Project_Assets.Scripts.Lobby
                      Player = player,
                      IsHostPlayer = playerId == lobby.HostId,
                      IsLocalPlayer = playerId == AuthenticationService.Instance.PlayerId,
-                 });
+                 }, NetworkManager.Singleton.LocalClientId);
                 
                  entry.gameObject.SetActive(true);
                 

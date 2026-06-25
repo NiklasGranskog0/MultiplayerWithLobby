@@ -13,24 +13,27 @@ namespace Project_Assets.Scripts.Player
         [SerializeField] private PlayerAnimations m_playerAnimationsComponent;
         [SerializeField] private PlayerMovement m_playerMovementComponent;
         [SerializeField] private Transform m_cameraStartPosition;
-        public PlayerCamera PlayerCameraComponent { get; set; }
-        private ulong m_playerId { get; set; }
+        [SerializeField] private ObjectTargeter m_objectTargeterComponent;
+        private PlayerCamera m_playerCameraComponent;
+        private ulong m_playerId;
 
         private void Start()
         {
             // Player object spawned in the Startup scene, so move it to the Game scene
             SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetSceneByName("Game"));
-            
+
             var playerCamera = FindObjectsByType<PlayerCamera>();
             foreach (var cam in playerCamera)
             {
                 if (cam.PlayerId != m_playerId) continue;
 
-                PlayerCameraComponent = cam;
+                m_playerCameraComponent = cam;
             }
 
-            PlayerCameraComponent.Initialize(m_playerInputsComponent, m_cameraStartPosition, IsOwner);
-            m_playerMovementComponent.Initialize(m_playerInputsComponent, PlayerCameraComponent);
+            m_playerCameraComponent.Initialize(m_playerInputsComponent, m_cameraStartPosition, IsOwner);
+            m_playerMovementComponent.Initialize(m_playerInputsComponent, m_playerCameraComponent);
+            m_objectTargeterComponent.Initialize(m_playerInputsComponent, m_playerCameraComponent, gameObject,
+                gameObject.tag);
         }
 
         private void Update()
@@ -39,9 +42,9 @@ namespace Project_Assets.Scripts.Player
             if (!IsOwner) return;
 
             // If the text chat window is open, don't update player movement
-            if (PlayerCameraComponent)
+            if (m_playerCameraComponent)
             {
-                PlayerCameraComponent.OnUpdate();
+                m_playerCameraComponent.OnUpdate(transform.position);
             }
         }
 

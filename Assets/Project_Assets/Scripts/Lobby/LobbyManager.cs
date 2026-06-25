@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Project_Assets.Scripts.Authentication;
 using Project_Assets.Scripts.Enums;
@@ -66,6 +67,8 @@ namespace Project_Assets.Scripts.Lobby
             ServiceLocator.Global.Get(out m_playersInLobby);
             ServiceLocator.ForSceneOf(this).Get(out m_lobbyUI);
             ServiceLocator.ForSceneOf(this).Get(out m_relayManager);
+
+            NetworkManager.Singleton.OnClientConnectedCallback += UpdatePlayerClientId;
         }
 
         private async void LobbyUpdate(ILobbyChanges obj)
@@ -173,8 +176,6 @@ namespace Project_Assets.Scripts.Lobby
 
                 var relay = await m_relayManager.CreateRelay(settings.MaxPlayers.max - 1);
                 relay.Log();
-
-                await UpdateLocalPlayerNetworkId();
                 
                 var relayCodeUpdate = await UpdateRelayJoinCode(relay.JoinCode);
                 relayCodeUpdate.Log();
@@ -471,22 +472,10 @@ namespace Project_Assets.Scripts.Lobby
             }
         }
 
-        private async Task<StatusReport> UpdateLocalPlayerNetworkId()
+        private async void UpdatePlayerClientId(ulong clientId) // TODO: wrap callback into await func
         {
-            if (ActiveLobby is null)
-            {
-                s_statusReport.MakeReport(false, "ActiveLobby not found (null)");
-                return s_statusReport;
-            }
-            
-            if (NetworkManager.Singleton is null || !NetworkManager.Singleton.IsListening)
-            {
-                s_statusReport.MakeReport(false, "NetworkManager not initialized or is not listening");
-                return s_statusReport;
-            }
-
-            // TODO: All clients get the same network ID, so we need to make sure that the network ID is unique
-            var connectedClientId = NetworkManager.Singleton.LocalClientId.ToString(); 
+            // If it is not the local player, skip setting the client ID
+            if (NetworkManager.Singleton.LocalClientId != clientId) return;
 
             try
             {
@@ -495,31 +484,36 @@ namespace Project_Assets.Scripts.Lobby
                     Data = new Dictionary<string, PlayerDataObject>
                     {
                         {
-                            StringConstants.k_PlayerNetworkId,
-                            new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, connectedClientId)
+                            StringConstants.k_PlayerClientId,
+                            new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, clientId.ToString())
                         }
                     }
                 };
                 
+                Debug.Log($"Updating player {AuthenticationService.Instance.PlayerId} client ID to: {clientId}".Color("orange"));
                 ActiveLobby = await LobbyService.Instance.UpdatePlayerAsync(ActiveLobby.Id, AuthenticationService.Instance.PlayerId, updatePlayerOptions);
                 OnLobbyPlayerUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 
-                s_statusReport.MakeReport(true, $"Updated local player network ID to: {connectedClientId}");
+                s_statusReport.MakeReport(true, $"Updated local player network ID to: {clientId}");
             }
             catch (LobbyServiceException e)
             {
                 s_statusReport.MakeReport(false, $"Failed to update local player network ID: {e.Message}");
             }
             
-            return s_statusReport;
+            // return s_statusReport;
         }
 
+        // TODO: If host leaves the lobby the Relay ends and disconnects the players.
+        
+        // TODO: Detect if the host player disconnects prematurely.
+        // TODO: Place the remaining players in a lobby.
+        // TODO: Select one of the remaining players to fill the host role.
+        // TODO: Start a new Relay allocation.
         private async void JoinRelay(string code)
         {
             var relay = await m_relayManager.JoinRelay(code);
             relay.Log();
-
-            await UpdateLocalPlayerNetworkId();
         }
 
         public async Task<LobbiesStatusReport> GetAllActiveLobbiesAsync()

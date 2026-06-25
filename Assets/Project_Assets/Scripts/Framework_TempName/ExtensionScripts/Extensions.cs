@@ -122,7 +122,8 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
         #endregion
 
         #region Strings
-
+        
+        // TODO: Unity boss room has an example of fade out for scenes
         public static IEnumerator FadeOut(this TMP_Text t, float fadeDuration)
         {
             var duration = 0f;
@@ -140,33 +141,33 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
 
         #region Lobby
 
-        public static UpdatePlayerOptions UpdatePlayerData(string key, string value,
-            PlayerDataObject.VisibilityOptions visibility = PlayerDataObject.VisibilityOptions.Public)
-        {
-            return new UpdatePlayerOptions()
-            {
-                Data = new Dictionary<string, PlayerDataObject>
-                {
-                    {
-                        key, new PlayerDataObject(visibility, value)
-                    }
-                }
-            };
-        }
-
-        public static Task<Unity.Services.Lobbies.Models.Lobby> UpdateLobbyData(string lobbyId, string key,
-            string value, DataObject.VisibilityOptions visibility = DataObject.VisibilityOptions.Member)
-        {
-            return LobbyService.Instance.UpdateLobbyAsync(lobbyId, new UpdateLobbyOptions
-            {
-                Data = new Dictionary<string, DataObject>
-                {
-                    {
-                        key, new DataObject(visibility, value)
-                    }
-                }
-            });
-        }
+        // public static UpdatePlayerOptions UpdatePlayerData(string key, string value,
+        //     PlayerDataObject.VisibilityOptions visibility = PlayerDataObject.VisibilityOptions.Public)
+        // {
+        //     return new UpdatePlayerOptions()
+        //     {
+        //         Data = new Dictionary<string, PlayerDataObject>
+        //         {
+        //             {
+        //                 key, new PlayerDataObject(visibility, value)
+        //             }
+        //         }
+        //     };
+        // }
+        //
+        // public static Task<Unity.Services.Lobbies.Models.Lobby> UpdateLobbyData(string lobbyId, string key,
+        //     string value, DataObject.VisibilityOptions visibility = DataObject.VisibilityOptions.Member)
+        // {
+        //     return LobbyService.Instance.UpdateLobbyAsync(lobbyId, new UpdateLobbyOptions
+        //     {
+        //         Data = new Dictionary<string, DataObject>
+        //         {
+        //             {
+        //                 key, new DataObject(visibility, value)
+        //             }
+        //         }
+        //     });
+        // }
 
         #endregion
 

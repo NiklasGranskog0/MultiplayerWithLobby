@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Project_Assets.Scripts.Game
 {
-    // Player spawn manager
+    // TODO: No real use of this class atm, just using it for testing buttons
     public class GameSpawnManager : MonoBehaviour
     {
         [SerializeField] private Transform[] m_spawnPoints;

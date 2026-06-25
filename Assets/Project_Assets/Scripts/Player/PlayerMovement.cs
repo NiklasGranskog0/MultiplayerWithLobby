@@ -25,8 +25,8 @@ namespace Project_Assets.Scripts.Player
        
         private void RightMouseClickEvent()
         {
-            // TODO: If distance to move is further than 'X' units, warp to new position
-            if (Physics.Raycast(m_playerCameraComponent.MouseRay, out var hitInfo, float.MaxValue, m_playerAgentLayer))
+            // TODO: If distance to move is further than 'X' units, warp to new position ?
+            if (Physics.Raycast(m_playerCameraComponent.MouseRay, out var hitInfo, 500f, m_playerAgentLayer))
             {
                 m_playerAgent.SetDestination(hitInfo.point);
             }

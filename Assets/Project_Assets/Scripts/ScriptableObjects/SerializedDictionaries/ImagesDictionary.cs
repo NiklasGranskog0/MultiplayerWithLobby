@@ -24,7 +24,6 @@ namespace Project_Assets.Scripts.ScriptableObjects.SerializedDictionaries
                 Init();
                 return m_dictionary[textureName];
             }
-            
         }
 
         private void Init()
