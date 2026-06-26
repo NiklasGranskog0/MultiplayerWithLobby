@@ -1,3 +1,4 @@
+using System.Collections;
 using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
 using Project_Assets.Scripts.ScriptableObjects;
 using UnityEngine;
@@ -7,7 +8,7 @@ namespace Project_Assets.Scripts.Player
 {
     public class PlayerMovement : MonoBehaviour
     {
-        [SerializeField] private NavMeshAgent m_playerAgent;
+        public NavMeshAgent PlayerAgent;
         [SerializeField] private LayerMask m_playerAgentLayer;
         private PlayerCamera m_playerCameraComponent;
         private PlayerInputs m_playerInputs;
@@ -18,18 +19,38 @@ namespace Project_Assets.Scripts.Player
             m_playerCameraComponent = playerCameraComponent; 
 
             // TODO: This is a hack to get the NavMeshAgent to work. (When agent is spawned it does not find navmesh)
-            m_playerAgent.FixNavMeshNotFound();
+            PlayerAgent.FixNavMeshNotFound();
             
             m_playerInputs.OnRightMouseClickEvent += RightMouseClickEvent;
         }
        
         private void RightMouseClickEvent()
         {
-            // TODO: If distance to move is further than 'X' units, warp to new position ?
+            PlayerAgent.isStopped = false;
+            
             if (Physics.Raycast(m_playerCameraComponent.MouseRay, out var hitInfo, 500f, m_playerAgentLayer))
             {
-                m_playerAgent.SetDestination(hitInfo.point);
+                PlayerAgent.SetDestination(hitInfo.point);
+                StartCoroutine(CheckDistanceLeft());
             }
+        }
+
+        // Check if the player is close enough to the destination to stop the agent
+        private IEnumerator CheckDistanceLeft()
+        {
+            var currentDistance = (transform.position - PlayerAgent.destination).magnitude;
+            const float k_MaximumDistanceAway = 2f;
+
+            while (currentDistance > k_MaximumDistanceAway)
+            {
+                currentDistance = (transform.position - PlayerAgent.destination).magnitude;
+                yield return null;
+            }
+            
+            if (currentDistance <= k_MaximumDistanceAway)
+                PlayerAgent.isStopped = true;
+            
+            yield return null;
         }
     }
 }

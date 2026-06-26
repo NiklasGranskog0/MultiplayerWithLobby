@@ -235,7 +235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 968624b9f60729e49877877ee951b818, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Player.PlayerMovement
-  m_playerAgent: {fileID: 5236679953515986149}
+  PlayerAgent: {fileID: 5236679953515986149}
   m_playerAgentLayer:
     serializedVersion: 2
     m_Bits: 128

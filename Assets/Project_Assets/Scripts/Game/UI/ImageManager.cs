@@ -19,6 +19,7 @@ namespace Project_Assets.Scripts.Game.UI
             public GameObject GameObject;
         }
         
+        // Populate this array in the inspector with the game objects corresponding to enums
         [SerializeField] private FromEnumToGameObject[] m_fromEnumToGameObject;
         private readonly Dictionary<ImageToLoad, GameObject> m_imageToGameObject = new();
 
@@ -26,18 +27,21 @@ namespace Project_Assets.Scripts.Game.UI
         {
             ServiceLocator.Global.Register(this, ServiceLevel.Scene, gameObject.scene.name);
 
+            // Sets the enum key to the corresponding game object from the array m_fromEnumToGameObject
             foreach (var imageEnum in m_fromEnumToGameObject)
             {
                 m_imageToGameObject[imageEnum.ImageToLoad] = imageEnum.GameObject;
             }
         } 
 
+        // Sets the game object corresponding to the image to active
         public void LoadImage(ImageToLoad image)
         {
             m_currentImage = image;
             m_imageToGameObject[m_currentImage].SetActive(true);
         }
 
+        // Sets the game object corresponding to the image to inactive
         public void UnloadImage()
         {
             m_imageToGameObject[m_currentImage].SetActive(false);

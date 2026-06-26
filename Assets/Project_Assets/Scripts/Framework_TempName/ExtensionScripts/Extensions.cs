@@ -173,6 +173,7 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
 
         #region NetworkGameObjects
 
+        // Optional: Add rotation parameter
         public static NetworkObject CreateNetworkObject(GameObject prefab, Transform position, ulong clientId,
             bool isPlayerObject = false, bool destroyWithScene = false, bool forceOverride = false)
         {

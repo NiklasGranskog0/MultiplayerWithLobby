@@ -42,7 +42,7 @@ namespace Project_Assets.Scripts.Game
             
             // TODO: Only need 2 spawn points, left & right
             // TODO: Could do spawn areas, and spawn players in a random position in that area
-            m_playersSpawnPoints = m_gameSpawnManager.SetPlayersSpawnPoint(clientIds);
+            m_playersSpawnPoints = m_gameSpawnManager.SetPlayersSpawnPoint(clientIds); // Temp
         }
 
         private void CreateAndSpawnPlayers()

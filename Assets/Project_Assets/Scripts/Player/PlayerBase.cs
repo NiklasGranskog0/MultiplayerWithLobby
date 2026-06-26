@@ -34,6 +34,7 @@ namespace Project_Assets.Scripts.Player
             m_playerMovementComponent.Initialize(m_playerInputsComponent, m_playerCameraComponent);
             m_objectTargeterComponent.Initialize(m_playerInputsComponent, m_playerCameraComponent, gameObject,
                 gameObject.tag);
+            m_playerAnimationsComponent.Initialize(m_playerMovementComponent);
         }
 
         private void Update()
@@ -45,6 +46,11 @@ namespace Project_Assets.Scripts.Player
             if (m_playerCameraComponent)
             {
                 m_playerCameraComponent.OnUpdate(transform.position);
+            }
+
+            if (m_playerAnimationsComponent)
+            {
+                m_playerAnimationsComponent.OnUpdate();
             }
         }
 
