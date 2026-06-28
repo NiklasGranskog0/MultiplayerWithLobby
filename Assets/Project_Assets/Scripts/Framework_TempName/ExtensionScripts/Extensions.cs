@@ -24,10 +24,18 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
             return gameObject.TryGetComponent<T>(out var component) ? component : gameObject.AddComponent<T>();
         }
 
+        public static T Get<T>(this GameObject gameObject) where T : Component
+        {
+            return gameObject.TryGetComponent(out T component)
+                ? component
+                : throw new ArgumentException(
+                    $"GameObject {gameObject.name} does not have a component of type {typeof(T).Name}");
+        }
+
         #endregion
-        
+
         #region Transform
-        
+
         public static void ClearContainer(this Transform container)
         {
             foreach (Transform child in container)
@@ -38,9 +46,9 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
                 }
             }
         }
-        
+
         #endregion
-        
+
         #region Agents
 
         // TODO: This is a hack to get the NavMeshAgent to work. (When agent is spawned it does not find navmesh)
@@ -49,7 +57,7 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
             agent.enabled = false;
             agent.enabled = true;
         }
-        
+
         #endregion
 
         #region color
@@ -122,7 +130,7 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
         #endregion
 
         #region Strings
-        
+
         // TODO: Unity boss room has an example of fade out for scenes
         public static IEnumerator FadeOut(this TMP_Text t, float fadeDuration)
         {
@@ -182,7 +190,7 @@ namespace Project_Assets.Scripts.Framework_TempName.ExtensionScripts
                 Debug.LogError($"NetworkObject not found on prefab: {prefab.name}");
                 return null;
             }
-            
+
             return NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(
                 networkObject,
                 clientId,

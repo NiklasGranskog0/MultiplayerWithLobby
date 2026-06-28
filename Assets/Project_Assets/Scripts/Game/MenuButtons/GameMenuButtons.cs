@@ -3,7 +3,6 @@ using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
 namespace Project_Assets.Scripts.Game.MenuButtons
 {
@@ -42,12 +41,12 @@ namespace Project_Assets.Scripts.Game.MenuButtons
             ResetButtonBinds();
         }
 
-        // TODO: Add player inputs to bind shortcut keys
-        public void BindButton(GameMenuButton buttonIndex, UnityAction action, Image buttonImage, 
+        // TODO: Bind shortcut keys to player inputs
+        public void BindButton(GameMenuButton buttonIndex, UnityAction action, Sprite buttonImage, 
             string buttonToolTip = "", KeyCode shortcutKey = KeyCode.None)
         {
             m_menuButtonDictionary[buttonIndex].ButtonComponent.onClick.AddListener(action);
-            m_menuButtonDictionary[buttonIndex].ImageComponent.sprite = buttonImage.sprite; // TODO 
+            m_menuButtonDictionary[buttonIndex].ImageComponent.sprite = buttonImage;
             m_menuButtonDictionary[buttonIndex].TextToolTip = buttonToolTip;
             m_menuButtonDictionary[buttonIndex].HasToolTip = !string.IsNullOrEmpty(buttonToolTip);
             m_menuButtonDictionary[buttonIndex].ShortcutKey = shortcutKey;

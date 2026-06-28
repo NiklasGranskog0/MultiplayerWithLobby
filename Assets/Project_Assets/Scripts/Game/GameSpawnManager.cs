@@ -8,7 +8,6 @@ using UnityEngine.UI;
 
 namespace Project_Assets.Scripts.Game
 {
-    // TODO: No real use of this class atm, just using it for testing buttons
     public class GameSpawnManager : MonoBehaviour
     {
         [SerializeField] private Transform[] m_spawnPoints;
@@ -19,20 +18,6 @@ namespace Project_Assets.Scripts.Game
         {
             ServiceLocator.ForSceneOf(this).Register(this, ServiceLevel.Scene, gameObject.scene.name);
             m_availableSpawnPoints = new Dictionary<ulong, Transform>();
-        }
-
-
-        public Image TestImage;
-        private void Start() // TODO TEMP TEST
-        {
-            ServiceLocator.Global.Get(out m_menuButtons);
-            
-            m_menuButtons.BindButton(GameMenuButton.TopLeft, TestFunction, TestImage, $"Upgrades Base to tier 2: {nameof(KeyCode.C)}".Color("white"));
-        }
-
-        private void TestFunction()
-        {
-            Debug.Log("Upgrade Button Clicked".Color("orange"));
         }
 
         public Dictionary<ulong, Transform> SetPlayersSpawnPoint(List<ulong> players)

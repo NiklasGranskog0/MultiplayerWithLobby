@@ -3,7 +3,10 @@
     public enum ImageToLoad
     {
         Player,
-        Base,
+        BaseTier1,
+        BaseTier2,
+        BaseTier3,
+        Barracks,
         None,
     }
 }

@@ -12,6 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc24d05d0de56f7459e164ed63aff9ac, type: 3}
   m_Name: Images
   m_EditorClassIdentifier: 
-  NameAndTextures:
-  - Name: B
-    Texture: {fileID: 2800000, guid: 669bccc6b3233924ca85fb48c4013145, type: 3}
+  nameAndTextures: []

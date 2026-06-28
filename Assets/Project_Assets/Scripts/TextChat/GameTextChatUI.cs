@@ -53,10 +53,9 @@ namespace Project_Assets.Scripts.TextChat
         }
 
         // TODO: Wrap text message to a new line if it exceeds the max character limit
-        // TODO: Close chat window on enter if chat input field is empty
+        // TODO: Close chat window on enter if chat input field is empty, close on ESC key
         private void HandleChatInput()
         {
-            // m_gameChatObject.SetActive(true);
             m_chatInputField.gameObject.SetActive(true);
             m_eventSystem.SetSelectedGameObject(m_chatInputField.gameObject, null);
             m_chatInputField.ActivateInputField();

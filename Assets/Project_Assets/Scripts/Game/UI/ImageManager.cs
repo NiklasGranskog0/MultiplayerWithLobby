@@ -8,7 +8,6 @@ namespace Project_Assets.Scripts.Game.UI
 {
     public class ImageManager : MonoBehaviour
     {
-        // TODO: Add the animation component, so that the image can show the current animation running instead of only idle
         public Camera ImageCamera;
         private ImageToLoad m_currentImage;
         
@@ -37,14 +36,11 @@ namespace Project_Assets.Scripts.Game.UI
         // Sets the game object corresponding to the image to active
         public void LoadImage(ImageToLoad image)
         {
+            m_imageToGameObject[m_currentImage].SetActive(false);
+            if (image == ImageToLoad.None) return;
+            
             m_currentImage = image;
             m_imageToGameObject[m_currentImage].SetActive(true);
-        }
-
-        // Sets the game object corresponding to the image to inactive
-        public void UnloadImage()
-        {
-            m_imageToGameObject[m_currentImage].SetActive(false);
         }
     }
 }

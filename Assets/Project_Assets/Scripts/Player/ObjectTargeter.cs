@@ -1,6 +1,7 @@
 using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
 using Project_Assets.Scripts.Game.UI;
+using Project_Assets.Scripts.Interfaces;
 using Project_Assets.Scripts.ScriptableObjects;
 using TMPro;
 using UnityEngine;
@@ -29,7 +30,7 @@ namespace Project_Assets.Scripts.Player
         private string m_teamTag;
 
         public void Initialize(PlayerInputs playerInputs, PlayerCamera playerCamera,
-            GameObject defaultSelectedObject, string teamTag)
+            ISelectionObject defaultSelectedObject, string teamTag)
         {
             m_playerInputs = playerInputs;
             m_playerCamera = playerCamera;
@@ -43,9 +44,9 @@ namespace Project_Assets.Scripts.Player
             m_selectedObjectRawImage.texture = m_imageManager.ImageCamera.targetTexture;
 
             // At the start of the game have the player character as the selected object
-            m_selectedObject = defaultSelectedObject;
-            m_selectedObjectName.text = m_selectedObject.name;
-            m_imageManager.LoadImage(ImageToLoad.Player);
+            // m_selectedObject = defaultSelectedObject;
+            m_selectedObjectName.text = defaultSelectedObject.Name;
+            m_imageManager.LoadImage(defaultSelectedObject.ImageToLoad);
         }
 
         private void Start() => m_playerInputs.OnLeftMouseClickEvent += OnClick;
@@ -63,11 +64,15 @@ namespace Project_Assets.Scripts.Player
                     if (!hitInfo.collider.gameObject.CompareTag(m_teamTag)) return;
 
                     // TODO: Get the selection objects menu buttons
-                    // TODO: Load the image of the selected object m_ImageManager.LoadImage();
-                    // TODO: m_imageManager.LoadImage(SelectedObject.GetComponent<ImageToLoad>); GO has a ImageToLoad enum to get or something
-
                     m_selectedObject = hitInfo.collider.gameObject;
-                    m_selectedObjectName.text = m_selectedObject.name;
+                    var selectionObject = m_selectedObject.GetComponent<ISelectionObject>();
+                    var menuButtons = m_selectedObject.GetComponent<IGameMenuButton>();
+
+                    menuButtons.SetGameMenuButtons();
+                    
+                    m_imageManager.LoadImage(selectionObject.ImageToLoad);
+                    
+                    m_selectedObjectName.text = selectionObject.Name;
                 }
             }
 

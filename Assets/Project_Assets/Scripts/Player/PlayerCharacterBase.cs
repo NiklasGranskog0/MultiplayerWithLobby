@@ -1,3 +1,5 @@
+using Project_Assets.Scripts.Enums;
+using Project_Assets.Scripts.Interfaces;
 using Project_Assets.Scripts.ScriptableObjects;
 using Unity.Netcode;
 using UnityEngine;
@@ -5,18 +7,20 @@ using UnityEngine.SceneManagement;
 
 namespace Project_Assets.Scripts.Player
 {
-    // TODO: Do the player actually need to be a NetworkBehaviour?
-    // TODO: Rename to PlayerCharacterBase
-    public class PlayerBase : NetworkBehaviour
+    public class PlayerCharacterBase : NetworkBehaviour, ISelectionObject
     {
         [SerializeField] private PlayerInputs m_playerInputsComponent;
         [SerializeField] private PlayerAnimations m_playerAnimationsComponent;
         [SerializeField] private PlayerMovement m_playerMovementComponent;
         [SerializeField] private Transform m_cameraStartPosition;
         [SerializeField] private ObjectTargeter m_objectTargeterComponent;
+        [SerializeField] private PlayerMenuButtons m_playerMenuButtons;
         private PlayerCamera m_playerCameraComponent;
         private ulong m_playerId;
 
+        public ImageToLoad ImageToLoad => ImageToLoad.Player;
+        public string Name => "Player";
+        
         private void Start()
         {
             // Player object spawned in the Startup scene, so move it to the Game scene
@@ -32,9 +36,10 @@ namespace Project_Assets.Scripts.Player
 
             m_playerCameraComponent.Initialize(m_playerInputsComponent, m_cameraStartPosition, IsOwner);
             m_playerMovementComponent.Initialize(m_playerInputsComponent, m_playerCameraComponent);
-            m_objectTargeterComponent.Initialize(m_playerInputsComponent, m_playerCameraComponent, gameObject,
+            m_objectTargeterComponent.Initialize(m_playerInputsComponent, m_playerCameraComponent, this,
                 gameObject.tag);
             m_playerAnimationsComponent.Initialize(m_playerMovementComponent);
+            m_playerMenuButtons.Initialize(m_playerInputsComponent);
         }
 
         private void Update()
@@ -42,7 +47,7 @@ namespace Project_Assets.Scripts.Player
             // Only update if the player is the owner
             if (!IsOwner) return;
 
-            // If the text chat window is open, don't update player movement
+            // TODO: If the text chat window is open, don't update player movement
             if (m_playerCameraComponent)
             {
                 m_playerCameraComponent.OnUpdate(transform.position);
