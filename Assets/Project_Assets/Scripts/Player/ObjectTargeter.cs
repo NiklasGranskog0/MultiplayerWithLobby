@@ -63,7 +63,6 @@ namespace Project_Assets.Scripts.Player
                 {
                     if (!hitInfo.collider.gameObject.CompareTag(m_teamTag)) return;
 
-                    // TODO: Get the selection objects menu buttons
                     m_selectedObject = hitInfo.collider.gameObject;
                     var selectionObject = m_selectedObject.GetComponent<ISelectionObject>();
                     var menuButtons = m_selectedObject.GetComponent<IGameMenuButton>();
