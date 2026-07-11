@@ -1,4 +1,5 @@
 using Project_Assets.Scripts.Enums;
+using Project_Assets.Scripts.Game.UI;
 using Project_Assets.Scripts.Interfaces;
 using Project_Assets.Scripts.ScriptableObjects;
 using Unity.Netcode;

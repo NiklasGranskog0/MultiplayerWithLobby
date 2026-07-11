@@ -1,13 +1,12 @@
-using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
-using Project_Assets.Scripts.Game.UI;
 using Project_Assets.Scripts.Interfaces;
+using Project_Assets.Scripts.Player;
 using Project_Assets.Scripts.ScriptableObjects;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Project_Assets.Scripts.Player
+namespace Project_Assets.Scripts.Game.UI
 {
     public class ObjectTargeter : MonoBehaviour
     {
@@ -64,13 +63,17 @@ namespace Project_Assets.Scripts.Player
                     if (!hitInfo.collider.gameObject.CompareTag(m_teamTag)) return;
 
                     m_selectedObject = hitInfo.collider.gameObject;
+                    
+                    // TODO: Add IGameMenuButton in ISelectionObject
+                    // TODO: Make it into a ScriptableObject? -> Array of GameMenuButtons in the inspector
+                    
                     var selectionObject = m_selectedObject.GetComponent<ISelectionObject>();
                     var menuButtons = m_selectedObject.GetComponent<IGameMenuButton>();
 
+                    // If ScriptableObject
+                    // SO.SetGameMenuButtons(); SO.LoadImage(); m_SelectedObjectName.text = SO.ObjectName; 
                     menuButtons.SetGameMenuButtons();
-                    
                     m_imageManager.LoadImage(selectionObject.ImageToLoad);
-                    
                     m_selectedObjectName.text = selectionObject.Name;
                 }
             }

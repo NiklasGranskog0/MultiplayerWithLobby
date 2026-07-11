@@ -1,6 +1,6 @@
 using Unity.Netcode.Components;
 
-namespace Project_Assets.Scripts.Player
+namespace Project_Assets.Scripts.Network
 {
     public class OwnerNetworkAnimator : NetworkAnimator
     {
