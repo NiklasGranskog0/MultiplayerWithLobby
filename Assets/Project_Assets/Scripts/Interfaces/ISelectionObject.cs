@@ -6,5 +6,6 @@ namespace Project_Assets.Scripts.Interfaces
     {
         public ImageToLoad ImageToLoad { get; }
         public string Name { get; }
+        public void SetGameMenuButtons();
     }
 }

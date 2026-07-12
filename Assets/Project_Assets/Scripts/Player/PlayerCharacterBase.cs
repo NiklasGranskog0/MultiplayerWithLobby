@@ -21,7 +21,11 @@ namespace Project_Assets.Scripts.Player
 
         public ImageToLoad ImageToLoad => ImageToLoad.Player;
         public string Name => "Player";
-        
+        public void SetGameMenuButtons()
+        {
+            
+        }
+
         private void Start()
         {
             // Player object spawned in the Startup scene, so move it to the Game scene

@@ -65,13 +65,10 @@ namespace Project_Assets.Scripts.Game.UI
                     m_selectedObject = hitInfo.collider.gameObject;
                     
                     // TODO: Add IGameMenuButton in ISelectionObject
-                    // TODO: Make it into a ScriptableObject? -> Array of GameMenuButtons in the inspector
                     
                     var selectionObject = m_selectedObject.GetComponent<ISelectionObject>();
                     var menuButtons = m_selectedObject.GetComponent<IGameMenuButton>();
 
-                    // If ScriptableObject
-                    // SO.SetGameMenuButtons(); SO.LoadImage(); m_SelectedObjectName.text = SO.ObjectName; 
                     menuButtons.SetGameMenuButtons();
                     m_imageManager.LoadImage(selectionObject.ImageToLoad);
                     m_selectedObjectName.text = selectionObject.Name;
