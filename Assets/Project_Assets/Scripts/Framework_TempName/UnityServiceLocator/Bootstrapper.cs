@@ -1,5 +1,6 @@
 ﻿using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Project_Assets.Scripts.Framework_TempName.UnityServiceLocator
 {
@@ -38,7 +39,7 @@ namespace Project_Assets.Scripts.Framework_TempName.UnityServiceLocator
     [AddComponentMenu("ServiceLocator/ServiceLocator Scene")]
     public class ServiceLocatorSceneBootstrapper : Bootstrapper
     {
-        // [SerializeField] private bool dontDestroyOnLoad = true;
+        // [SerializeField] private bool m_dontDestroyOnLoad = true;
 
         protected override void Bootstrap()
         {

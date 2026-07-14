@@ -311,7 +311,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11aa509316dc08245846db6f30964309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Player.PlayerMenuButtons
-  m_spriteDictionary: {fileID: 11400000, guid: 4171245dbb9a6134bb9d4f0aa1738fae, type: 2}
   m_objectMenuButtons:
   - ClickEvent:
       m_PersistentCalls:
@@ -333,6 +332,26 @@ MonoBehaviour:
     Icon: {fileID: 21300010, guid: ef4a8d855fd835e42b625eb8c707a861, type: 3}
     ShortcutKey: 286
     TextToolTip: "Tool tip text test \nShortcutkey: F5\nMiddle Center Left"
+  - ClickEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 278206900478176051}
+          m_TargetAssemblyTypeName: Project_Assets.Scripts.Player.PlayerMenuButtons,
+            Assembly-CSharp
+          m_MethodName: SpawnTestPrefab
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    GameMenuButton: 11
+    Icon: {fileID: 21300048, guid: 2e8e0326cef2ff14c968b6e7bdd381b5, type: 3}
+    ShortcutKey: 0
+    TextToolTip: Spawn Test Prefab
 --- !u!1001 &751116366957411312
 PrefabInstance:
   m_ObjectHideFlags: 0

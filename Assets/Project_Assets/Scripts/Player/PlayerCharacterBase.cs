@@ -21,10 +21,7 @@ namespace Project_Assets.Scripts.Player
 
         public ImageToLoad ImageToLoad => ImageToLoad.Player;
         public string Name => "Player";
-        public void SetGameMenuButtons()
-        {
-            
-        }
+        public void SetGameMenuButtons() => m_playerMenuButtons.SetGameMenuButtons();
 
         private void Start()
         {
@@ -44,7 +41,7 @@ namespace Project_Assets.Scripts.Player
             m_objectTargeterComponent.Initialize(m_playerInputsComponent, m_playerCameraComponent, this,
                 gameObject.tag);
             m_playerAnimationsComponent.Initialize(m_playerMovementComponent);
-            m_playerMenuButtons.Initialize(m_playerInputsComponent);
+            m_playerMenuButtons.Initialize(m_playerInputsComponent, m_playerId);
         }
 
         private void Update()

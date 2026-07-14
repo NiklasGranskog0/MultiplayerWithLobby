@@ -13,12 +13,20 @@ namespace Project_Assets.Scripts.Game
     public class GameManager : MonoBehaviour
     {
         // TODO: Get scriptable object with prefabs (network prefabs for now)
+        // TODO: Enum To Prefab serialized dictionary 
         [SerializeField] private GameObject m_playerPrefab;
         [SerializeField] private GameObject m_playerCameraPrefab;
+        [SerializeField] private GameObject m_unitPrefabTest;
+        [SerializeField] private Transform m_castleSpawnPositionTest;
 
         private GameSpawnManager m_gameSpawnManager;
         private Dictionary<ulong, Transform> m_playersSpawnPoints;
         private PlayersInLobby m_playersInLobby;
+
+        public void SpawnTestPrefab(ulong clientId)
+        {
+            Extensions.CreateNetworkObject(m_unitPrefabTest, m_castleSpawnPositionTest, clientId);
+        }
 
         private void Awake()
         {
@@ -36,6 +44,7 @@ namespace Project_Assets.Scripts.Game
             CreateAndSpawnPlayers();
         }
 
+        // TODO: Should not be in GameManager
         private void SetPlayersSpawnPoint()
         {
             var clientIds = NetworkManager.Singleton.ConnectedClientsIds.ToList();
@@ -45,6 +54,7 @@ namespace Project_Assets.Scripts.Game
             m_playersSpawnPoints = m_gameSpawnManager.SetPlayersSpawnPoint(clientIds); // Temp
         }
 
+        // TODO: Spawn should not be in GameManager
         private void CreateAndSpawnPlayers()
         {
             // Creates a player and camera network object for each player in the lobby

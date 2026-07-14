@@ -64,12 +64,9 @@ namespace Project_Assets.Scripts.Game.UI
 
                     m_selectedObject = hitInfo.collider.gameObject;
                     
-                    // TODO: Add IGameMenuButton in ISelectionObject
-                    
                     var selectionObject = m_selectedObject.GetComponent<ISelectionObject>();
-                    var menuButtons = m_selectedObject.GetComponent<IGameMenuButton>();
 
-                    menuButtons.SetGameMenuButtons();
+                    selectionObject.SetGameMenuButtons();
                     m_imageManager.LoadImage(selectionObject.ImageToLoad);
                     m_selectedObjectName.text = selectionObject.Name;
                 }
