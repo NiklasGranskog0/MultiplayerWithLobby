@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Project_Assets.Scripts.Enums;
-using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
+using Project_Assets.Scripts.Framework.ExtensionScripts;
 using Unity.Services.Lobbies.Models;
 using UnityEngine.UI;
 

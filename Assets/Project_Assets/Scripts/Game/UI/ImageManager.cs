@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Project_Assets.Scripts.Enums;
-using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
+using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using UnityEngine;
 
 namespace Project_Assets.Scripts.Game.UI

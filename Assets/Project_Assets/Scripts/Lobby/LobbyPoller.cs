@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using Project_Assets.Scripts.Events;
-using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
-using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
+using Project_Assets.Scripts.Framework.ExtensionScripts;
+using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using UnityEngine;

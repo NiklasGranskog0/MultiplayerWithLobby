@@ -1,6 +1,6 @@
 using Project_Assets.Scripts.Enums;
-using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
-using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
+using Project_Assets.Scripts.Framework.ExtensionScripts;
+using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.ScriptableObjects.SerializedDictionaries;
 using Project_Assets.Scripts.Structs;
 using TMPro;

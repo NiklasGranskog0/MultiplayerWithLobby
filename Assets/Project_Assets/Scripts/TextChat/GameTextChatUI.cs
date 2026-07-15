@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
-using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
-using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
+using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.ScriptableObjects;
 using TMPro;
 using Unity.Services.Vivox;

@@ -1,5 +1,5 @@
-using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
-using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
+using Project_Assets.Scripts.Framework.ExtensionScripts;
+using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.ScriptableObjects.SerializedDictionaries;
 using TMPro;
 using UnityEngine;

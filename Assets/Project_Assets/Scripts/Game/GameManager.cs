@@ -1,31 +1,40 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
-using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
+using Project_Assets.Scripts.Enums;
+using Project_Assets.Scripts.Framework.ExtensionScripts;
+using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.Lobby;
+using Project_Assets.Scripts.Network;
 using Project_Assets.Scripts.Player;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Project_Assets.Scripts.Game
 {
     public class GameManager : MonoBehaviour
     {
         // TODO: Get scriptable object with prefabs (network prefabs for now)
-        // TODO: Enum To Prefab serialized dictionary 
+        // TODO: Enum To Prefab serialized dictionary maybe
         [SerializeField] private GameObject m_playerPrefab;
         [SerializeField] private GameObject m_playerCameraPrefab;
         [SerializeField] private GameObject m_unitPrefabTest;
         [SerializeField] private Transform m_castleSpawnPositionTest;
 
+        public GameObject TeamOneBase;
+        public GameObject TeamTwoBase;
+
         private GameSpawnManager m_gameSpawnManager;
         private Dictionary<ulong, Transform> m_playersSpawnPoints;
         private PlayersInLobby m_playersInLobby;
+        private NetworkObjectPool m_networkObjectPool;
 
-        public void SpawnTestPrefab(ulong clientId)
+        public void SpawnTestPrefab(ulong clientId, string teamTag)
         {
-            Extensions.CreateNetworkObject(m_unitPrefabTest, m_castleSpawnPositionTest, clientId);
+            // Extensions.CreateNetworkObject(m_unitPrefabTest, m_castleSpawnPositionTest, clientId);
+            var networkObject = m_networkObjectPool.GetNetworkObject(m_unitPrefabTest, m_castleSpawnPositionTest.position, Quaternion.identity);
+            networkObject.gameObject.tag = teamTag;
         }
 
         private void Awake()
@@ -38,8 +47,10 @@ namespace Project_Assets.Scripts.Game
             if (!NetworkManager.Singleton.IsHost) return;
 
             ServiceLocator.ForSceneOf(this).Get(out m_gameSpawnManager);
+            ServiceLocator.ForSceneOf(this).Get(out m_networkObjectPool);
+            m_networkObjectPool.InitializePool();
             ServiceLocator.Global.Get(out m_playersInLobby);
-            
+
             SetPlayersSpawnPoint();
             CreateAndSpawnPlayers();
         }

@@ -1,5 +1,5 @@
 using System.Collections;
-using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
+using Project_Assets.Scripts.Framework.ExtensionScripts;
 using Project_Assets.Scripts.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.AI;

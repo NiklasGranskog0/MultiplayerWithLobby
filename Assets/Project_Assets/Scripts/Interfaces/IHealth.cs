@@ -1,6 +1,7 @@
-using UnityEngine;
-
-public class IHealth
+namespace Project_Assets.Scripts.Interfaces
 {
+    public class IHealth
+    {
     
+    }
 }

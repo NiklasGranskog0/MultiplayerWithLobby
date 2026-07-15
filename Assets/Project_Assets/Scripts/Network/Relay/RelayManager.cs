@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
+using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.Structs;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;

@@ -1,6 +1,7 @@
-using UnityEngine;
-
-public class IDamage
+namespace Project_Assets.Scripts.Interfaces
 {
+    public class IDamage
+    {
     
+    }
 }

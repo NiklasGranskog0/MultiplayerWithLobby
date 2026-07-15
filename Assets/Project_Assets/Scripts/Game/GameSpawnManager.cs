@@ -1,10 +1,7 @@
 using System.Collections.Generic;
-using Project_Assets.Scripts.Enums;
-using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
-using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
+using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.Game.MenuButtons;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Project_Assets.Scripts.Game
 {

@@ -1,5 +1,5 @@
-using Project_Assets.Scripts.Framework_TempName.ExtensionScripts;
-using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
+using Project_Assets.Scripts.Framework.ExtensionScripts;
+using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.Game;
 using Project_Assets.Scripts.Game.MenuButtons;
 using Project_Assets.Scripts.ScriptableObjects;
@@ -17,13 +17,15 @@ namespace Project_Assets.Scripts.Player
         private PlayerInputs m_playerInputs; // for listening to button presses probably
         
         private ulong m_clientId;
+        private string m_teamTag;
         
         // TODO: Listen to button presses for shortcut keys
-       public void Initialize(PlayerInputs playerInputs, ulong clientId)
+       public void Initialize(PlayerInputs playerInputs, ulong clientId, string teamTag)
        {
            ServiceLocator.Global.Get(out m_gameMenuButtons);
            ServiceLocator.Global.Get(out m_gameManager);
            m_clientId = clientId;
+           m_teamTag = teamTag;
            
            m_playerInputs = playerInputs;
            SetGameMenuButtons(); // Temp, player is selected at start so set buttons immediately
@@ -46,7 +48,7 @@ namespace Project_Assets.Scripts.Player
        // TODO: Test func, real function should take in a "enum to prefab(enum)" parameter
        public void SpawnTestPrefab()
        {
-           m_gameManager.SpawnTestPrefab(m_clientId);
+           m_gameManager.SpawnTestPrefab(m_clientId, m_teamTag);
        }
        
        public void OnButtonTest()

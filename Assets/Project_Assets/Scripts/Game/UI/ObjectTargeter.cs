@@ -1,4 +1,4 @@
-using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
+using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.Interfaces;
 using Project_Assets.Scripts.Player;
 using Project_Assets.Scripts.ScriptableObjects;

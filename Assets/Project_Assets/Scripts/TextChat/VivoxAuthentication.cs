@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Project_Assets.Scripts.Framework_TempName.UnityServiceLocator;
+using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Unity.Services.Authentication;
 using Unity.Services.Vivox;
 using UnityEngine;
