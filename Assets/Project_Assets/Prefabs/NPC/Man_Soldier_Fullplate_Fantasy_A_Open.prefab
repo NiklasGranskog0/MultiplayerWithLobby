@@ -140,8 +140,6 @@ GameObject:
   - component: {fileID: 6817246202945350518}
   - component: {fileID: -7003008166663037050}
   - component: {fileID: 505578586994205912}
-  - component: {fileID: -1056836005468304153}
-  - component: {fileID: 8106355819336595908}
   m_Layer: 0
   m_Name: Man_Soldier_Fullplate_Fantasy_A_Open
   m_TagString: Untagged
@@ -236,34 +234,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &-1056836005468304153
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 229759677066226614}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e67d72769f563047bc96d18565cc80d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Units.UnitMovement
-  PlayerAgent: {fileID: 505578586994205912}
-  TeamTag: 
---- !u!114 &8106355819336595908
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 229759677066226614}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 411cae8548831304dbc4cf9d853fa039, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Units.UnitBase
-  m_unitMovement: {fileID: -1056836005468304153}
-  TeamTag: 
 --- !u!1 &490912105837433009
 GameObject:
   m_ObjectHideFlags: 0

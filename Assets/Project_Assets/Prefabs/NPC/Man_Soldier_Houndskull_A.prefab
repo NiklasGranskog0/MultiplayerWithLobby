@@ -2049,8 +2049,6 @@ GameObject:
   - component: {fileID: 2985472112819887312}
   - component: {fileID: -7233763457654570834}
   - component: {fileID: 4694912594108114801}
-  - component: {fileID: 32702732613792376}
-  - component: {fileID: 2864501806306933090}
   m_Layer: 0
   m_Name: Man_Soldier_Houndskull_A
   m_TagString: Untagged
@@ -2145,34 +2143,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &32702732613792376
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8414267172879817744}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e67d72769f563047bc96d18565cc80d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Units.UnitMovement
-  PlayerAgent: {fileID: 4694912594108114801}
-  TeamTag: 
---- !u!114 &2864501806306933090
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8414267172879817744}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 411cae8548831304dbc4cf9d853fa039, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Units.UnitBase
-  m_unitMovement: {fileID: 32702732613792376}
-  TeamTag: 
 --- !u!1 &8482756154077899159
 GameObject:
   m_ObjectHideFlags: 0

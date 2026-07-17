@@ -583,8 +583,6 @@ GameObject:
   - component: {fileID: 9049510911671487646}
   - component: {fileID: -7420075360953497171}
   - component: {fileID: 2110531759540060887}
-  - component: {fileID: -1219784827238727678}
-  - component: {fileID: -736753769115148044}
   m_Layer: 0
   m_Name: Woman_Princess_Dress_Wide_Fantasy
   m_TagString: Untagged
@@ -679,34 +677,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &-1219784827238727678
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2323204582609439838}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e67d72769f563047bc96d18565cc80d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Units.UnitMovement
-  PlayerAgent: {fileID: 2110531759540060887}
-  TeamTag: 
---- !u!114 &-736753769115148044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2323204582609439838}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 411cae8548831304dbc4cf9d853fa039, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Units.UnitBase
-  m_unitMovement: {fileID: -1219784827238727678}
-  TeamTag: 
 --- !u!1 &2395942406376126937
 GameObject:
   m_ObjectHideFlags: 0

@@ -2176,8 +2176,6 @@ GameObject:
   - component: {fileID: 2415344900435377999}
   - component: {fileID: -8716276751279566731}
   - component: {fileID: 876487057410717892}
-  - component: {fileID: -2797999074266182275}
-  - component: {fileID: 4993851108365368028}
   m_Layer: 0
   m_Name: Woman_Soldier_Fullplate_Fantasy
   m_TagString: Untagged
@@ -2272,34 +2270,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &-2797999074266182275
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8948365606492438415}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e67d72769f563047bc96d18565cc80d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Units.UnitMovement
-  PlayerAgent: {fileID: 876487057410717892}
-  TeamTag: 
---- !u!114 &4993851108365368028
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8948365606492438415}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 411cae8548831304dbc4cf9d853fa039, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Units.UnitBase
-  m_unitMovement: {fileID: -2797999074266182275}
-  TeamTag: 
 --- !u!1 &9030647118194592264
 GameObject:
   m_ObjectHideFlags: 0

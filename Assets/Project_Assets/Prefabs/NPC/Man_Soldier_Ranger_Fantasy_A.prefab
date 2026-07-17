@@ -1329,8 +1329,6 @@ GameObject:
   - component: {fileID: 327128611795004214}
   - component: {fileID: -9067592908936497433}
   - component: {fileID: 1130477295904868276}
-  - component: {fileID: 3193871750328447534}
-  - component: {fileID: 5972579297153836592}
   m_Layer: 0
   m_Name: Man_Soldier_Ranger_Fantasy_A
   m_TagString: Untagged
@@ -1425,34 +1423,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &3193871750328447534
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6422640790172199926}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e67d72769f563047bc96d18565cc80d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Units.UnitMovement
-  PlayerAgent: {fileID: 1130477295904868276}
-  TeamTag: 
---- !u!114 &5972579297153836592
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6422640790172199926}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 411cae8548831304dbc4cf9d853fa039, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Units.UnitBase
-  m_unitMovement: {fileID: 3193871750328447534}
-  TeamTag: 
 --- !u!1 &6522634241978887078
 GameObject:
   m_ObjectHideFlags: 0
