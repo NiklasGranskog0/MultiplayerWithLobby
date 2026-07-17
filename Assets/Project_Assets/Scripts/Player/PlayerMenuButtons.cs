@@ -45,7 +45,7 @@ namespace Project_Assets.Scripts.Player
            }
        }
 
-       // TODO: Test func, real function should take in a "enum to prefab(enum)" parameter
+       // TODO: Test func, real function should take in a "enum to prefab(enum) I think" parameter
        public void SpawnTestPrefab()
        {
            m_gameManager.SpawnTestPrefab(m_clientId, m_teamTag);

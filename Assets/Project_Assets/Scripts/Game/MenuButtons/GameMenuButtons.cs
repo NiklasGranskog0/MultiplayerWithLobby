@@ -15,6 +15,8 @@ namespace Project_Assets.Scripts.Game.MenuButtons
         private void Awake()
         {
             Initialize();
+            
+            // TODO: Does not need to be global, can be scene-specific
             ServiceLocator.Global.Register(this, ServiceLevel.Global, gameObject.scene.name);
         }
 
