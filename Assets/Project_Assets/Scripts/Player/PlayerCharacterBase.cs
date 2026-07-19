@@ -25,7 +25,7 @@ namespace Project_Assets.Scripts.Player
 
         private void Start()
         {
-            // Player object spawned in the Startup scene, so move it to the Game scene
+            // Moving the Player object to the Game scene
             SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetSceneByName("Game"));
 
             var playerCamera = FindObjectsByType<PlayerCamera>();

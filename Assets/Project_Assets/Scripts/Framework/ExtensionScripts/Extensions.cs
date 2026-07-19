@@ -186,6 +186,9 @@ namespace Project_Assets.Scripts.Framework.ExtensionScripts
 
         #region NetworkGameObjects
 
+        public static NetworkObject CreateNetworkObject(GameObject prefab, ulong clientId = 0UL) =>
+            CreateNetworkObject(prefab, prefab.transform, clientId);
+        
         // Optional: Add rotation parameter
         public static NetworkObject CreateNetworkObject(GameObject prefab, Transform position, ulong clientId,
             bool isPlayerObject = false, bool destroyWithScene = false, bool forceOverride = false)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Project_Assets.Scripts.Framework.ExtensionScripts;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Unity.Netcode;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace Project_Assets.Scripts.Network
         public void Awake() =>
             ServiceLocator.ForSceneOf(this).Register(this, ServiceLevel.Scene, gameObject.scene.name);
 
-        public override void OnNetworkSpawn() => InitializePool();
+        // public override void OnNetworkSpawn() => InitializePool();
         public override void OnNetworkDespawn() => ClearPool();
 
         public void OnValidate()
@@ -73,6 +74,7 @@ namespace Project_Assets.Scripts.Network
 
         /// <summary>
         /// Return an object to the pool (reset objects before returning).
+        /// Prefab is the key to the pool dictionary.
         /// </summary>
         public void ReturnNetworkObject(NetworkObject networkObject, GameObject prefab)
         {
@@ -150,6 +152,8 @@ namespace Project_Assets.Scripts.Network
         /// </summary>
         public void InitializePool()
         {
+            Debug.Log("Initializing pool".Color(Color.lightSalmon));
+            
             if (m_hasInitialized) return;
             foreach (var configObject in m_pooledPrefabsList)
             {

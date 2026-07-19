@@ -1,16 +1,16 @@
 using Project_Assets.Scripts.Enums;
-using Project_Assets.Scripts.Framework.ExtensionScripts;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.Game;
 using Project_Assets.Scripts.Game.MenuButtons;
 using Project_Assets.Scripts.Interfaces;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace Project_Assets.Scripts.Units
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    public abstract class UnitBase : MonoBehaviour, ISelectionObject
+    public abstract class UnitBase : NetworkBehaviour, ISelectionObject
     {
         public NavMeshAgent Agent;
         [HideInInspector] public string TeamTag;

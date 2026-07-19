@@ -51,6 +51,11 @@ namespace Project_Assets.Scripts.Player
            m_gameManager.SpawnTestPrefab(m_clientId, m_teamTag);
        }
        
+       public void ReturnAllTestPrefabs()
+       {
+           m_gameManager.ReturnTestPrefab();
+       }
+       
        public void OnButtonTest()
        {
            Action();
