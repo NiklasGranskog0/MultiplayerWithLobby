@@ -41,7 +41,7 @@ namespace Project_Assets.Scripts.Player
             m_objectTargeterComponent.Initialize(m_playerInputsComponent, m_playerCameraComponent, this,
                 gameObject.tag);
             m_playerAnimationsComponent.Initialize(m_playerMovementComponent);
-            m_playerMenuButtons.Initialize(m_playerInputsComponent, m_playerId, gameObject.tag);
+            m_playerMenuButtons.Initialize();
         }
 
         private void Update()

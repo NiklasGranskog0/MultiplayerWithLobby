@@ -2002,7 +2002,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7541182871349610264}
   - component: {fileID: 7534906435033897828}
-  - component: {fileID: 3159010990324406296}
   m_Layer: 8
   m_Name: woman-princess-dress-wide-fantasy
   m_TagString: Untagged
@@ -2150,29 +2149,6 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.00063562393, y: -0.11474666, z: -0.04862249}
     m_Extent: {x: 0.9281641, y: 0.9753953, z: 0.2968027}
   m_DirtyAABB: 0
---- !u!136 &3159010990324406296
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7852436784937696287}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.92816454
-  m_Height: 1.9507906
-  m_Direction: 1
-  m_Center: {x: 0.00062792806, y: 0.84847283, z: -0.018547416}
 --- !u!1 &7887012777883161822
 GameObject:
   m_ObjectHideFlags: 0

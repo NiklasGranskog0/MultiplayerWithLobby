@@ -60,12 +60,13 @@ namespace Project_Assets.Scripts.Framework.ExtensionScripts
         private static byte ToByte(float f)
         {
             f = Mathf.Clamp01(f);
-            return (byte) (f * 255);
+            return (byte)(f * 255);
         }
-        
-        private static string ToHex(this Color color) => $"#{ToByte(color.r):X2}{ToByte(color.g):X2}{ToByte(color.b):X2}";
-        
-        public static string Color(this string s, string color) => $"<color={color.ToUpper()}>{s}</color>";
+
+        private static string ToHex(this Color color) =>
+            $"#{ToByte(color.r):X2}{ToByte(color.g):X2}{ToByte(color.b):X2}";
+
+        // public static string Color(this string s, string color) => $"<color={color.ToUpper()}>{s}</color>";
 
         public static string Color(this string text, Color color) => $"<color={color.ToHex()}>{text}</color>";
 
@@ -132,6 +133,16 @@ namespace Project_Assets.Scripts.Framework.ExtensionScripts
             };
         }
 
+        public static UnitType UnitTypeFromString(this string s)
+        {
+            var stringType = s.Replace("_", "");
+
+            if (Enum.TryParse<UnitType>(stringType, out var type)) return type;
+
+            throw new ArgumentException($"UnitTypeFromString: Tried to convert {s} to {stringType} Enum," +
+                                        "but it does not exist.");
+        }
+
         #endregion
 
         #region Strings
@@ -188,7 +199,7 @@ namespace Project_Assets.Scripts.Framework.ExtensionScripts
 
         public static NetworkObject CreateNetworkObject(GameObject prefab, ulong clientId = 0UL) =>
             CreateNetworkObject(prefab, prefab.transform, clientId);
-        
+
         // Optional: Add rotation parameter
         public static NetworkObject CreateNetworkObject(GameObject prefab, Transform position, ulong clientId,
             bool isPlayerObject = false, bool destroyWithScene = false, bool forceOverride = false)

@@ -1808,7 +1808,7 @@ GameObject:
   - component: {fileID: -3336052041797260762}
   - component: {fileID: -8226269367023269082}
   m_Layer: 8
-  m_Name: Man_Soldier_Fullplate_Fantasy_A
+  m_Name: Man_Soldier_FullPlate_Fantasy_A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

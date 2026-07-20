@@ -839,7 +839,7 @@ GameObject:
   - component: {fileID: -2155626602491073342}
   - component: {fileID: -3106070101027566964}
   m_Layer: 8
-  m_Name: Man_Soldier_Houndskull_B
+  m_Name: Man_Soldier_HoundSkull_B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2066,7 +2066,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7151223838793563415}
   - component: {fileID: 5280690212928789112}
-  - component: {fileID: 3128570312732919187}
   m_Layer: 8
   m_Name: man-soldier-houndskull-b
   m_TagString: Untagged
@@ -2214,29 +2213,6 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.0003401637, y: -0.12385854, z: -0.025993004}
     m_Extent: {x: 0.9495254, y: 0.9638649, z: 0.24350868}
   m_DirtyAABB: 0
---- !u!136 &3128570312732919187
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8434841142587319707}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.9495254
-  m_Height: 1.9277298
-  m_Direction: 1
-  m_Center: {x: 0.00034016205, y: 0.83936095, z: 0.004082069}
 --- !u!1 &8501168335819293471
 GameObject:
   m_ObjectHideFlags: 0

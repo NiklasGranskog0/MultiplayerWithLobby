@@ -1196,7 +1196,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5393030203376439168}
   - component: {fileID: 7190790805339273092}
-  - component: {fileID: 4222457476073160679}
   m_Layer: 8
   m_Name: man-villager-a
   m_TagString: Untagged
@@ -1344,29 +1343,6 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.0015451014, y: -0.1270242, z: -0.016680941}
     m_Extent: {x: 0.9392451, y: 0.96049726, z: 0.19269483}
   m_DirtyAABB: 0
---- !u!136 &4222457476073160679
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4076292249654520553}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.9392451
-  m_Height: 1.9209945
-  m_Direction: 1
-  m_Center: {x: 0.0015451004, y: 0.83619535, z: 0.013409391}
 --- !u!1 &4214461268851657532
 GameObject:
   m_ObjectHideFlags: 0

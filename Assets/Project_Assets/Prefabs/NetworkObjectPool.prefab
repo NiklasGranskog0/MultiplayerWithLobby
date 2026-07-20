@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1750464173718085579
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 845787066377884872}
+  - component: {fileID: 4627577307733411584}
+  - component: {fileID: 8357766211006758453}
+  m_Layer: 0
+  m_Name: NetworkObjectPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &845787066377884872
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1750464173718085579}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4627577307733411584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1750464173718085579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 4048147771
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  <InScenePlaced>k__BackingField: 0
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!114 &8357766211006758453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1750464173718085579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c0f3940444258f4cb5a3df9c8b54ad8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Network.NetworkObjectPool
+  ShowTopMostFoldoutHeaderGroup: 1
+  m_pooledPrefabsList:
+  - Prefab: {fileID: 4802352162206730859, guid: 8b6c3a672b81c044181638bf2d1de120, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 8465344326754645336, guid: 4e01800ba6cbf4848b85214ff129013a, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 490030006942499390, guid: 9f7fff73066a71a4ea0995c8cb207dac, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 7155293158469676710, guid: ef2be50c23e0f5c48a1ebccfc50c5b77, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 229759677066226614, guid: 88eedf4770148194aa4c9e751275c96f, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 1366262985531460440, guid: 883800819ced1534984e597f37f854ee, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 3360752932982242809, guid: fdf8f8c936fa40045af7de22980952b9, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 8414267172879817744, guid: 166e2830f3a62c24480c5d64e05b68d2, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 2696397005932986141, guid: 7523357a6c58bb540bf289ae7026bbc8, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 2858523310445721793, guid: 29bd836aefa05804d8251dba69dbf6a6, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 5917559420482344648, guid: 824e9a79981c5414c872b3467b70f4e6, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 7633641758350233848, guid: ff2f1e00595f1e446af42f6c14586edd, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 3249815623722183648, guid: b30561affc5b7924c93ad59465adf4ad, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 6422640790172199926, guid: 5de08676919588e48b0fce22e3567d7a, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 1494023232614168542, guid: d18e5b58a727c674cb83d73c83186a48, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 4931793284623662484, guid: ef4d4352df78ef64e9c4c50afba19b8b, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 3915958362508182197, guid: de06a3729f671de498658faf9056516e, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 9111408388181086631, guid: e385c8e5ebd81a5429fe67c0d27875f3, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 1786646319396311678, guid: 97ca5dbe37b3c494f852332ec56effb1, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 6955602338762971417, guid: d5c5da0b9c7f3fa4286471bd22c96ee4, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 1486660942565494256, guid: 6e62c5d663ddc3141a6888d32a0ade17, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 6588157006678591604, guid: beaf5a6471359a942b86ab1fbd3b0900, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 2323204582609439838, guid: 5f71741bc40dbce48a978200f5654578, type: 3}
+    PrewarmCount: 20
+  - Prefab: {fileID: 8948365606492438415, guid: 7b11cbcf999503b45a024a604ee6996d, type: 3}
+    PrewarmCount: 20

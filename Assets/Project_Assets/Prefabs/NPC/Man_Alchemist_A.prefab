@@ -1498,7 +1498,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6206634579353062831}
   - component: {fileID: 8284354467660109989}
-  - component: {fileID: 5648648667891267385}
   m_Layer: 8
   m_Name: man-alchemist-a
   m_TagString: Untagged
@@ -1646,29 +1645,6 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.00015929341, y: -0.12884334, z: -0.050176725}
     m_Extent: {x: 0.93922246, y: 0.9682822, z: 0.2369454}
   m_DirtyAABB: 0
---- !u!136 &5648648667891267385
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6434010308729778843}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.93922246
-  m_Height: 1.9365644
-  m_Direction: 1
-  m_Center: {x: 0.00015929024, y: 0.8343762, z: -0.020086393}
 --- !u!1 &6453497996768118686
 GameObject:
   m_ObjectHideFlags: 0

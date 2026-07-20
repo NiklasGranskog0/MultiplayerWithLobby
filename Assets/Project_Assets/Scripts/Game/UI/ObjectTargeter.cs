@@ -43,7 +43,6 @@ namespace Project_Assets.Scripts.Game.UI
             m_selectedObjectRawImage.texture = m_imageManager.ImageCamera.targetTexture;
 
             // At the start of the game have the player character as the selected object
-            // m_selectedObject = defaultSelectedObject;
             m_selectedObjectName.text = defaultSelectedObject.Name;
             m_imageManager.LoadImage(defaultSelectedObject.ImageToLoad);
         }

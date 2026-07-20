@@ -318,7 +318,7 @@ MonoBehaviour:
         - m_Target: {fileID: 278206900478176051}
           m_TargetAssemblyTypeName: Project_Assets.Scripts.Player.PlayerMenuButtons,
             Assembly-CSharp
-          m_MethodName: OnButtonTest
+          m_MethodName: ExitTheGame
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -329,49 +329,9 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
     GameMenuButton: 0
-    Icon: {fileID: 21300010, guid: ef4a8d855fd835e42b625eb8c707a861, type: 3}
-    ShortcutKey: 286
-    TextToolTip: "Tool tip text test \nShortcutkey: F5\nMiddle Center Left"
-  - ClickEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 278206900478176051}
-          m_TargetAssemblyTypeName: Project_Assets.Scripts.Player.PlayerMenuButtons,
-            Assembly-CSharp
-          m_MethodName: SpawnTestPrefab
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    GameMenuButton: 11
-    Icon: {fileID: 21300048, guid: 2e8e0326cef2ff14c968b6e7bdd381b5, type: 3}
+    Icon: {fileID: 21300000, guid: 3647ab5049e23a14c97d14dc6daadf79, type: 3}
     ShortcutKey: 0
-    TextToolTip: Spawn Test Prefab
-  - ClickEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 278206900478176051}
-          m_TargetAssemblyTypeName: Project_Assets.Scripts.Player.PlayerMenuButtons,
-            Assembly-CSharp
-          m_MethodName: ReturnAllTestPrefabs
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    GameMenuButton: 8
-    Icon: {fileID: 21300086, guid: 0eaf9fe6c11160f438c2d72544ae3270, type: 3}
-    ShortcutKey: 0
-    TextToolTip: Return all test prefabs
+    TextToolTip: Exit The Game
 --- !u!1001 &751116366957411312
 PrefabInstance:
   m_ObjectHideFlags: 0

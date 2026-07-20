@@ -1295,7 +1295,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1828140603354366710}
   - component: {fileID: 8298922035612417086}
-  - component: {fileID: 7849620006011307240}
   m_Layer: 8
   m_Name: woman-princess-dress-narrow-fantasy
   m_TagString: Untagged
@@ -1443,29 +1442,6 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.00063562393, y: -0.11220619, z: -0.046284735}
     m_Extent: {x: 0.9281641, y: 0.97285295, z: 0.22131693}
   m_DirtyAABB: 0
---- !u!136 &7849620006011307240
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6301576741999935195}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.9281644
-  m_Height: 1.9457059
-  m_Direction: 1
-  m_Center: {x: 0.00062793127, y: 0.8510133, z: -0.016209662}
 --- !u!1 &6397668288943523876
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Project_Assets.Scripts.Framework.ExtensionScripts;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.Network;
 using Project_Assets.Scripts.Units.Types;
@@ -59,7 +58,7 @@ namespace Project_Assets.Scripts.Game
         private void Awake()
         {
             ServiceLocator.ForSceneOf(this).Register(this, ServiceLevel.Scene, gameObject.scene.name);
-            Extensions.CreateNetworkObject(m_poolNetworkManager, NetworkManager.Singleton.LocalClientId);
+            // Extensions.CreateNetworkObject(m_poolNetworkManager, NetworkManager.Singleton.LocalClientId);
         }
 
         private void Start()

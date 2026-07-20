@@ -65,7 +65,7 @@ namespace Project_Assets.Scripts.Lobby
 
             if (task.Exception != null)
             {
-                Debug.LogWarning($"Lobby poll failed: {task.Exception.Message}".Color("red"));
+                Debug.LogWarning($"Lobby poll failed: {task.Exception.Message}".Color(Color.red));
                 yield break;
             }
 
@@ -76,7 +76,7 @@ namespace Project_Assets.Scripts.Lobby
 
             if (m_currentLobby == null)
             {
-                Debug.Log("Lobby not found, stopping lobby polling".Color("red"));
+                Debug.Log("Lobby not found, stopping lobby polling".Color(Color.red));
                 yield break;
             }
 
@@ -86,13 +86,13 @@ namespace Project_Assets.Scripts.Lobby
 
             if (oldHostId != newHostId)
             {
-                Debug.LogWarning("Host is missing. Attempting host reassignment...".Color("red"));
+                Debug.LogWarning("Host is missing. Attempting host reassignment...".Color(Color.red));
                 yield return AssignNewHost(updatedLobby);
             }
 
             m_currentLobby = updatedLobby;
             Debug.Log($"Lobby polled. Host: {m_currentLobby.HostId}, Players: {m_currentLobby.Players.Count}"
-                .Color("cyan"));
+                .Color(Color.cyan));
         }
 
         private bool CheckIfKicked()
@@ -125,17 +125,17 @@ namespace Project_Assets.Scripts.Lobby
 
             if (task.Exception != null)
             {
-                Debug.LogError($"Host reassignment failed: {task.Exception.Message}".Color("red"));
+                Debug.LogError($"Host reassignment failed: {task.Exception.Message}".Color(Color.red));
             }
             else
             {
-                Debug.Log($"Host reassignment succeeded {selectedHostId}".Color("green"));
+                Debug.Log($"Host reassignment succeeded {selectedHostId}".Color(Color.green));
                 m_lobbyManager.ActiveLobby = task.Result;
 
                 if (selectedHostId == myId)
                 {
                     m_lobbyManager.Heartbeat.StartHeartBeat(m_lobbyManager.ActiveLobby.Id);
-                    Debug.Log("Started heartbeat (new host)".Color("cyan"));
+                    Debug.Log("Started heartbeat (new host)".Color(Color.cyan));
                 }
             }
         }

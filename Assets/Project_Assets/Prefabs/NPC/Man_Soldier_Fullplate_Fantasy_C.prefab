@@ -934,7 +934,7 @@ GameObject:
   - component: {fileID: -5648535941172699088}
   - component: {fileID: -8026832461423094617}
   m_Layer: 8
-  m_Name: Man_Soldier_Fullplate_Fantasy_C
+  m_Name: Man_Soldier_FullPlate_Fantasy_C
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2066,7 +2066,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2623530586835750175}
   - component: {fileID: 3727530001320943782}
-  - component: {fileID: 3734244020793962993}
   m_Layer: 8
   m_Name: man-soldier-fullplate-medieval-c
   m_TagString: Untagged
@@ -2214,29 +2213,6 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.00023049116, y: -0.110248655, z: -0.025338985}
     m_Extent: {x: 0.9172757, y: 0.9684936, z: 0.22798231}
   m_DirtyAABB: 0
---- !u!136 &3734244020793962993
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8101223853554150160}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.9172757
-  m_Height: 1.9369872
-  m_Direction: 1
-  m_Center: {x: 0.00023048956, y: 0.85297084, z: 0.004736088}
 --- !u!1 &8131159075727278434
 GameObject:
   m_ObjectHideFlags: 0

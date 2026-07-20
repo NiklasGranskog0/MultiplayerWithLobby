@@ -56,7 +56,7 @@ namespace Project_Assets.Scripts.Lobby
             }
             else
             {
-                Debug.Log("Heartbeat sent".Color("cyan"));
+                Debug.Log("Heartbeat sent".Color(Color.cyan));
             }
         }
     }

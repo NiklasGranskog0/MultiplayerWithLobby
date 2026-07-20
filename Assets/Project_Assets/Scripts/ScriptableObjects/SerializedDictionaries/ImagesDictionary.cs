@@ -14,7 +14,7 @@ namespace Project_Assets.Scripts.ScriptableObjects.SerializedDictionaries
             public Texture2D Texture;
         }
 
-        [SerializeField] private NameAndTexture[] nameAndTextures;
+        [SerializeField] private NameAndTexture[] m_nameAndTextures;
         [NonSerialized] private Dictionary<string, Texture2D> m_dictionary;
 
         public Texture2D this[string textureName]
@@ -59,12 +59,12 @@ namespace Project_Assets.Scripts.ScriptableObjects.SerializedDictionaries
         {
             m_dictionary = new Dictionary<string, Texture2D>();
 
-            if (nameAndTextures == null)
+            if (m_nameAndTextures == null)
             {
                 return;
             }
 
-            foreach (var nameAndTexture in nameAndTextures)
+            foreach (var nameAndTexture in m_nameAndTextures)
             {
                 if (string.IsNullOrWhiteSpace(nameAndTexture.Name))
                 {

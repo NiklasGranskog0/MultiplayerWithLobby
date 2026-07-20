@@ -59,7 +59,7 @@ namespace Project_Assets.Scripts.Scenes
         {
             ResetProgressSlider(m_currentLoadingScreen);
 
-            Debug.Log("SceneLoader: ".Color("red") + $"Loading scene group {sceneGroup.ToString()}".Color("red"));
+            Debug.Log("SceneLoader: ".Color(Color.red) + $"Loading scene group {sceneGroup.ToString()}".Color(Color.red));
             EnableLoadingCanvas(true);
 
             await m_sceneGroupManager.LoadScenes(m_sceneGroupAssets.SceneGroups[(int)sceneGroup], m_loadingProgress);
@@ -87,7 +87,7 @@ namespace Project_Assets.Scripts.Scenes
             // TODO: Send message to the host that scene have been loaded
 
             EnableLoadingCanvas(false);
-            Debug.Log("SceneLoader: ".Color("red") + "Finished Loading Scene Group".Color("lightblue"));
+            Debug.Log("SceneLoader: ".Color(Color.red) + "Finished Loading Scene Group".Color(Color.lightBlue));
         }
 
         private void EnableLoadingCanvas(bool enable)

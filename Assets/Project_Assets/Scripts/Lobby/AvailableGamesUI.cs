@@ -78,7 +78,7 @@ namespace Project_Assets.Scripts.Lobby
         private void OnLobbyListChanged(LobbyListChangedEventArgs obj)
         {
             PopulateLobbyList(obj.Lobbies);
-            Debug.Log("Populate Lobby List (LobbyListChanged)".Color("cyan"));
+            Debug.Log("Populate Lobby List (LobbyListChanged)".Color(Color.cyan));
         }
         
         // When refreshing, get all the active lobbies and populate the game list
@@ -96,7 +96,7 @@ namespace Project_Assets.Scripts.Lobby
             
             if (lobbies == null || lobbies.Count == 0)
             {
-                Debug.Log("No lobbies found".Color("red"));
+                Debug.Log("No lobbies found".Color(Color.red));
                 return;
             }
 

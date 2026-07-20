@@ -125,9 +125,7 @@ namespace Project_Assets.Scripts.Framework.UnityServiceLocator
 
         public ServiceLocator Get<T>(out T service) where T : class
         {
-            if (TryGetService(out service))
-            { return this;
-            }
+            if (TryGetService(out service)) return this;
 
             if (TryGetNextInHierarchy(out ServiceLocator container))
             {
@@ -135,9 +133,9 @@ namespace Project_Assets.Scripts.Framework.UnityServiceLocator
                 return this;
             }
 
-            throw new ArgumentException("ServiceLocator: ".Color("red") +
-                                        $"Service of type {typeof(T).Name.Color("red")} not registered!".Color(
-                                            "lightblue"));
+            throw new ArgumentException("ServiceLocator: ".Color(Color.red) +
+                                        $"Service of type {typeof(T).Name.Color(Color.red)} not registered!".Color(
+                                            Color.lightBlue));
         }
 
         private bool TryGetService<T>(out T service) where T : class
@@ -191,11 +189,11 @@ namespace Project_Assets.Scripts.Framework.UnityServiceLocator
 
         private void LogRegisterService<T>(T service, ServiceLevel level, string sceneName = "")
         {
-            var endString = $"Registered service of the type {typeof(T).Name.Color("red")}".Color("lightblue");
-            var globalString = "ServiceLocator ".Color("red") + $"[{level.ToString()}]".Color("orange") +
-                               ": ".Color("red");
-            var localOrScene = "ServiceLocator ".Color("red") + $"[{level + " | " + sceneName}]".Color("orange") +
-                               ": ".Color("red");
+            var endString = $"Registered service of the type {typeof(T).Name.Color(Color.red)}".Color(Color.lightBlue);
+            var globalString = "ServiceLocator ".Color(Color.red) + $"[{level.ToString()}]".Color(Color.orange) +
+                               ": ".Color(Color.red);
+            var localOrScene = "ServiceLocator ".Color(Color.red) + $"[{level + " | " + sceneName}]".Color(Color.orange) +
+                               ": ".Color(Color.red);
 
             switch (level)
             {

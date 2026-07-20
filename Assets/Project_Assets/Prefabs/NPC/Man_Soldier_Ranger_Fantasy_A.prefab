@@ -1911,7 +1911,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7338115735670181545}
   - component: {fileID: 7495813507565011575}
-  - component: {fileID: 6188126297137927844}
   m_Layer: 8
   m_Name: man-soldier-ranger-medieval-a
   m_TagString: Untagged
@@ -2059,29 +2058,6 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.00016057491, y: -0.11793184, z: -0.016008005}
     m_Extent: {x: 0.94202566, y: 0.95719814, z: 0.20463695}
   m_DirtyAABB: 0
---- !u!136 &6188126297137927844
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7554845222219295144}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.94202566
-  m_Height: 1.9143963
-  m_Direction: 1
-  m_Center: {x: 0.00016057391, y: 0.8452877, z: 0.014067069}
 --- !u!1 &7602464194290448510
 GameObject:
   m_ObjectHideFlags: 0

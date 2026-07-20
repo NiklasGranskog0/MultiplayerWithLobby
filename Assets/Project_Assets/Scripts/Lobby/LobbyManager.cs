@@ -98,11 +98,11 @@ namespace Project_Assets.Scripts.Lobby
                     }
                 }
 
-                Debug.Log("LobbyUpdate".Color("orange"));
+                Debug.Log("LobbyUpdate".Color(Color.orange));
             }
             catch (LobbyServiceException e)
             {
-                Debug.Log($"LobbyUpdate apply failed: {e.Message}".Color("red"));
+                Debug.Log($"LobbyUpdate apply failed: {e.Message}".Color(Color.red));
             }
         }
 
@@ -130,7 +130,7 @@ namespace Project_Assets.Scripts.Lobby
 
         private void SendTimerLeftMessage(float obj)
         {
-            OnSendSystemMessage?.Invoke($"Game starting in {obj}... ".Color("red"));
+            OnSendSystemMessage?.Invoke($"Game starting in {obj}... ".Color(Color.red));
         }
 
         private void PollerOnOnShouldBeenKicked(LobbyEventArgs obj)
@@ -216,7 +216,7 @@ namespace Project_Assets.Scripts.Lobby
             if (isHost && Heartbeat != null)
             {
                 Heartbeat.StopHeartBeat();
-                Debug.Log("Stopped heartbeat (was host)".Color("red"));
+                Debug.Log("Stopped heartbeat (was host)".Color(Color.red));
             }
 
             Poller.StopLobbyPolling();
@@ -490,7 +490,7 @@ namespace Project_Assets.Scripts.Lobby
                     }
                 };
                 
-                Debug.Log($"Updating player {AuthenticationService.Instance.PlayerId} client ID to: {clientId}".Color("orange"));
+                Debug.Log($"Updating player {AuthenticationService.Instance.PlayerId} client ID to: {clientId}".Color(Color.orange));
                 ActiveLobby = await LobbyService.Instance.UpdatePlayerAsync(ActiveLobby.Id, AuthenticationService.Instance.PlayerId, updatePlayerOptions);
                 OnLobbyPlayerUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 

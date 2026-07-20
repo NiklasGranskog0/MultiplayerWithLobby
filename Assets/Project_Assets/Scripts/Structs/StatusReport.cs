@@ -18,7 +18,7 @@ namespace Project_Assets.Scripts.Structs
         
         public void Log()
         {
-            Debug.Log($"Success: {m_status.Success} :  Message: {m_status.Message}".Color(m_status.Success ? "green" : "red"));
+            Debug.Log($"Success: {m_status.Success} :  Message: {m_status.Message}".Color(m_status.Success ? Color.green : Color.red));
         }
     }
     
@@ -35,7 +35,7 @@ namespace Project_Assets.Scripts.Structs
 
         public void Log()
         {
-            Debug.Log($"Success: {Success} :  Message: {Message}".Color(Success ? "green" : "red"));
+            Debug.Log($"Success: {Success} :  Message: {Message}".Color(Success ? Color.green : Color.red));
         }
     }
 
@@ -53,7 +53,7 @@ namespace Project_Assets.Scripts.Structs
 
         public void Log()
         {
-            Debug.Log($"Success: {m_status.Success} :  Message: {m_status.Message}".Color(m_status.Success ? "green" : "red"));
+            Debug.Log($"Success: {m_status.Success} :  Message: {m_status.Message}".Color(m_status.Success ? Color.green : Color.red));
         }
     }
 
@@ -71,7 +71,7 @@ namespace Project_Assets.Scripts.Structs
 
         public void Log()
         {
-            Debug.Log($"Success: {Status.Success} :  Message: {Status.Message}".Color(Status.Success ? "green" : "red"));
+            Debug.Log($"Success: {Status.Success} :  Message: {Status.Message}".Color(Status.Success ? Color.green : Color.red));
         }
     }
 }

@@ -1834,7 +1834,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4481542402893906295}
   - component: {fileID: 444050751431104720}
-  - component: {fileID: 7694903212718842670}
   m_Layer: 8
   m_Name: woman-soldier-fullplate-fantasy
   m_TagString: Untagged
@@ -1982,29 +1981,6 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.00029209256, y: -0.10820004, z: -0.014603302}
     m_Extent: {x: 0.93214893, y: 0.97838974, z: 0.26868647}
   m_DirtyAABB: 0
---- !u!136 &7694903212718842670
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8256104833039376013}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.93214893
-  m_Height: 1.9567795
-  m_Direction: 1
-  m_Center: {x: 0.00029209163, y: 0.85501945, z: 0.015471771}
 --- !u!1 &8401940270362211650
 GameObject:
   m_ObjectHideFlags: 0
@@ -2177,7 +2153,7 @@ GameObject:
   - component: {fileID: -8716276751279566731}
   - component: {fileID: 876487057410717892}
   m_Layer: 8
-  m_Name: Woman_Soldier_Fullplate_Fantasy
+  m_Name: Woman_Soldier_FullPlate_Fantasy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

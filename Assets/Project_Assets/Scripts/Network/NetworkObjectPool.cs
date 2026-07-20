@@ -12,6 +12,7 @@ namespace Project_Assets.Scripts.Network
     public class NetworkObjectPool : NetworkBehaviour
     {
         [SerializeField] private List<PoolConfigObject> m_pooledPrefabsList;
+        public List<PoolConfigObject> PooledPrefabs => m_pooledPrefabsList;
 
         private readonly HashSet<GameObject> m_prefabs = new();
 
@@ -22,7 +23,7 @@ namespace Project_Assets.Scripts.Network
         public void Awake() =>
             ServiceLocator.ForSceneOf(this).Register(this, ServiceLevel.Scene, gameObject.scene.name);
 
-        // public override void OnNetworkSpawn() => InitializePool();
+        public override void OnNetworkSpawn() => InitializePool();
         public override void OnNetworkDespawn() => ClearPool();
 
         public void OnValidate()
@@ -179,7 +180,7 @@ namespace Project_Assets.Scripts.Network
     }
 
     [Serializable]
-    internal struct PoolConfigObject
+    public struct PoolConfigObject
     {
         public GameObject Prefab;
         public int PrewarmCount;

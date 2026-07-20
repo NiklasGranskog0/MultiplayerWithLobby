@@ -1136,7 +1136,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7241545046505581533}
   - component: {fileID: 2332734900949414662}
-  - component: {fileID: 2173758276698321562}
   m_Layer: 8
   m_Name: woman-headband-fantasy
   m_TagString: Untagged
@@ -1284,29 +1283,6 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.00063559413, y: -0.12895793, z: -0.048643947}
     m_Extent: {x: 0.9281641, y: 0.9601719, z: 0.24053895}
   m_DirtyAABB: 0
---- !u!136 &2173758276698321562
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5605585953517181191}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.9281641
-  m_Height: 1.9203439
-  m_Direction: 1
-  m_Center: {x: 0.00063559104, y: 0.8342616, z: -0.018568903}
 --- !u!1 &5775847122217519761
 GameObject:
   m_ObjectHideFlags: 0
