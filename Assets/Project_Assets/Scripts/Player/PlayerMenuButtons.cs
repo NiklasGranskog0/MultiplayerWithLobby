@@ -1,3 +1,4 @@
+using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Framework.ExtensionScripts;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.Game.MenuButtons;
@@ -26,8 +27,8 @@ namespace Project_Assets.Scripts.Player
 
             foreach (var button in m_objectMenuButtons)
             {
-                m_gameMenuButtons.BindButton(button.GameMenuButton, button.ClickEvent.Invoke, button.Icon,
-                    button.TextToolTip, button.ShortcutKey);
+                m_gameMenuButtons.BindButton(button.GameMenuButton, button.ClickedAction, button.Icon,
+                    button.TextToolTip, button.ShortcutKey, null);
             }
         }
 

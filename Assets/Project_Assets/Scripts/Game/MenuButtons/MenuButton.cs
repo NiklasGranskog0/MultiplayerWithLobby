@@ -1,3 +1,6 @@
+using Project_Assets.Scripts.Enums;
+using Project_Assets.Scripts.Framework;
+using Project_Assets.Scripts.Framework.ExtensionScripts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -6,7 +9,7 @@ using Button = UnityEngine.UI.Button;
 
 namespace Project_Assets.Scripts.Game.MenuButtons
 {
-    public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
         [Header("Button Components")]
         public Button ButtonComponent;
@@ -21,6 +24,8 @@ namespace Project_Assets.Scripts.Game.MenuButtons
         // Text to set in tooltip if hover over button
         public GameObject TextAreaObject;
         public TextMeshProUGUI TextArea;
+        
+        [HideInInspector] public SerializedCallback<UnitType> Callback;
 
         public void OnPointerEnter(PointerEventData eventData)
         {
@@ -31,5 +36,6 @@ namespace Project_Assets.Scripts.Game.MenuButtons
         }
         
         public void OnPointerExit(PointerEventData eventData) => TextAreaObject.SetActive(false);
+        public void OnPointerClick(PointerEventData eventData) => Callback?.Invoke();
     }
 }

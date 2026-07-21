@@ -312,7 +312,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Player.PlayerMenuButtons
   m_objectMenuButtons:
-  - ClickEvent:
+  - ClickedAction:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 278206900478176051}
@@ -332,6 +332,10 @@ MonoBehaviour:
     Icon: {fileID: 21300000, guid: 3647ab5049e23a14c97d14dc6daadf79, type: 3}
     ShortcutKey: 0
     TextToolTip: Exit The Game
+    Callback:
+      m_targetObject: {fileID: 0}
+      m_methodName: 
+      m_parameters: []
 --- !u!1001 &751116366957411312
 PrefabInstance:
   m_ObjectHideFlags: 0

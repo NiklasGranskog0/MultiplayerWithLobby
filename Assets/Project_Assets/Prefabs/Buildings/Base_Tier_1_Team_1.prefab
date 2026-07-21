@@ -165,14 +165,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bae8ea73917428b4a94968a169a1e827, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Buildings.BuildingMenuButtons
+  m_spawnPosition: {fileID: 9139952622674811970}
   m_objectMenuButtons:
-  - ClickEvent:
+  - ClickedAction:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: -6510670646904470910}
           m_TargetAssemblyTypeName: Project_Assets.Scripts.Buildings.BuildingMenuButtons,
             Assembly-CSharp
-          m_MethodName: ExitTheGame
+          m_MethodName: 
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -185,7 +186,27 @@ MonoBehaviour:
     GameMenuButton: 0
     Icon: {fileID: 21300000, guid: 3647ab5049e23a14c97d14dc6daadf79, type: 3}
     ShortcutKey: 0
-    TextToolTip: Exit the game :D
+    TextToolTip: spawn unit
+    Callback:
+      m_targetObject: {fileID: -6510670646904470910}
+      m_methodName: SpawnUnit
+      m_parameters:
+      - ValueType: 5
+        BoolValue: 0
+        IntValue: 0
+        FloatValue: 0
+        StringValue: 
+        Vector3Value: {x: 0, y: 0, z: 0}
+        UnitTypeValue: 5
+        GameMenuButtonValue: 0
+      - ValueType: 3
+        BoolValue: 0
+        IntValue: 0
+        FloatValue: 0
+        StringValue: Team1
+        Vector3Value: {x: 0, y: 0, z: 0}
+        UnitTypeValue: 0
+        GameMenuButtonValue: 0
 --- !u!1 &7103412660813528914
 GameObject:
   m_ObjectHideFlags: 0

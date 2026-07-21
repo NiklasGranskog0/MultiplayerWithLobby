@@ -13,7 +13,7 @@ namespace Project_Assets.Scripts.Buildings
         [SerializeField] private ObjectMenuButton[] m_objectMenuButtons;
         private GameMenuButtons m_gameMenuButtons;
         private PoolManager m_poolManager;
-        
+
         public void Start()
         {
             ServiceLocator.Global.Get(out m_gameMenuButtons);
@@ -23,17 +23,21 @@ namespace Project_Assets.Scripts.Buildings
         public void SetGameMenuButtons()
         {
             m_gameMenuButtons.ResetButtonBinds();
-            
+
+            // 
             foreach (var button in m_objectMenuButtons)
             {
-                m_gameMenuButtons.BindButton(button.GameMenuButton, button.ClickEvent.Invoke, button.Icon, button.TextToolTip, button.ShortcutKey);
+                m_gameMenuButtons.BindButton(button.GameMenuButton, button.ClickedAction, button.Icon,
+                    button.TextToolTip, button.ShortcutKey, button.Callback);
             }
         }
 
-        public void SpawnUnit(/*UnitType unitType*/)
+        public UnitType CallbackNull() => UnitType.None;
+        
+        public UnitType SpawnUnit(UnitType unitType, string teamTag)
         {
-            m_poolManager.SpawnPooledObjectRpc(UnitType.ManSoldierFullPlateFantasyA
-                , m_spawnPosition.position);
+            m_poolManager.SpawnPooledObjectRpc(unitType, m_spawnPosition.position, teamTag);
+            return unitType; // Redundant, but callback needs to have a return value.
         }
     }
 }

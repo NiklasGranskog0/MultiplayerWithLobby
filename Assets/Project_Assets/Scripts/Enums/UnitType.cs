@@ -2,6 +2,7 @@
 {
     public enum UnitType
     {
+        None = 0,
         ManAlchemistA,
         ManAlchemistB,
         ManAlchemistC,

@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Project_Assets.Scripts.Enums;
+using Project_Assets.Scripts.Framework;
+using Project_Assets.Scripts.Framework.ExtensionScripts;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using UnityEngine;
 using UnityEngine.Events;
@@ -44,17 +47,19 @@ namespace Project_Assets.Scripts.Game.MenuButtons
         }
 
         // TODO: Bind shortcut keys to player inputs
-        public void BindButton(GameMenuButton buttonIndex, UnityAction action, Sprite buttonImage, 
-            string buttonToolTip = "", KeyCode shortcutKey = KeyCode.None)
+        public void BindButton(GameMenuButton buttonIndex, UnityEvent action, Sprite buttonImage, 
+            string buttonToolTip = "", KeyCode shortcutKey = KeyCode.None, SerializedCallback<UnitType> callback = null)
         {
-            m_menuButtonDictionary[buttonIndex].ButtonComponent.onClick.AddListener(action);
-            m_menuButtonDictionary[buttonIndex].ImageComponent.sprite = buttonImage;
-            m_menuButtonDictionary[buttonIndex].TextToolTip = buttonToolTip;
-            m_menuButtonDictionary[buttonIndex].HasToolTip = !string.IsNullOrEmpty(buttonToolTip);
-            m_menuButtonDictionary[buttonIndex].ShortcutKey = shortcutKey;
-            m_menuButtonDictionary[buttonIndex].ButtonObject.SetActive(true);
+            var menuButton = m_menuButtonDictionary[buttonIndex];
+            menuButton.Callback = callback;
+            menuButton.ButtonComponent.onClick.AddListener(action.Invoke);
+            menuButton.ImageComponent.sprite = buttonImage;
+            menuButton.TextToolTip = buttonToolTip;
+            menuButton.HasToolTip = !string.IsNullOrEmpty(buttonToolTip);
+            menuButton.ShortcutKey = shortcutKey;
+            menuButton.ButtonObject.SetActive(true);
         }
-
+        
         public void ResetButtonBinds()
         {
             foreach (var menuButton in MenuButtons)

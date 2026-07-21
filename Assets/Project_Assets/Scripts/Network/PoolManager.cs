@@ -24,10 +24,11 @@ namespace Project_Assets.Scripts.Network
         private void Start() => ServiceLocator.For(this).Get(out m_unitTypeToPrefab);
 
         [Rpc(SendTo.Server)]
-        public void SpawnPooledObjectRpc(UnitType unitType, Vector3 spawnPoint)
+        public void SpawnPooledObjectRpc(UnitType unitType, Vector3 spawnPoint, string team)
         {
             var prefab = m_unitTypeToPrefab.GetPrefabObject(unitType);
             var networkObject = m_networkObjectPool.GetNetworkObject(prefab, spawnPoint, Quaternion.identity);
+            networkObject.gameObject.tag = team;
             networkObject.Spawn();
         }
 
