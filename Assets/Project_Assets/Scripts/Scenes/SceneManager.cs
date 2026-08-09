@@ -1,10 +1,10 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Framework.ExtensionScripts;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.ScriptableObjects;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Project_Assets.Scripts.Scenes
@@ -12,7 +12,7 @@ namespace Project_Assets.Scripts.Scenes
     public class SceneManager : MonoBehaviour
     {
         private LoadingProgress m_loadingProgress;
-        private SceneGroupManager m_sceneGroupManager;
+        [HideInInspector] public SceneGroupManager SceneGroupManager;
 
         [SerializeField] private LoadingScene m_defaultLoadingScreen;
         [SerializeField] private LoadingScene m_gameLoadingScreen;
@@ -31,15 +31,15 @@ namespace Project_Assets.Scripts.Scenes
             ServiceLocator.Global.Register(this, ServiceLevel.Global);
 
             m_loadingProgress = new LoadingProgress();
-            m_sceneGroupManager = new SceneGroupManager();
+            SceneGroupManager = new SceneGroupManager();
 
-            m_sceneGroupManager.OnSceneLoaded +=
+            SceneGroupManager.OnSceneLoaded +=
                 sceneName => Debug.Log("SceneGroupManager OnSceneLoaded: " + sceneName);
 
-            m_sceneGroupManager.OnSceneUnloaded +=
+            SceneGroupManager.OnSceneUnloaded +=
                 sceneName => Debug.Log("SceneGroupManager OnSceneUnloaded: " + sceneName);
 
-            m_sceneGroupManager.OnSceneGroupLoaded += FinishedLoading;
+            SceneGroupManager.OnSceneGroupLoaded += FinishedLoading;
         }
 
         private async void Start()
@@ -55,6 +55,17 @@ namespace Project_Assets.Scripts.Scenes
             UpdateLoadingProgress(m_currentLoadingScreen);
         }
 
+        public async Task<SceneEventType> LoadSceneGroupByEnumNetwork(SceneGroupToLoad  sceneGroup)
+        {
+            ResetProgressSlider(m_currentLoadingScreen);
+
+            Debug.Log("SceneLoader: ".Color(Color.red) + $"Loading scene group {sceneGroup.ToString()}".Color(Color.red));
+            EnableLoadingCanvas(true);
+
+            var sceneEventType = await SceneGroupManager.LoadScenesNetwork(m_sceneGroupAssets.SceneGroups[(int)sceneGroup], m_loadingProgress);
+            return sceneEventType;
+        }
+
         public async Task LoadSceneGroupByEnum(SceneGroupToLoad sceneGroup)
         {
             ResetProgressSlider(m_currentLoadingScreen);
@@ -62,7 +73,7 @@ namespace Project_Assets.Scripts.Scenes
             Debug.Log("SceneLoader: ".Color(Color.red) + $"Loading scene group {sceneGroup.ToString()}".Color(Color.red));
             EnableLoadingCanvas(true);
 
-            await m_sceneGroupManager.LoadScenes(m_sceneGroupAssets.SceneGroups[(int)sceneGroup], m_loadingProgress);
+            await SceneGroupManager.LoadScenes(m_sceneGroupAssets.SceneGroups[(int)sceneGroup], m_loadingProgress);
         }
 
         private void UpdateLoadingProgress(LoadingScene loadingScene)

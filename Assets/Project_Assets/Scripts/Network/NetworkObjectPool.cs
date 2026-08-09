@@ -20,8 +20,18 @@ namespace Project_Assets.Scripts.Network
 
         private bool m_hasInitialized = false;
 
-        public void Awake() =>
+        public void Awake()
+        {
             ServiceLocator.ForSceneOf(this).Register(this, ServiceLevel.Scene, gameObject.scene.name);
+            // var networkObject = GetComponent<NetworkObject>();
+            
+            // Debug.Log(networkObject.IsSpawned.ToString().Color(Color.blueViolet));
+            
+            // if (!networkObject.IsSpawned) networkObject.Spawn(); // LMAO
+
+            // Just initialize pool here, doesn't like to be spawned 
+            // InitializePool();
+        }
 
         public override void OnNetworkSpawn() => InitializePool();
         public override void OnNetworkDespawn() => ClearPool();

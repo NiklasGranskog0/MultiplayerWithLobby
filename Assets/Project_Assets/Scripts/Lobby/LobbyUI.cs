@@ -114,6 +114,10 @@ namespace Project_Assets.Scripts.Lobby
 
         private void UpdatePlayerList(Unity.Services.Lobbies.Models.Lobby lobby)
         {
+            if (lobby == null) return;
+            
+            if (lobby.IsLocked) return;
+            
             if (lobby?.Players == null)
             {
                 Debug.LogWarning("Lobby players is null or empty".Color(Color.red));

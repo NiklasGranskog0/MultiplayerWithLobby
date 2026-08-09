@@ -17,6 +17,7 @@ namespace Project_Assets.Scripts.Units
 
         public StateMachine.StateMachine StateMachine;
 
+        // TODO: GameManager is a singleton
         [HideInInspector] public GameManager GameManager;
         private GameMenuButtons m_gameMenuButtons;
 
@@ -30,7 +31,7 @@ namespace Project_Assets.Scripts.Units
             // TODO: Maybe all units doesn't need a reference to the game manager
             ServiceLocator.ForSceneOf(this).Get(out GameManager);
             
-            TeamTag = gameObject.tag;
+            TeamTag = gameObject.tag; // Temp
             ServiceLocator.Global.Get(out m_gameMenuButtons);
         }
 

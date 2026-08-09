@@ -1,70 +1,32 @@
-using System.Collections.Generic;
+using Project_Assets.Scripts.Framework.ExtensionScripts;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
-using Project_Assets.Scripts.Network;
-using Project_Assets.Scripts.Units.Types;
-using Unity.Netcode;
+using Project_Assets.Scripts.Scenes;
 using UnityEngine;
 
 namespace Project_Assets.Scripts.Game
 {
-    public class GameManager : MonoBehaviour
+    public class GameManager : NetworkSingleton<GameManager>
     {
-        [SerializeField] private GameObject m_unitPrefabTest;
-        [SerializeField] private GameObject m_poolNetworkManager;
-        
-        [SerializeField] private Transform m_castleSpawnPositionTeam1;
-        [SerializeField] private Transform m_castleSpawnPositionTeam2;
-        
         public GameObject TeamOneBase;
         public GameObject TeamTwoBase;
 
-        private Dictionary<ulong, Transform> m_playersSpawnPoints;
-        private NetworkObjectPool m_networkObjectPool;
-
-        public void SpawnTestPrefab(ulong clientId, string teamTag)
+        public override void OnNetworkSpawn()
         {
-            var spawnPoint = teamTag == "Team1" ? m_castleSpawnPositionTeam1 : m_castleSpawnPositionTeam2;
-
-            if (NetworkManager.Singleton.IsHost)
-            {
-                var networkObject = m_networkObjectPool.GetNetworkObject(m_unitPrefabTest, spawnPoint.position, Quaternion.identity);
-                networkObject.gameObject.tag = teamTag;
-                networkObject.Spawn(); 
-            }
-            else
-            {
-                SpawnRpc(teamTag, spawnPoint.position);
-            }
+            Debug.Log("GameManager OnNetworkSpawn".Color(Color.green));
+            
+            // TODO: Set team bases prefab/game object
         }
 
-        public void ReturnTestPrefab()
+        public async void StartGame()
         {
-            foreach (var obj in GameObject.FindGameObjectsWithTag("Team1"))
-            {
-                if (!obj.TryGetComponent<ManSoldierFullPlateFantasyA>(out var soldier)) continue;
-                
-                m_networkObjectPool.ReturnNetworkObject(soldier.GetComponent<NetworkObject>(), m_unitPrefabTest);
-            }
+            Debug.Log("GameManager StartGame".Color(Color.green));
+            
+            ServiceLocator.Global.Get(out SceneManager sm);
+            await sm.SceneGroupManager.UnloadScene("Lobby");
+            
+            sm.SceneGroupManager.InvokeOnSceneGroupLoaded();
         }
 
-        //[Rpc(SendTo.Server)]
-        private void SpawnRpc(string teamTag, Vector3 spawnPoint)
-        {
-            var networkObject = m_networkObjectPool.GetNetworkObject(m_unitPrefabTest, spawnPoint, Quaternion.identity);
-            networkObject.gameObject.tag = teamTag;
-            networkObject.Spawn();
-        }
-
-        private void Awake()
-        {
-            ServiceLocator.ForSceneOf(this).Register(this, ServiceLevel.Scene, gameObject.scene.name);
-            // Extensions.CreateNetworkObject(m_poolNetworkManager, NetworkManager.Singleton.LocalClientId);
-        }
-
-        private void Start()
-        {
-            ServiceLocator.ForSceneOf(this).Get(out m_networkObjectPool);
-            if (!NetworkManager.Singleton.IsHost) return;
-        }
+        // private void Awake() => ServiceLocator.ForSceneOf(this).Register(this, ServiceLevel.Scene, gameObject.scene.name);
     }
 }

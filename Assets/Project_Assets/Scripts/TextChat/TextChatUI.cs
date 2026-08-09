@@ -157,7 +157,15 @@ namespace Project_Assets.Scripts.TextChat
 
         private async void SystemSendMessage(string message)
         {
-            await VivoxService.Instance.SendChannelTextMessageAsync(m_vivoxManager.CurrentChannelName, message);
+            try
+            {
+                await VivoxService.Instance.SendChannelTextMessageAsync(m_vivoxManager.CurrentChannelName, message);
+            }
+            catch (Exception e)
+            {
+                s_statusReport.MakeReport(false, e.Message);
+                s_statusReport.Log();
+            }
         }
 
         private async void OnChannelJoined(string s)

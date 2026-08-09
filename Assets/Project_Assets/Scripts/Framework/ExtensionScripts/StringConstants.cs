@@ -20,5 +20,6 @@ namespace Project_Assets.Scripts.Framework.ExtensionScripts
         public const string k_GameImage = "GameImage";
 
         public const string k_SystemMessage = "SystemMessage";
+        public const string k_SceneLoadState = "SceneLoadState";
     }
 }

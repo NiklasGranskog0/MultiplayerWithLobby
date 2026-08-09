@@ -133,6 +133,7 @@ namespace Project_Assets.Scripts.Framework.ExtensionScripts
             };
         }
 
+        // Used to get unit type from prefabs name, which have an underscore after each word
         public static UnitType UnitTypeFromString(this string s)
         {
             var stringType = s.Replace("_", "");
@@ -197,11 +198,11 @@ namespace Project_Assets.Scripts.Framework.ExtensionScripts
 
         #region NetworkGameObjects
 
-        public static NetworkObject CreateNetworkObject(GameObject prefab, ulong clientId = 0UL) =>
-            CreateNetworkObject(prefab, prefab.transform, clientId);
+        // public static NetworkObject CreateNetworkObject(GameObject prefab, ulong clientId = 0) =>
+        //     CreateNetworkObject(prefab, prefab.transform, clientId);
 
         // Optional: Add rotation parameter
-        public static NetworkObject CreateNetworkObject(GameObject prefab, Transform position, ulong clientId,
+        public static NetworkObject CreateNetworkObjectAndSpawn(GameObject prefab, Vector3 position, ulong clientId,
             bool isPlayerObject = false, bool destroyWithScene = false, bool forceOverride = false)
         {
             if (!prefab.TryGetComponent<NetworkObject>(out var networkObject))
@@ -216,9 +217,8 @@ namespace Project_Assets.Scripts.Framework.ExtensionScripts
                 destroyWithScene,
                 isPlayerObject,
                 forceOverride,
-                position.position);
+                position);
         }
-
         #endregion
     }
 }

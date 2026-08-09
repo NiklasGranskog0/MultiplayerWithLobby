@@ -1,8 +1,9 @@
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Project_Assets.Scripts.Framework.ExtensionScripts
 {
-    public sealed class PersistentSingleton<T> : MonoBehaviour where T : Component
+    public class PersistentSingleton<T> : NetworkBehaviour where T : Component
     {
         public bool UnParentOnAwake = true;
         public static bool HasInstance => s_instance != null;

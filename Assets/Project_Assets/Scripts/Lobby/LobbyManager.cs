@@ -25,6 +25,7 @@ namespace Project_Assets.Scripts.Lobby
         [SerializeField] public LobbyHeartbeat Heartbeat;
         [SerializeField] public LobbyPoller Poller;
         [SerializeField] public GameStartTimer GameStartTimer;
+        [SerializeField] public GameObject PlayersLoadState;
         private string m_lastSystemMessageSeen;
 
         public event Action<LobbyEventArgs> OnCreateLobbyAsync;
@@ -38,6 +39,7 @@ namespace Project_Assets.Scripts.Lobby
         public event Action<string> OnSetGameCode;
         public event Action<string> OnSendSystemMessage;
         public event Action<Unity.Services.Lobbies.Models.Lobby> OnSendLobbyPlayers;
+        public event Action<string, SceneEventType> OnSendPlayerLoadState;
 
         private static StatusReport s_statusReport;
         private static LobbiesStatusReport s_lobbiesStatusReport;
@@ -45,7 +47,6 @@ namespace Project_Assets.Scripts.Lobby
 
         private readonly LobbyEventCallbacks m_eventCallbacks = new();
         private PlayerAuthentication m_playerAuthentication;
-        private PlayersInLobby m_playersInLobby;
         private SceneManager m_sceneManager;
         private LobbyUI m_lobbyUI;
         private RelayManager m_relayManager;
@@ -64,7 +65,6 @@ namespace Project_Assets.Scripts.Lobby
         {
             ServiceLocator.Global.Get(out m_playerAuthentication);
             ServiceLocator.Global.Get(out m_sceneManager);
-            ServiceLocator.Global.Get(out m_playersInLobby);
             ServiceLocator.ForSceneOf(this).Get(out m_lobbyUI);
             ServiceLocator.ForSceneOf(this).Get(out m_relayManager);
 
@@ -78,6 +78,9 @@ namespace Project_Assets.Scripts.Lobby
             try
             {
                 obj.ApplyToLobby(ActiveLobby);
+                
+                if (obj.IsLocked.Value){}
+                
                 OnLobbyPlayerUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
 
                 // If a new system message is present, notify listeners at once
@@ -93,7 +96,10 @@ namespace Project_Assets.Scripts.Lobby
                         // Only need to do this if we're not the host, because host will load game scene in StartGame()
                         if (AuthenticationService.Instance.PlayerId != ActiveLobby.HostId)
                         {
-                            await m_sceneManager.LoadSceneGroupByEnum(SceneGroupToLoad.Game);
+                            OnSendLobbyPlayers?.Invoke(ActiveLobby);
+                            var sceneEventType = await m_sceneManager.LoadSceneGroupByEnumNetwork(SceneGroupToLoad.Game);
+                            await UpdatePlayerSceneEventLoadState(sceneEventType);
+                            OnSendPlayerLoadState?.Invoke(NetworkManager.Singleton.LocalClientId.ToString(), sceneEventType);
                         }
                     }
                 }
@@ -197,6 +203,8 @@ namespace Project_Assets.Scripts.Lobby
             OnJoinedTextChannel?.Invoke(ActiveLobby.Id);
             OnCreateLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
             OnSetGameCode?.Invoke(ActiveLobby.LobbyCode);
+
+            Extensions.CreateNetworkObjectAndSpawn(PlayersLoadState, Vector3.zero, NetworkManager.Singleton.LocalClientId);
 
             return s_statusReport;
         }
@@ -464,7 +472,10 @@ namespace Project_Assets.Scripts.Lobby
                 m_sceneManager.SwitchLoadingScreen(LoadingScreenEnum.Game);
                 m_sceneManager.SetLoadingScreenTitle(ActiveLobby.Name);
                 OnSendLobbyPlayers?.Invoke(ActiveLobby);
-                await m_sceneManager.LoadSceneGroupByEnum(SceneGroupToLoad.Game);
+
+                var sceneEventType = await m_sceneManager.LoadSceneGroupByEnumNetwork(SceneGroupToLoad.Game);
+                await UpdatePlayerSceneEventLoadState(sceneEventType);
+                OnSendPlayerLoadState?.Invoke(NetworkManager.Singleton.LocalClientId.ToString(), sceneEventType); // Could be null
             }
             catch (LobbyServiceException e)
             {
@@ -502,6 +513,34 @@ namespace Project_Assets.Scripts.Lobby
             }
             
             // return s_statusReport;
+        }
+        
+        private async Task<StatusReport> UpdatePlayerSceneEventLoadState(SceneEventType sceneEventType)
+        {
+            try
+            {
+                var updatePlayerOptions = new UpdatePlayerOptions
+                {
+                    Data = new Dictionary<string, PlayerDataObject>
+                    {
+                        {
+                            StringConstants.k_SceneLoadState,
+                            new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, sceneEventType.ToString())
+                        }
+                    }
+                };
+                
+                Debug.Log($"Updating player {AuthenticationService.Instance.PlayerId} sceneEventType to: {sceneEventType}".Color(Color.orange));
+                ActiveLobby = await LobbyService.Instance.UpdatePlayerAsync(ActiveLobby.Id, AuthenticationService.Instance.PlayerId, updatePlayerOptions);
+                
+                s_statusReport.MakeReport(true, $"Updated local player sceneEventType to: {sceneEventType}");
+            }
+            catch (LobbyServiceException e)
+            {
+                s_statusReport.MakeReport(false, $"Failed to update local player sceneEventType: {e.Message}");
+            }
+            
+            return s_statusReport;
         }
 
         // TODO: If host leaves the lobby the Relay ends and disconnects the players.

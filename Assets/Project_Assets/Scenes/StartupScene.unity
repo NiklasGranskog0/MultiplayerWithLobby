@@ -357,6 +357,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2476731932821127906, guid: 110b07d6a5f6c884fbb25f9700a17774, type: 3}
+      propertyPath: NetworkConfig.ForceSamePrefabs
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2476731932821127906, guid: 110b07d6a5f6c884fbb25f9700a17774, type: 3}
       propertyPath: NetworkConfig.EnableSceneManagement
       value: 0
       objectReference: {fileID: 0}

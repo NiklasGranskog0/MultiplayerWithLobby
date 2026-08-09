@@ -8,7 +8,12 @@ namespace Project_Assets.Scripts.Buildings
     public class BaseTierOne : MonoBehaviour, ISelectionObject
     {
         [SerializeField] private BuildingMenuButtons m_buildingMenuButtons;
-        
+
+        private void Start()
+        {
+            m_buildingMenuButtons.Initialize();
+        }
+
         public ImageToLoad ImageToLoad => ImageToLoad.Castle;
         public string Name => "Castle";
         public void SetGameMenuButtons()

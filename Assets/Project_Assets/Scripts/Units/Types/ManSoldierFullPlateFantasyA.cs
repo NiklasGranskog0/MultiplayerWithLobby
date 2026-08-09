@@ -21,6 +21,7 @@ namespace Project_Assets.Scripts.Units.Types
             // StateMachine.AddTransition(m_AttackUnit, m_MoveToEnemyBaseState, new FunctionPredicate(() => NoUnitInRange);
             // StateMachine.AddAnyTransition(m_Dead, new FunctionPredicate(() => Health <= 0f);
             
+            // StateMachine will not start if there is no transition
             StateMachine.SetState(m_unitMoveState);
         }
         

@@ -1,38 +1,40 @@
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Project_Assets.Scripts.Framework.ExtensionScripts
 {
-    public class Singleton<T> : MonoBehaviour where T : Component
+    public class NetworkSingleton<T> : NetworkBehaviour where T : Component
     {
-        private static T s_instance;
+        public static T Instance { get; private set; }
 
-        public static T Instance
+        public virtual void Awake()
         {
-            get
+            if (Instance == null) Instance  = this as T;
+            else
             {
-                if (s_instance) return s_instance;
-
-                s_instance = FindAnyObjectByType<T>();
-                
-                s_instance = new GameObject
-                {
-                    name = nameof(T),
-                    hideFlags = HideFlags.HideAndDontSave
-                }.AddComponent<T>();
-                
-                Debug.Log("Singleton.cs Created new Singleton of type: " + typeof(T) +
-                          ", Script calling to Singleton instance that does not exists.");
-                
-                return s_instance;
+                Destroy(this);
             }
         }
-        
-        private void OnDestroy() => DestroySingleton();
-        
-        private void DestroySingleton()
-        {
-            if (s_instance == this)
-                s_instance = null;
-        }
+
+        // public static T Instance
+        // {
+        //     get
+        //     {
+        //         if (s_instance) return s_instance;
+        //
+        //         s_instance = FindAnyObjectByType<T>();
+        //         
+        //         s_instance = new GameObject
+        //         {
+        //             name = nameof(T),
+        //             hideFlags = HideFlags.HideAndDontSave
+        //         }.AddComponent<T>();
+        //         
+        //         Debug.Log("Singleton.cs Created new Singleton of type: " + typeof(T) +
+        //                   ", Script calling to Singleton instance that does not exists.");
+        //         
+        //         return s_instance;
+        //     }
+        // }
     }
 }

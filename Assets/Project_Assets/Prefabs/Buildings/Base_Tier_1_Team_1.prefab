@@ -199,14 +199,6 @@ MonoBehaviour:
         Vector3Value: {x: 0, y: 0, z: 0}
         UnitTypeValue: 5
         GameMenuButtonValue: 0
-      - ValueType: 3
-        BoolValue: 0
-        IntValue: 0
-        FloatValue: 0
-        StringValue: Team1
-        Vector3Value: {x: 0, y: 0, z: 0}
-        UnitTypeValue: 0
-        GameMenuButtonValue: 0
 --- !u!1 &7103412660813528914
 GameObject:
   m_ObjectHideFlags: 0
