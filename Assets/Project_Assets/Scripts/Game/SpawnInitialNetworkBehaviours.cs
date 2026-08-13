@@ -1,3 +1,4 @@
+using Project_Assets.Scripts.Framework.ExtensionScripts;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -7,17 +8,13 @@ namespace Project_Assets.Scripts.Game
     {
        [SerializeField] private GameObject[] m_networkBehaviours;
 
-       private void Awake()
+       private void Start()
        {
            if (!NetworkManager.Singleton.IsHost) return;
-           
+
            foreach (var behaviour in m_networkBehaviours)
-           {
-               // Extensions.CreateNetworkObjectAndSpawn(behaviour, Vector3.zero, NetworkManager.Singleton.LocalClientId);
-               
-               // var instance = Instantiate(behaviour);
-               // var networkObject = instance.GetComponent<NetworkObject>();
-               // networkObject.Spawn();
+           { 
+               Extensions.CreateNetworkObjectAndSpawn(behaviour, Vector3.zero, 0); // 0 = host id
            }
        }
     }

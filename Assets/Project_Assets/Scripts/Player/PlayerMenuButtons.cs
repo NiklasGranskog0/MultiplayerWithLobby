@@ -1,6 +1,7 @@
 using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Framework.ExtensionScripts;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
+using Project_Assets.Scripts.Game;
 using Project_Assets.Scripts.Game.MenuButtons;
 using Project_Assets.Scripts.Structs;
 using UnityEditor;

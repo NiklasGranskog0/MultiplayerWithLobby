@@ -1,4 +1,4 @@
-namespace Project_Assets.Scripts.Framework.ExtensionScripts
+namespace Project_Assets.Scripts.GlobalConstants.Strings
 {
     // TODO: StringConstants
     public static class StringConstants

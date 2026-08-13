@@ -6,7 +6,7 @@ using Project_Assets.Scripts.Structs;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Project_Assets.Scripts.Framework
+namespace Project_Assets.Scripts.UtilityExtensions.Serialization
 {
     [Serializable]
     public class SerializedCallback<TReturn> : ISerializationCallbackReceiver

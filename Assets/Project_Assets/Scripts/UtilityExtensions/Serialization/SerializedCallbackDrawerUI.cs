@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 using ValueType = Project_Assets.Scripts.Enums.ValueType;
 
-namespace Project_Assets.Scripts.Framework
+namespace Project_Assets.Scripts.UtilityExtensions.Serialization
 {
     [CustomPropertyDrawer(typeof(SerializedCallback<>), true)]
     public class SerializedCallbackDrawerUI : PropertyDrawer

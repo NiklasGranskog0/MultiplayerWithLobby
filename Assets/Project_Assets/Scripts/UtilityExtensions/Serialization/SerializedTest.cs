@@ -1,7 +1,7 @@
 ﻿using Project_Assets.Scripts.Framework.ExtensionScripts;
 using UnityEngine;
 
-namespace Project_Assets.Scripts.Framework
+namespace Project_Assets.Scripts.UtilityExtensions.Serialization
 {
     public class SerializedTest : MonoBehaviour
     {

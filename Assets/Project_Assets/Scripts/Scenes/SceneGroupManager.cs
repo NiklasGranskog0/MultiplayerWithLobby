@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Eflatun.SceneReference;
 using Project_Assets.Scripts.Enums;
+using Project_Assets.Scripts.Framework.ExtensionScripts;
 using Project_Assets.Scripts.Structs;
 using Unity.Netcode;
 using UnityEditor;
@@ -18,7 +19,7 @@ namespace Project_Assets.Scripts.Scenes
         public event Action OnSceneGroupLoaded;
 
         public void InvokeOnSceneGroupLoaded() => OnSceneGroupLoaded?.Invoke();
-        
+
         private SceneGroup m_activeSceneGroup;
 
         private readonly AsyncOperationGroup m_asyncOperationGroup = new(10);
@@ -48,9 +49,8 @@ namespace Project_Assets.Scripts.Scenes
 
                 if (sceneData.SceneReference.State == SceneReferenceState.Regular)
                 {
-                    var asyncOperation =
-                        UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneData.SceneReference.Path,
-                            LoadSceneMode.Additive);
+                    var asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneData.SceneReference.Path,
+                        LoadSceneMode.Additive);
 
                     m_asyncOperationGroup.AsyncOperations.Add(asyncOperation);
                 }
@@ -73,8 +73,6 @@ namespace Project_Assets.Scripts.Scenes
                 UnityEngine.SceneManagement.SceneManager.SetActiveScene(activeScene);
             }
 
-            // TODO: Invoke when all clients load complete
-            // OnSceneGroupLoaded?.Invoke(); // Turns loading canvas off
             return SceneEventType.LoadComplete;
         }
 
@@ -134,9 +132,9 @@ namespace Project_Assets.Scripts.Scenes
         public async Task UnloadScene(string sceneName, bool unloadUnusedAssets = false)
         {
             var asyncOperation = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(sceneName);
-            
+
             if (asyncOperation is null) return;
-            
+
             while (!asyncOperation.isDone)
             {
                 await Task.Delay(100);
@@ -147,7 +145,7 @@ namespace Project_Assets.Scripts.Scenes
                 await Resources.UnloadUnusedAssets();
             }
         }
-        
+
         public async Task UnloadScenes(bool unloadUnusedAssets = false) // was false 
         {
             var scenes = new HashSet<string>();
@@ -168,10 +166,10 @@ namespace Project_Assets.Scripts.Scenes
             foreach (string scene in scenes)
             {
                 if (scene.Equals("StartupScene")) continue;
-            
+
                 var asyncOperation = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(scene);
                 if (asyncOperation is null) continue;
-            
+
                 asyncOperationGroup.AsyncOperations.Add(asyncOperation);
                 OnSceneUnloaded?.Invoke(scene);
             }

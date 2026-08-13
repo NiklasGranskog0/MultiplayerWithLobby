@@ -1,4 +1,5 @@
-﻿using Project_Assets.Scripts.Framework.ExtensionScripts;
+﻿using System.Threading.Tasks;
+using Project_Assets.Scripts.Framework.ExtensionScripts;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.Game;
 using Unity.Netcode;
@@ -35,7 +36,8 @@ namespace Project_Assets.Scripts.Lobby
             }
             else
             {
-                OwnerLoadCompleteRPC();
+                m_loadedPlayerCount++;
+                CheckAllPlayersLoaded();
             }
         }
 
@@ -52,14 +54,6 @@ namespace Project_Assets.Scripts.Lobby
         // Clients send message to Host
         [Rpc(SendTo.Owner)]
         private void ClientLoadCompleteRPC()
-        {
-            m_loadedPlayerCount++;
-            CheckAllPlayersLoaded();
-        }
-
-        // Host sends message to himself
-        [Rpc(SendTo.Owner)]
-        private void OwnerLoadCompleteRPC()
         {
             m_loadedPlayerCount++;
             CheckAllPlayersLoaded();

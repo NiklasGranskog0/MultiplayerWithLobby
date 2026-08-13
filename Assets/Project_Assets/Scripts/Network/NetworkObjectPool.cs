@@ -1,15 +1,16 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Project_Assets.Scripts.Framework.ExtensionScripts;
-using Project_Assets.Scripts.Framework.UnityServiceLocator;
+using Project_Assets.Scripts.UtilityExtensions.Singletons;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.SceneManagement;
 
 namespace Project_Assets.Scripts.Network
 {
-    public class NetworkObjectPool : NetworkBehaviour
+    public class NetworkObjectPool : NetworkSingleton<NetworkObjectPool>
     {
         [SerializeField] private List<PoolConfigObject> m_pooledPrefabsList;
         public List<PoolConfigObject> PooledPrefabs => m_pooledPrefabsList;
@@ -20,20 +21,12 @@ namespace Project_Assets.Scripts.Network
 
         private bool m_hasInitialized = false;
 
-        public void Awake()
+        public override void OnNetworkSpawn()
         {
-            ServiceLocator.ForSceneOf(this).Register(this, ServiceLevel.Scene, gameObject.scene.name);
-            // var networkObject = GetComponent<NetworkObject>();
-            
-            // Debug.Log(networkObject.IsSpawned.ToString().Color(Color.blueViolet));
-            
-            // if (!networkObject.IsSpawned) networkObject.Spawn(); // LMAO
-
-            // Just initialize pool here, doesn't like to be spawned 
-            // InitializePool();
+            SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetSceneByName("Game"));    
+            InitializePool();   
         }
-
-        public override void OnNetworkSpawn() => InitializePool();
+        
         public override void OnNetworkDespawn() => ClearPool();
 
         public void OnValidate()
@@ -161,9 +154,9 @@ namespace Project_Assets.Scripts.Network
         /// <summary>
         /// Registers all objects in <see cref="m_pooledPrefabsList"/> to the cache.
         /// </summary>
-        public void InitializePool()
+        private void InitializePool()
         {
-            Debug.Log("Initializing pool".Color(Color.lightSalmon));
+            Debug.Log("Initializing NetworkObjectPool".Color(Color.lightSalmon));
             
             if (m_hasInitialized) return;
             foreach (var configObject in m_pooledPrefabsList)
@@ -177,8 +170,10 @@ namespace Project_Assets.Scripts.Network
         /// <summary>
         /// Unregisters all objects in <see cref="m_pooledPrefabsList"/> from the cache.
         /// </summary>
-        public void ClearPool()
+        private void ClearPool()
         {
+            Debug.Log("Clearing NetworkObjectPool".Color(Color.lightSalmon));
+            
             foreach (var prefab in m_prefabs)
             {
                 // Unregister Netcode Spawn handlers
