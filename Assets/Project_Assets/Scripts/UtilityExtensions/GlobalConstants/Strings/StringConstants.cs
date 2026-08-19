@@ -1,6 +1,6 @@
-namespace Project_Assets.Scripts.GlobalConstants.Strings
+namespace Project_Assets.Scripts.UtilityExtensions.GlobalConstants.Strings
 {
-    // TODO: StringConstants
+    // TODO: Lobby Manager
     public static class StringConstants
     {
         public const string k_PlayerName = "PlayerName";

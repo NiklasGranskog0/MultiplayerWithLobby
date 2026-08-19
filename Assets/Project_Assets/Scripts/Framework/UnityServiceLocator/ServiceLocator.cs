@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Project_Assets.Scripts.Framework.ExtensionScripts;
-using Unity.Netcode;
+using Project_Assets.Scripts.UtilityExtensions.GameObjects;
+using Project_Assets.Scripts.UtilityExtensions.Strings;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -152,7 +152,7 @@ namespace Project_Assets.Scripts.Framework.UnityServiceLocator
                 return false;
             }
 
-            container = transform.parent.OrNull()?.GetComponentInParent<ServiceLocator>().OrNull() ??
+            container = (transform.parent.OrNull()?.GetComponentInParent<ServiceLocator>()).OrNull() ??
                         ForSceneOf(this) ?? Global;
             return container != null;
         }

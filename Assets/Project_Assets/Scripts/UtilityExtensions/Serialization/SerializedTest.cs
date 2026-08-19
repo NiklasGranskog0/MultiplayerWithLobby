@@ -1,4 +1,4 @@
-﻿using Project_Assets.Scripts.Framework.ExtensionScripts;
+﻿using Project_Assets.Scripts.UtilityExtensions.Strings;
 using UnityEngine;
 
 namespace Project_Assets.Scripts.UtilityExtensions.Serialization

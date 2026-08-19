@@ -1,9 +1,9 @@
 using System;
-using Project_Assets.Scripts.Framework.ExtensionScripts;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
-using Project_Assets.Scripts.GlobalConstants.Strings;
 using Project_Assets.Scripts.Lobby;
 using Project_Assets.Scripts.Scenes;
+using Project_Assets.Scripts.UtilityExtensions.GlobalConstants.Strings;
+using Project_Assets.Scripts.UtilityExtensions.NetworkExtensions;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -28,16 +28,16 @@ namespace Project_Assets.Scripts.Game
         private void Start()
         {
             if (!NetworkManager.Singleton.IsHost) return;
-            // SpawnGameManager();
+            // SpawnGameManager(); 
 
             ServiceLocator.Global.Get(out m_playersInLobby);
             ServiceLocator.Global.Get(out m_sceneManager);
-            
+
             SpawnPlayers();
         }
 
         private void SpawnGameManager() =>
-            Extensions.CreateNetworkObjectAndSpawn(m_gameManagerPrefab, Vector3.zero, 0); // 0 = host id
+            m_gameManagerPrefab.CreateAsNetworkObjectAndSpawn(Vector3.zero, 0);
 
         private void SpawnPlayers()
         {
@@ -48,10 +48,11 @@ namespace Project_Assets.Scripts.Game
                 var id = ulong.Parse(data[StringConstants.k_PlayerClientId].Value);
                 var teamNb = ulong.Parse(data[StringConstants.k_PlayerTeam].Value);
 
-                var playerObj = Extensions.CreateNetworkObjectAndSpawn(m_playerObjects.PlayerPrefab,
-                    m_spawnPoints[teamNb].position, id);
-                var playerCam = Extensions.CreateNetworkObjectAndSpawn(m_playerObjects.PlayerCameraPrefab,
-                    m_spawnPoints[teamNb].position, id);
+                var playerObj =
+                    m_playerObjects.PlayerPrefab.CreateAsNetworkObjectAndSpawn(m_spawnPoints[teamNb].position, id);
+                var playerCam =
+                    m_playerObjects.PlayerCameraPrefab.CreateAsNetworkObjectAndSpawn(m_spawnPoints[teamNb].position,
+                        id);
 
                 // Set the player's and camera tag to their team number
                 playerObj.gameObject.tag = Enum.GetName(typeof(Enums.Team), teamNb);

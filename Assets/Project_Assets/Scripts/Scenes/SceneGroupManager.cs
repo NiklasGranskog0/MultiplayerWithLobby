@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Eflatun.SceneReference;
 using Project_Assets.Scripts.Enums;
-using Project_Assets.Scripts.Framework.ExtensionScripts;
 using Project_Assets.Scripts.Structs;
 using Unity.Netcode;
 using UnityEditor;

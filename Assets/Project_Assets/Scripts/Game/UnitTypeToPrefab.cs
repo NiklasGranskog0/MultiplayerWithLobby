@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Project_Assets.Scripts.Enums;
-using Project_Assets.Scripts.Framework.ExtensionScripts;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.Network;
+using Project_Assets.Scripts.UtilityExtensions.Enums;
 using UnityEngine;
 
 namespace Project_Assets.Scripts.Game

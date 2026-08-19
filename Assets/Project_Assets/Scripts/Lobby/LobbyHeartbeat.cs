@@ -1,5 +1,5 @@
 using System.Collections;
-using Project_Assets.Scripts.Framework.ExtensionScripts;
+using Project_Assets.Scripts.UtilityExtensions.Strings;
 using Unity.Services.Lobbies;
 using UnityEngine;
 

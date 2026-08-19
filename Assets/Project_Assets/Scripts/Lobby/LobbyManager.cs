@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Project_Assets.Scripts.Authentication;
 using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Events;
-using Project_Assets.Scripts.Framework.ExtensionScripts;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
-using Project_Assets.Scripts.GlobalConstants.Strings;
 using Project_Assets.Scripts.Network.Relay;
 using Project_Assets.Scripts.Scenes;
 using Project_Assets.Scripts.Structs;
+using Project_Assets.Scripts.UtilityExtensions.GlobalConstants.Strings;
+using Project_Assets.Scripts.UtilityExtensions.Strings;
+using Project_Assets.Scripts.UtilityExtensions.NetworkExtensions;
 using Unity.Netcode;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
@@ -204,9 +204,9 @@ namespace Project_Assets.Scripts.Lobby
             OnJoinedTextChannel?.Invoke(ActiveLobby.Id);
             OnCreateLobbyAsync?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
             OnSetGameCode?.Invoke(ActiveLobby.LobbyCode);
-
-            Extensions.CreateNetworkObjectAndSpawn(PlayersLoadState, Vector3.zero, NetworkManager.Singleton.LocalClientId);
-
+            
+            PlayersLoadState.CreateAsNetworkObjectAndSpawn(Vector3.zero, NetworkManager.Singleton.LocalClientId);
+            
             return s_statusReport;
         }
 

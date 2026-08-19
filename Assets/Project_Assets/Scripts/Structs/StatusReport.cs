@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Project_Assets.Scripts.Framework.ExtensionScripts;
 using Project_Assets.Scripts.Interfaces;
+using Project_Assets.Scripts.UtilityExtensions.Strings;
 using UnityEngine;
 
 namespace Project_Assets.Scripts.Structs

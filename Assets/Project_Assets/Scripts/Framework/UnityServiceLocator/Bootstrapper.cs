@@ -1,4 +1,4 @@
-﻿using Project_Assets.Scripts.Framework.ExtensionScripts;
+﻿using Project_Assets.Scripts.UtilityExtensions.GameObjects;
 using UnityEngine;
 
 namespace Project_Assets.Scripts.Framework.UnityServiceLocator

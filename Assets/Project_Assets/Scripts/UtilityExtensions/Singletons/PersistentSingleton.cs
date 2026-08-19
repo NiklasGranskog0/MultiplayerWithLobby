@@ -33,12 +33,6 @@ namespace Project_Assets.Scripts.UtilityExtensions.Singletons
             }
         }
 
-        // protected override void OnNetworkPreSpawn(ref NetworkManager networkManager)
-        // {
-        //     base.OnNetworkPreSpawn(ref networkManager);
-        //     InitSingleton();
-        // }
-
         private void Awake() => InitSingleton();
 
         protected virtual void OnDestroy()

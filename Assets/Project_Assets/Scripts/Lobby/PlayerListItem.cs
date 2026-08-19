@@ -1,7 +1,6 @@
 using Project_Assets.Scripts.Enums;
-using Project_Assets.Scripts.Framework.ExtensionScripts;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
-using Project_Assets.Scripts.GlobalConstants.Strings;
+using Project_Assets.Scripts.UtilityExtensions.GlobalConstants.Strings;
 using TMPro;
 using Unity.Services.Authentication;
 using UnityEngine;

@@ -1,4 +1,4 @@
-using Project_Assets.Scripts.Framework.ExtensionScripts;
+using Project_Assets.Scripts.UtilityExtensions.NetworkExtensions;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -13,8 +13,8 @@ namespace Project_Assets.Scripts.Game
            if (!NetworkManager.Singleton.IsHost) return;
 
            foreach (var behaviour in m_networkBehaviours)
-           { 
-               Extensions.CreateNetworkObjectAndSpawn(behaviour, Vector3.zero, 0); // 0 = host id
+           {
+               behaviour.CreateAsNetworkObjectAndSpawn(Vector3.zero, 0);
            }
        }
     }
