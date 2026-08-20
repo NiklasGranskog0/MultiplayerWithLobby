@@ -4,7 +4,7 @@ using Project_Assets.Scripts.Game;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace Project_Assets.Scripts.Network
+namespace Project_Assets.Scripts.Network.Game
 {
     public class PoolManager : NetworkBehaviour
     {

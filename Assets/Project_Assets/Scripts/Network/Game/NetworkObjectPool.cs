@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Project_Assets.Scripts.UtilityExtensions.Singletons;
@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 
-namespace Project_Assets.Scripts.Network
+namespace Project_Assets.Scripts.Network.Game
 {
     public class NetworkObjectPool : NetworkSingleton<NetworkObjectPool>
     {

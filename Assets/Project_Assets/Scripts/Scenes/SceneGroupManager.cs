@@ -145,7 +145,7 @@ namespace Project_Assets.Scripts.Scenes
             }
         }
 
-        public async Task UnloadScenes(bool unloadUnusedAssets = false) // was false 
+        public async Task UnloadScenes(bool unloadUnusedAssets = false)
         {
             var scenes = new HashSet<string>();
             var sceneCount = UnityEngine.SceneManagement.SceneManager.sceneCount;

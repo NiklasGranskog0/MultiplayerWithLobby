@@ -135,6 +135,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2065961571004719268, guid: 213f0e1b2542a9f4c8ab4cc0620891be, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2661054703799499926, guid: 213f0e1b2542a9f4c8ab4cc0620891be, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -178,6 +182,10 @@ PrefabInstance:
     - target: {fileID: 3099875234071488160, guid: 213f0e1b2542a9f4c8ab4cc0620891be, type: 3}
       propertyPath: m_Name
       value: SceneManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6732058198760474236, guid: 213f0e1b2542a9f4c8ab4cc0620891be, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8579647305339323936, guid: 213f0e1b2542a9f4c8ab4cc0620891be, type: 3}
       propertyPath: loadingText
