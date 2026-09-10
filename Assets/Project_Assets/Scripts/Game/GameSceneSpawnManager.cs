@@ -28,7 +28,6 @@ namespace Project_Assets.Scripts.Game
         private void Start()
         {
             if (!NetworkManager.Singleton.IsHost) return;
-            // SpawnGameManager(); 
 
             ServiceLocator.Global.Get(out m_playersInLobby);
             ServiceLocator.Global.Get(out m_sceneManager);
@@ -36,11 +35,9 @@ namespace Project_Assets.Scripts.Game
             SpawnPlayers();
         }
 
-        private void SpawnGameManager() =>
-            m_gameManagerPrefab.CreateAsNetworkObjectAndSpawn(Vector3.zero, 0);
-
         private void SpawnPlayers()
         {
+            // TODO: Add UIObject Targeter as network object
             // Creates a player and camera network object for each player in the lobby
             foreach (var player in m_playersInLobby.Players)
             {

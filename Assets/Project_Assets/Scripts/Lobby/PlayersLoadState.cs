@@ -12,6 +12,7 @@ namespace Project_Assets.Scripts.Lobby
         private PlayersInLobby m_playersInLobby;
         private int m_loadedPlayerCount;
         private bool m_gameStarted;
+        private SpawnInitialNetworkBehaviours m_spawnInitialNetworkBehaviours;
 
         public override void OnNetworkSpawn()
         {
@@ -44,7 +45,11 @@ namespace Project_Assets.Scripts.Lobby
         {
             if (!m_loadedPlayerCount.Equals(m_playersInLobby.Players.Count)) return;
             
-            if (!m_gameStarted)
+            m_spawnInitialNetworkBehaviours = FindAnyObjectByType<SpawnInitialNetworkBehaviours>();
+            m_spawnInitialNetworkBehaviours.LoadGameScripts();
+            var loaded = m_spawnInitialNetworkBehaviours.IsComplete;
+
+            if (!m_gameStarted && loaded)
             {
                 StartGameRPC();
             }
@@ -63,7 +68,6 @@ namespace Project_Assets.Scripts.Lobby
         {
             m_gameStarted = true;
             Debug.Log("StartGameRPC".Color(Color.green));
-            
             GameManager.Instance.StartGame();
         }
     }

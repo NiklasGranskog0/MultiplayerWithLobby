@@ -95,8 +95,6 @@ namespace Project_Assets.Scripts.Scenes
 
         private void FinishedLoading()
         {
-            // TODO: Send message to the host that scene have been loaded
-
             EnableLoadingCanvas(false);
             Debug.Log("SceneLoader: ".Color(Color.red) + "Finished Loading Scene Group".Color(Color.lightBlue));
         }

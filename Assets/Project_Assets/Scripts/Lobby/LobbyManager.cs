@@ -16,6 +16,7 @@ using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Project_Assets.Scripts.Lobby
 {
@@ -27,6 +28,7 @@ namespace Project_Assets.Scripts.Lobby
         [SerializeField] public LobbyPoller Poller;
         [SerializeField] public GameStartTimer GameStartTimer;
         [SerializeField] public GameObject PlayersLoadState;
+        [SerializeField] public EventSystem EventSystem;
         private string m_lastSystemMessageSeen;
 
         public event Action<LobbyEventArgs> OnCreateLobbyAsync;
@@ -98,6 +100,7 @@ namespace Project_Assets.Scripts.Lobby
                         if (AuthenticationService.Instance.PlayerId != ActiveLobby.HostId)
                         {
                             OnSendLobbyPlayers?.Invoke(ActiveLobby);
+                            EventSystem.gameObject.SetActive(false);
                             var sceneEventType = await m_sceneManager.LoadSceneGroupByEnumNetwork(SceneGroupToLoad.Game);
                             await UpdatePlayerSceneEventLoadState(sceneEventType);
                             OnSendPlayerLoadState?.Invoke(NetworkManager.Singleton.LocalClientId.ToString(), sceneEventType);
@@ -473,7 +476,8 @@ namespace Project_Assets.Scripts.Lobby
                 m_sceneManager.SwitchLoadingScreen(LoadingScreenEnum.Game);
                 m_sceneManager.SetLoadingScreenTitle(ActiveLobby.Name);
                 OnSendLobbyPlayers?.Invoke(ActiveLobby);
-
+                
+                EventSystem.gameObject.SetActive(false);
                 var sceneEventType = await m_sceneManager.LoadSceneGroupByEnumNetwork(SceneGroupToLoad.Game);
                 await UpdatePlayerSceneEventLoadState(sceneEventType);
                 OnSendPlayerLoadState?.Invoke(NetworkManager.Singleton.LocalClientId.ToString(), sceneEventType); // Could be null

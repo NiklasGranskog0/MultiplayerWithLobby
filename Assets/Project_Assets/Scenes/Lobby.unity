@@ -1761,6 +1761,7 @@ MonoBehaviour:
   Poller: {fileID: 172821702}
   GameStartTimer: {fileID: 172821705}
   PlayersLoadState: {fileID: 3159225706130697511, guid: 92d32cff8232edd4587d10d7ca16ee2a, type: 3}
+  EventSystem: {fileID: 902076946}
 --- !u!114 &172821705
 MonoBehaviour:
   m_ObjectHideFlags: 0
