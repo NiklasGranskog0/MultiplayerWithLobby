@@ -3,12 +3,14 @@ using Project_Assets.Scripts.Interfaces;
 using Project_Assets.Scripts.Player;
 using Project_Assets.Scripts.ScriptableObjects;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Project_Assets.Scripts.Game.UI
 {
-    public class ObjectTargeter : MonoBehaviour
+    public class ObjectTargeter : NetworkBehaviour
     {
         [SerializeField] private LayerMask m_uiObjectSelectionLayer;
 
@@ -27,13 +29,13 @@ namespace Project_Assets.Scripts.Game.UI
         private const float k_raycastDistance = 500f;
 
         private string m_teamTag;
+        public ulong PlayerId;
 
-        public void Initialize(PlayerInputs playerInputs, PlayerCamera playerCamera,
-            ISelectionObject defaultSelectedObject, string teamTag)
+        public void Initialize(PlayerInputs playerInputs, PlayerCamera playerCamera, ISelectionObject defaultSelectedObject)
         {
             m_playerInputs = playerInputs;
             m_playerCamera = playerCamera;
-            m_teamTag = teamTag;
+            m_teamTag = gameObject.tag;
 
             ServiceLocator.Global.Get(out m_uiObjects);
             ServiceLocator.Global.Get(out m_imageManager);
@@ -47,7 +49,12 @@ namespace Project_Assets.Scripts.Game.UI
             m_imageManager.LoadImage(defaultSelectedObject.ImageToLoad);
         }
 
-        private void Start() => m_playerInputs.OnLeftMouseClickEvent += OnClick;
+        private void Start()
+        {
+            SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetSceneByName("Game"));
+            m_playerInputs.OnLeftMouseClickEvent += OnClick;  
+        } 
+        
         private void OnClick() => m_selectionRequest = true;
 
         // Raycast in late update to make sure we are creating a raycast direction after the camera has moved
@@ -59,6 +66,10 @@ namespace Project_Assets.Scripts.Game.UI
 
                 if (Physics.Raycast(mouseRay, out var hitInfo, k_raycastDistance, m_uiObjectSelectionLayer))
                 {
+                    Debug.Log(hitInfo.collider.gameObject.CompareTag(m_teamTag));
+                    Debug.Log(m_teamTag);
+                    Debug.Log(gameObject.tag);
+                    
                     if (!hitInfo.collider.gameObject.CompareTag(m_teamTag)) return;
 
                     m_selectedObject = hitInfo.collider.gameObject;
@@ -73,5 +84,7 @@ namespace Project_Assets.Scripts.Game.UI
 
             m_selectionRequest = false;
         }
+        
+        public override void OnNetworkSpawn() => PlayerId = OwnerClientId;
     }
 }

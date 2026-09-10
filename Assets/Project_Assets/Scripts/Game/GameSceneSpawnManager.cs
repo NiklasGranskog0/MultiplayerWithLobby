@@ -13,6 +13,7 @@ namespace Project_Assets.Scripts.Game
     {
         public GameObject PlayerPrefab;
         public GameObject PlayerCameraPrefab;
+        public GameObject PlayerObjectTargeterPrefab;
     }
 
     public class GameSceneSpawnManager : MonoBehaviour
@@ -33,7 +34,6 @@ namespace Project_Assets.Scripts.Game
 
         private void SpawnPlayers()
         {
-            // TODO: Add UIObject Targeter as network object
             // Creates a player and camera network object for each player in the lobby
             foreach (var player in m_playersInLobby.Players)
             {
@@ -46,10 +46,13 @@ namespace Project_Assets.Scripts.Game
                 var playerCam =
                     m_playerObjects.PlayerCameraPrefab.CreateAsNetworkObjectAndSpawn(m_spawnPoints[teamNb].position,
                         id);
+                var playerTargeter = m_playerObjects.PlayerObjectTargeterPrefab.CreateAsNetworkObjectAndSpawn(
+                    m_spawnPoints[teamNb].position, id);
 
                 // Set the player's and camera tag to their team number
                 playerObj.gameObject.tag = Enum.GetName(typeof(Enums.Team), teamNb);
                 playerCam.gameObject.tag = Enum.GetName(typeof(Enums.Team), teamNb);
+                playerTargeter.gameObject.tag = Enum.GetName(typeof(Enums.Team), teamNb);
             }
         }
     }

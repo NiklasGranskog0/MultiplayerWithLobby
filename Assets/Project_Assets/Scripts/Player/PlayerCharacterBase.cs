@@ -2,6 +2,7 @@ using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Game.UI;
 using Project_Assets.Scripts.Interfaces;
 using Project_Assets.Scripts.ScriptableObjects;
+using Project_Assets.Scripts.UtilityExtensions.Strings;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,8 +15,8 @@ namespace Project_Assets.Scripts.Player
         [SerializeField] private PlayerAnimations m_playerAnimationsComponent;
         [SerializeField] private PlayerMovement m_playerMovementComponent;
         [SerializeField] private Transform m_cameraStartPosition;
-        [SerializeField] private ObjectTargeter m_objectTargeterComponent;
         [SerializeField] private PlayerMenuButtons m_playerMenuButtons;
+        private ObjectTargeter m_objectTargeterComponent;
         private PlayerCamera m_playerCameraComponent;
         private ulong m_playerId;
 
@@ -27,7 +28,7 @@ namespace Project_Assets.Scripts.Player
         {
             // Moving the Player object to the Game scene
             SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetSceneByName("Game"));
-
+            
             var playerCamera = FindObjectsByType<PlayerCamera>();
             foreach (var cam in playerCamera)
             {
@@ -36,10 +37,15 @@ namespace Project_Assets.Scripts.Player
                 m_playerCameraComponent = cam;
             }
 
+            foreach (var objTar in FindObjectsByType<ObjectTargeter>())
+            {
+                if (objTar.PlayerId != m_playerId) continue;
+                m_objectTargeterComponent = objTar;
+            }
+
             m_playerCameraComponent.Initialize(m_playerInputsComponent, m_cameraStartPosition, IsOwner);
             m_playerMovementComponent.Initialize(m_playerInputsComponent, m_playerCameraComponent);
-            m_objectTargeterComponent.Initialize(m_playerInputsComponent, m_playerCameraComponent, this,
-                gameObject.tag);
+            m_objectTargeterComponent.Initialize(m_playerInputsComponent, m_playerCameraComponent, this);
             m_playerAnimationsComponent.Initialize(m_playerMovementComponent);
             m_playerMenuButtons.Initialize();
         }
