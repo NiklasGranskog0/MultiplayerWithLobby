@@ -1,7 +1,6 @@
 using System;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.Lobby;
-using Project_Assets.Scripts.Scenes;
 using Project_Assets.Scripts.UtilityExtensions.GlobalConstants.Strings;
 using Project_Assets.Scripts.UtilityExtensions.NetworkExtensions;
 using Unity.Netcode;
@@ -18,19 +17,16 @@ namespace Project_Assets.Scripts.Game
 
     public class GameSceneSpawnManager : MonoBehaviour
     {
-        [SerializeField] private GameObject m_gameManagerPrefab;
         [SerializeField] private Transform[] m_spawnPoints;
         [SerializeField] private PlayerObjects m_playerObjects;
 
         private PlayersInLobby m_playersInLobby;
-        private SceneManager m_sceneManager;
 
         private void Start()
         {
             if (!NetworkManager.Singleton.IsHost) return;
 
             ServiceLocator.Global.Get(out m_playersInLobby);
-            ServiceLocator.Global.Get(out m_sceneManager);
 
             SpawnPlayers();
         }

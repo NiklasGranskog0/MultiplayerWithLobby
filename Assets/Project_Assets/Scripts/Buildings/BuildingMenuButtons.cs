@@ -13,12 +13,10 @@ namespace Project_Assets.Scripts.Buildings
         [SerializeField] private Transform m_spawnPosition;
         [SerializeField] private ObjectMenuButton[] m_objectMenuButtons;
         private GameMenuButtons m_gameMenuButtons;
-        private PoolManager m_poolManager;
 
         public void Initialize()
         {
             ServiceLocator.Global.Get(out m_gameMenuButtons);
-            // ServiceLocator.ForSceneOf(this).Get(out m_poolManager);
         }
 
         public void SetGameMenuButtons()
@@ -37,9 +35,7 @@ namespace Project_Assets.Scripts.Buildings
         
         public UnitType SpawnUnit(UnitType unitType)
         {
-            if (m_poolManager is null) ServiceLocator.ForSceneOf(this).Get(out m_poolManager);
-                
-            m_poolManager.SpawnPooledObject(unitType, m_spawnPosition.position, gameObject.tag);
+            PoolManager.Instance.SpawnPooledObject(unitType, m_spawnPosition.position, gameObject.tag);
             return unitType; // Redundant, but callback needs to have a return value.
         }
     }

@@ -35,7 +35,7 @@ namespace Project_Assets.Scripts.UtilityExtensions.Singletons
 
         private void Awake() => InitSingleton();
 
-        protected virtual void OnDestroy()
+        protected new virtual void OnDestroy()
         {
             if (s_instance == this)
             {

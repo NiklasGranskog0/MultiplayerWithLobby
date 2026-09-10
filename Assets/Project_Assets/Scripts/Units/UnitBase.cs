@@ -15,10 +15,8 @@ namespace Project_Assets.Scripts.Units
         public NavMeshAgent Agent;
         [HideInInspector] public string TeamTag;
 
-        public StateMachine.StateMachine StateMachine;
+        protected StateMachine.StateMachine StateMachine;
 
-        // TODO: GameManager is a singleton
-        [HideInInspector] public GameManager GameManager;
         private GameMenuButtons m_gameMenuButtons;
 
         public virtual void Awake()
@@ -28,9 +26,6 @@ namespace Project_Assets.Scripts.Units
         
         public virtual void Start()
         {
-            // TODO: Maybe all units doesn't need a reference to the game manager
-            ServiceLocator.ForSceneOf(this).Get(out GameManager);
-            
             TeamTag = gameObject.tag; // Temp
             ServiceLocator.Global.Get(out m_gameMenuButtons);
         }

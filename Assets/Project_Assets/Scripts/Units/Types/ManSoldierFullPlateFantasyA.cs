@@ -1,5 +1,6 @@
 using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Framework;
+using Project_Assets.Scripts.Game;
 using Project_Assets.Scripts.StateMachine.States;
 
 namespace Project_Assets.Scripts.Units.Types
@@ -13,7 +14,7 @@ namespace Project_Assets.Scripts.Units.Types
         {
             base.Start();
             
-            m_unitMoveState = new UnitMoveState(Agent, TeamTag, GameManager, gameObject);
+            m_unitMoveState = new UnitMoveState(Agent, TeamTag, GameManager.Instance, gameObject);
             m_unitGroundAttack = new UnitGroundAttack();
             
             StateMachine.AddAnyTransition(m_unitMoveState, new FunctionPredicate(() => gameObject.activeInHierarchy));

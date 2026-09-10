@@ -1,19 +1,14 @@
 using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.Game;
-using Unity.Netcode;
+using Project_Assets.Scripts.UtilityExtensions.Singletons;
 using UnityEngine;
 
 namespace Project_Assets.Scripts.Network.Game
 {
-    public class PoolManager : NetworkBehaviour
+    public class PoolManager : NetworkSingleton<PoolManager>
     {
         private UnitTypeToPrefab m_unitTypeToPrefab;
-
-        private void Awake()
-        {
-            ServiceLocator.ForSceneOf(this).Register(this, ServiceLevel.Scene, gameObject.scene.name);
-        }
 
         private void Start()
         {

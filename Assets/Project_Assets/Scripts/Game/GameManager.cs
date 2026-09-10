@@ -1,5 +1,5 @@
 using System;
-using System.Threading.Tasks;
+using Project_Assets.Scripts.Buildings;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.UtilityExtensions.Singletons;
 using Project_Assets.Scripts.UtilityExtensions.Strings;
@@ -12,15 +12,19 @@ namespace Project_Assets.Scripts.Game
     {
         public GameObject TeamOneBase;
         public GameObject TeamTwoBase;
-
-        // TODO: Currently GameManager is not getting spawned over the network
-        // TODO: We could do this by dynamically spawning the GameManager in GameSceneSpawnManager or SpawnInitialNetworkBehaviours
-        // TODO: However, this would mean that the GameManager might not be spawned before StartGame() is called
-        // TODO: And we would have to set the team bases object in code
-
+        
         public override void OnNetworkSpawn()
         {
             SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetSceneByName("Game"));
+
+            foreach (var baseTierOne in FindObjectsByType<BaseTierOne>())
+            {
+                if (baseTierOne.gameObject.tag.Equals("Team1"))
+                    TeamOneBase = baseTierOne.gameObject;
+                else
+                    TeamTwoBase = baseTierOne.gameObject;
+            }
+            
             // TODO: Set team bases prefab/game object
         }
 

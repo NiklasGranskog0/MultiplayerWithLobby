@@ -50,7 +50,7 @@ namespace Project_Assets.Scripts.StateMachine.States
             m_agent.SetDestination(m_destination);
         }
         
-        // Check if the player is close enough to the destination to stop the agent
+        // Check if the unit is close enough to the destination to stop the agent
         private IEnumerator CheckDistanceLeft()
         {
             var currentDistance = (m_unit.transform.position - m_agent.destination).magnitude;

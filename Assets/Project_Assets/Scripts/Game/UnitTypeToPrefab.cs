@@ -22,11 +22,14 @@ namespace Project_Assets.Scripts.Game
         [SerializeField] private FromEnumToPrefab[] m_fromEnumToPrefab;
         private readonly Dictionary<UnitType, GameObject> m_unitTypeToPrefab = new();
 
-        private void Awake() => ServiceLocator.For(this).Register(this, ServiceLevel.Local, gameObject.scene.name);
+        private void Awake()
+        {
+            ServiceLocator.For(this).Register(this, ServiceLevel.Local, gameObject.scene.name);
+            m_networkObjectPool = NetworkObjectPool.Instance;
+        }
 
         private void Start()
         {
-            ServiceLocator.ForSceneOf(this).Get(out m_networkObjectPool);
             m_fromEnumToPrefab = new FromEnumToPrefab[m_networkObjectPool.PooledPrefabs.Count];
 
             for (int i = 0; i < m_networkObjectPool.PooledPrefabs.Count; i++)
