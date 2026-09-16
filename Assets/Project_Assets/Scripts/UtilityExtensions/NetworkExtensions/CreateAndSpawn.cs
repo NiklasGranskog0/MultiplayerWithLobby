@@ -1,4 +1,6 @@
-﻿using Unity.Netcode;
+﻿using Project_Assets.Scripts.Game.UI;
+using Project_Assets.Scripts.Player;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Project_Assets.Scripts.UtilityExtensions.NetworkExtensions

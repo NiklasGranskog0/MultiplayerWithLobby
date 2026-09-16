@@ -50,7 +50,7 @@ namespace Project_Assets.Scripts.Lobby
             var loaded = m_spawnInitialNetworkBehaviours.IsComplete;
 
             if (!m_gameStarted && loaded)
-            {
+            { 
                 StartGameRPC();
             }
         }

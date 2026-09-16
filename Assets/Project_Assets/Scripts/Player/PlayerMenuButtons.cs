@@ -33,6 +33,7 @@ namespace Project_Assets.Scripts.Player
             }
         }
 
+        // Temp
         public void ExitTheGame()
         {
             Debug.Log("Exiting the game".Color(Color.red));

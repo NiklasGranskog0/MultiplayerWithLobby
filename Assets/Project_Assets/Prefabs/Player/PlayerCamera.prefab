@@ -141,7 +141,7 @@ GameObject:
   - component: {fileID: 7107611414377944175}
   m_Layer: 0
   m_Name: PlayerCamera
-  m_TagString: Untagged
+  m_TagString: Team2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -180,6 +180,7 @@ MonoBehaviour:
   Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
+  m_InScenePlaced: 0
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
@@ -203,4 +204,4 @@ MonoBehaviour:
   m_playerCamera: {fileID: 993710142343047262}
   m_cameraTarget: {fileID: 9090114744994044166}
   m_cameraMoveSpeed: 15
-  PlayerId: 0
+  CameraId: 0

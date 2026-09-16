@@ -134,11 +134,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Project_Assets.Scripts.Player.PlayerBase
   ShowTopMostFoldoutHeaderGroup: 1
+  m_playerPrefabs:
+    Player: {fileID: 4229498176680890359}
+    CameraPrefab: {fileID: 8179921237309481470, guid: c98dcfb864b73af439cdef0869199687, type: 3}
+    TargeterPrefab: {fileID: 4934340969114352349, guid: 1956467d648731947b0dd21f429a55ed, type: 3}
   m_playerInputsComponent: {fileID: 11400000, guid: 2f42087214b976b41902f162fa41bfb8, type: 2}
   m_playerAnimationsComponent: {fileID: 1981519173124256410}
   m_playerMovementComponent: {fileID: 4229821249715826934}
   m_cameraStartPosition: {fileID: 8649425317078063728}
-  m_objectTargeterComponent: {fileID: 0}
   m_playerMenuButtons: {fileID: 278206900478176051}
 --- !u!114 &-7131759201153768744
 MonoBehaviour:

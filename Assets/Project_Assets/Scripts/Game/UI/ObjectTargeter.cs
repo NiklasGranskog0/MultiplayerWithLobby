@@ -2,15 +2,16 @@ using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.Interfaces;
 using Project_Assets.Scripts.Player;
 using Project_Assets.Scripts.ScriptableObjects;
+using Project_Assets.Scripts.UtilityExtensions.Strings;
 using TMPro;
-using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Project_Assets.Scripts.Game.UI
 {
-    public class ObjectTargeter : NetworkBehaviour
+    public class ObjectTargeter : MonoBehaviour
     {
         [SerializeField] private LayerMask m_uiObjectSelectionLayer;
 
@@ -31,11 +32,14 @@ namespace Project_Assets.Scripts.Game.UI
         private string m_teamTag;
         public ulong PlayerId;
 
-        public void Initialize(PlayerInputs playerInputs, PlayerCamera playerCamera, ISelectionObject defaultSelectedObject)
+        public void Initialize(PlayerInputs playerInputs, PlayerCamera playerCamera, ISelectionObject defaultSelectedObject,
+            string teamTag)
         {
             m_playerInputs = playerInputs;
             m_playerCamera = playerCamera;
-            m_teamTag = gameObject.tag;
+            m_teamTag = teamTag;
+            
+            m_playerInputs.OnLeftMouseClickEvent += OnClick;
 
             ServiceLocator.Global.Get(out m_uiObjects);
             ServiceLocator.Global.Get(out m_imageManager);
@@ -47,12 +51,14 @@ namespace Project_Assets.Scripts.Game.UI
             // At the start of the game have the player character as the selected object
             m_selectedObjectName.text = defaultSelectedObject.Name;
             m_imageManager.LoadImage(defaultSelectedObject.ImageToLoad);
+            
+            gameObject.SetActive(true);
         }
 
-        private void Start()
+        private void Awake()
         {
             SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetSceneByName("Game"));
-            m_playerInputs.OnLeftMouseClickEvent += OnClick;  
+            gameObject.SetActive(false);
         } 
         
         private void OnClick() => m_selectionRequest = true;
@@ -66,12 +72,8 @@ namespace Project_Assets.Scripts.Game.UI
 
                 if (Physics.Raycast(mouseRay, out var hitInfo, k_raycastDistance, m_uiObjectSelectionLayer))
                 {
-                    Debug.Log(hitInfo.collider.gameObject.CompareTag(m_teamTag));
-                    Debug.Log(m_teamTag);
-                    Debug.Log(gameObject.tag);
-                    
                     if (!hitInfo.collider.gameObject.CompareTag(m_teamTag)) return;
-
+                    
                     m_selectedObject = hitInfo.collider.gameObject;
                     
                     var selectionObject = m_selectedObject.GetComponent<ISelectionObject>();
@@ -84,7 +86,5 @@ namespace Project_Assets.Scripts.Game.UI
 
             m_selectionRequest = false;
         }
-        
-        public override void OnNetworkSpawn() => PlayerId = OwnerClientId;
     }
 }

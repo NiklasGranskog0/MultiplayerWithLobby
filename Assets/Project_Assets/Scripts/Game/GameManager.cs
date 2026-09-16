@@ -24,8 +24,6 @@ namespace Project_Assets.Scripts.Game
                 else
                     TeamTwoBase = baseTierOne.gameObject;
             }
-            
-            // TODO: Set team bases prefab/game object
         }
 
         public async void StartGame()

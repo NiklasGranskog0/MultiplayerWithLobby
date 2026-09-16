@@ -1,22 +1,22 @@
 using Project_Assets.Scripts.ScriptableObjects;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 namespace Project_Assets.Scripts.Player
 {
-    public class PlayerCamera : NetworkBehaviour
+    public class PlayerCamera : MonoBehaviour
     {
         [SerializeField] private Camera m_playerCamera;
         [SerializeField] private Transform m_cameraTarget;
         [SerializeField] private float m_cameraMoveSpeed = 15f;
         private PlayerInputs m_playerInputs;
-        public ulong PlayerId;
 
         private Vector3 m_cameraMoveDirection;
         private Vector3 m_mousePosition;
         private Vector3 m_playerPosition;
+
+        public ulong PlayerId;
         
         public Ray MouseRay 
         {
@@ -31,19 +31,19 @@ namespace Project_Assets.Scripts.Player
             }
         }
 
-        private void Start()
+        private void Awake()
         {
             // Camera object spawned in the Startup scene, so move it to the Game scene
             SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetSceneByName("Game"));
         }
 
-        public void Initialize(PlayerInputs playerInputs, Transform startTransform, bool isOwner)
+        public void Initialize(PlayerInputs playerInputs, Transform startTransform, string teamTag)
         {
+            gameObject.tag = teamTag;
             m_playerInputs = playerInputs;
             m_playerInputs.OnMovementEvent += SetCameraMoveDirection;
             m_playerInputs.OnCameraResetEvent += ResetCameraPosition;
-            
-            m_playerCamera.gameObject.SetActive(isOwner);
+
             transform.rotation = Quaternion.Euler(-15f, -90f, 0);
             transform.position = startTransform.position;
         }
@@ -61,11 +61,10 @@ namespace Project_Assets.Scripts.Player
             m_cameraMoveDirection.z = direction.x;
         }
 
+        // Resets camera position to the player's position
         private void ResetCameraPosition()
         {
             m_cameraTarget.position = new Vector3(m_playerPosition.x + 7.8f, m_cameraTarget.position.y, m_playerPosition.z);
         }
-
-        public override void OnNetworkSpawn() => PlayerId = OwnerClientId;
     }
 }
