@@ -143,6 +143,11 @@ MonoBehaviour:
   m_playerMovementComponent: {fileID: 4229821249715826934}
   m_cameraStartPosition: {fileID: 8649425317078063728}
   m_playerMenuButtons: {fileID: 278206900478176051}
+  PlayerTeam:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
 --- !u!114 &-7131759201153768744
 MonoBehaviour:
   m_ObjectHideFlags: 0

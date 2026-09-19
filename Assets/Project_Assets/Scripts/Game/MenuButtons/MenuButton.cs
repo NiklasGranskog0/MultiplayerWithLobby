@@ -24,6 +24,7 @@ namespace Project_Assets.Scripts.Game.MenuButtons
         public GameObject TextAreaObject;
         public TextMeshProUGUI TextArea;
         
+        // Can have other callback types, callback doesn't need to only be of UnitType
         [HideInInspector] public SerializedCallback<UnitType> Callback;
 
         public void OnPointerEnter(PointerEventData eventData)

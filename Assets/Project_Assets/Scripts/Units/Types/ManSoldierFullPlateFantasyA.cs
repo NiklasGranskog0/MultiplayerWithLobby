@@ -14,7 +14,7 @@ namespace Project_Assets.Scripts.Units.Types
         {
             base.Start();
             
-            m_unitMoveState = new UnitMoveState(Agent, TeamTag, GameManager.Instance, gameObject);
+            m_unitMoveState = new UnitMoveState(Agent, TeamNetworkVariable.Value, GameManager.Instance, gameObject);
             m_unitGroundAttack = new UnitGroundAttack();
             
             StateMachine.AddAnyTransition(m_unitMoveState, new FunctionPredicate(() => gameObject.activeInHierarchy));

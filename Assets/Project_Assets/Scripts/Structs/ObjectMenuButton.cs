@@ -1,6 +1,5 @@
 ﻿using System;
 using Project_Assets.Scripts.Enums;
-using Project_Assets.Scripts.Framework;
 using Project_Assets.Scripts.UtilityExtensions.Serialization;
 using UnityEngine;
 using UnityEngine.Events;
@@ -16,8 +15,8 @@ namespace Project_Assets.Scripts.Structs
         public KeyCode ShortcutKey;
         [TextArea(5, 1)] public string TextToolTip;
 
-        [Header("Only select this if the button should spawn a unit, otherwise leave it as none")]
-        [Tooltip("Only select this if the button should spawn a unit, otherwise leave it as none")]
+        [Header("Serialized Callback function")]
+        [Tooltip("Serialized Callback function")]
         public SerializedCallback<UnitType> Callback;
     }
 }

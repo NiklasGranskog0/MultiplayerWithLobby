@@ -16,9 +16,7 @@ namespace Project_Assets.Scripts.Player
 
     public class PlayerCharacterBase : NetworkBehaviour, ISelectionObject
     {
-        // TODO: PlayerPrefabs don't need player prefab
         [SerializeField] private PlayerPrefabs m_playerPrefabs;
-
         [SerializeField] private PlayerInputs m_playerInputsComponent;
         [SerializeField] private PlayerAnimations m_playerAnimationsComponent;
         [SerializeField] private PlayerMovement m_playerMovementComponent;
@@ -46,15 +44,13 @@ namespace Project_Assets.Scripts.Player
             SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetSceneByName("Game"));
 
             if (!IsOwner) return;
-            
-            // TODO: send the PlayerTeam instead of the gameObject.tag 
-            
-            m_playerCameraComponent.Initialize(m_playerInputsComponent, m_cameraStartPosition, gameObject.tag);
+
+            m_playerMenuButtons.Initialize();
+            m_playerCameraComponent.Initialize(m_playerInputsComponent, m_cameraStartPosition);
             m_playerMovementComponent.Initialize(m_playerInputsComponent, m_playerCameraComponent);
             m_objectTargeterComponent.Initialize(m_playerInputsComponent, m_playerCameraComponent, this, 
-                gameObject.tag);
+                PlayerTeam.Value);
             m_playerAnimationsComponent.Initialize(m_playerMovementComponent);
-            m_playerMenuButtons.Initialize();
         }
 
         private void Update()
@@ -76,7 +72,7 @@ namespace Project_Assets.Scripts.Player
 
         public override void OnNetworkSpawn()
         {
-            ApplyTeamTag(PlayerTeam.Value);
+            ApplyTeamTag(PlayerTeam.Value); // TODO:  Do we need this ? 
             PlayerTeam.OnValueChanged += OnTeamChanged;
 
             if (!IsOwner) return;

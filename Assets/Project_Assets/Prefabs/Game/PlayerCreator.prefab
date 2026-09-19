@@ -72,7 +72,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCreator
   ShowTopMostFoldoutHeaderGroup: 1
-  m_playerPrefabs:
-    Player: {fileID: 4229498176680890359, guid: e3bff6551d2003b4e852eecb37730180, type: 3}
-    CameraPrefab: {fileID: 8179921237309481470, guid: c98dcfb864b73af439cdef0869199687, type: 3}
-    TargeterPrefab: {fileID: 4934340969114352349, guid: 1956467d648731947b0dd21f429a55ed, type: 3}
+  m_playerPrefab: {fileID: 4229498176680890359, guid: e3bff6551d2003b4e852eecb37730180, type: 3}

@@ -1,3 +1,4 @@
+using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.Interfaces;
 using Project_Assets.Scripts.Player;
@@ -15,8 +16,6 @@ namespace Project_Assets.Scripts.Game.UI
     {
         [SerializeField] private LayerMask m_uiObjectSelectionLayer;
 
-        // TODO: Name is just a placeholder for now, might replace it with something else
-        // TODO: Might add health bar to the object
         private TextMeshProUGUI m_selectedObjectName;
         private RawImage m_selectedObjectRawImage;
 
@@ -30,14 +29,13 @@ namespace Project_Assets.Scripts.Game.UI
         private const float k_raycastDistance = 500f;
 
         private string m_teamTag;
-        public ulong PlayerId;
 
         public void Initialize(PlayerInputs playerInputs, PlayerCamera playerCamera, ISelectionObject defaultSelectedObject,
-            string teamTag)
+            Team teamTag)
         {
             m_playerInputs = playerInputs;
             m_playerCamera = playerCamera;
-            m_teamTag = teamTag;
+            m_teamTag = teamTag.ToString();
             
             m_playerInputs.OnLeftMouseClickEvent += OnClick;
 
@@ -51,6 +49,7 @@ namespace Project_Assets.Scripts.Game.UI
             // At the start of the game have the player character as the selected object
             m_selectedObjectName.text = defaultSelectedObject.Name;
             m_imageManager.LoadImage(defaultSelectedObject.ImageToLoad);
+            defaultSelectedObject.SetGameMenuButtons();
             
             gameObject.SetActive(true);
         }

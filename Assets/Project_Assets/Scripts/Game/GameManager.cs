@@ -10,8 +10,8 @@ namespace Project_Assets.Scripts.Game
 {
     public class GameManager : NetworkSingleton<GameManager>
     {
-        public GameObject TeamOneBase;
-        public GameObject TeamTwoBase;
+        public GameObject TeamOneBase { get; private set; }
+        public GameObject TeamTwoBase { get; private set; }
         
         public override void OnNetworkSpawn()
         {

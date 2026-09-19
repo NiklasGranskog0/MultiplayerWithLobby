@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.Lobby;
 using Project_Assets.Scripts.Player;
-using Project_Assets.Scripts.Structs;
 using Project_Assets.Scripts.UtilityExtensions.GlobalConstants.Strings;
 using Project_Assets.Scripts.UtilityExtensions.NetworkExtensions;
 using Project_Assets.Scripts.UtilityExtensions.Strings;
@@ -15,7 +13,7 @@ namespace Project_Assets.Scripts.Game
     public class PlayerCreator : NetworkBehaviour
     {
         // TODO: Only need player prefab
-        [SerializeField] private PlayerPrefabs m_playerPrefabs;
+        [SerializeField] private GameObject m_playerPrefab;
         private IReadOnlyList<Transform> m_spawnPoints;
         private PlayersInLobby m_playersInLobby;
 
@@ -46,15 +44,13 @@ namespace Project_Assets.Scripts.Game
                     $"Player Creator SpawnPlayers: PlayerId: {playerId}, TeamNumber: {teamNumber}, " +
                     $"SpawnPoint: {m_spawnPoints[teamNumber]}, Team: {(Enums.Team)teamNumber}");
 
-                var playerNetworkObject = m_playerPrefabs.Player.CreateAsNetworkObjectAndSpawn(
+                var playerNetworkObject = m_playerPrefab.CreateAsNetworkObjectAndSpawn(
                     m_spawnPoints[teamNumber].position,
                     playerId);
 
                 Debug.Log($"Player Creator Setting Team Tag: {(Enums.Team)teamNumber}");
                 var playerObject = playerNetworkObject.GetComponent<PlayerCharacterBase>();
                 playerObject.PlayerTeam.Value = (Enums.Team)teamNumber;
-
-                // playerNetworkObject.gameObject.tag = Enum.GetName(typeof(Enums.Team), teamNumber);
             }
 
             Debug.Log("Player Creator SpawnPlayers: Done".Color(Color.lightSalmon));

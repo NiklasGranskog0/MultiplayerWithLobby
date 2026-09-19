@@ -3,8 +3,10 @@ using Project_Assets.Scripts.UtilityExtensions.GameObjects;
 using Project_Assets.Scripts.Game;
 using Project_Assets.Scripts.UtilityExtensions.NavMeshAgents;
 using Project_Assets.Scripts.UtilityExtensions.Strings;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Android;
 
 namespace Project_Assets.Scripts.StateMachine.States
 {
@@ -17,12 +19,12 @@ namespace Project_Assets.Scripts.StateMachine.States
         private Vector3 m_destination;
         private readonly string m_teamTag;
 
-        public UnitMoveState(NavMeshAgent agent, string teamTag, GameManager gameManager, 
+        public UnitMoveState(NavMeshAgent agent, FixedString32Bytes teamTag, GameManager gameManager, 
             GameObject unit)
         {
             m_unit = unit;
             m_agent = agent;
-            m_teamTag = teamTag;
+            m_teamTag = teamTag.Value;
             m_gameManager = gameManager;
         }
 
@@ -39,14 +41,14 @@ namespace Project_Assets.Scripts.StateMachine.States
             Debug.Log("Exiting Move State".Color(Color.lightSalmon));    
         }
         
-        // public override void OnUpdate() { }
-        
         private void SetDestination()
         {
             m_destination = m_teamTag.Equals("Team1")
                 ? m_gameManager.TeamTwoBase.transform.position
                 : m_gameManager.TeamOneBase.transform.position;
             
+            // Could also have a distance check to make sure the unit walks to the correct base
+
             m_agent.SetDestination(m_destination);
         }
         

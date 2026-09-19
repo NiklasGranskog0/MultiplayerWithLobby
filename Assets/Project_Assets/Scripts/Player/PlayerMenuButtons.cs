@@ -1,39 +1,13 @@
-using Project_Assets.Scripts.Enums;
-using Project_Assets.Scripts.Framework.UnityServiceLocator;
-using Project_Assets.Scripts.Game;
 using Project_Assets.Scripts.Game.MenuButtons;
-using Project_Assets.Scripts.Structs;
 using Project_Assets.Scripts.UtilityExtensions.Strings;
 using UnityEditor;
 using UnityEngine;
 
 namespace Project_Assets.Scripts.Player
 {
-    public class PlayerMenuButtons : MonoBehaviour
+    public class PlayerMenuButtons : MenuButtonsBase
     {
-        [SerializeField] private ObjectMenuButton[] m_objectMenuButtons;
-
-        private GameMenuButtons m_gameMenuButtons;
-
-        // TODO: Listen to button presses for shortcut keys
-        public void Initialize()
-        {
-            ServiceLocator.Global.Get(out m_gameMenuButtons);
-            SetGameMenuButtons(); // Player is selected at start so set buttons immediately
-        }
-
-        public void SetGameMenuButtons()
-        {
-            m_gameMenuButtons.ResetButtonBinds();
-
-            foreach (var button in m_objectMenuButtons)
-            {
-                m_gameMenuButtons.BindButton(button.GameMenuButton, button.ClickedAction, button.Icon,
-                    button.TextToolTip, button.ShortcutKey, null);
-            }
-        }
-
-        // Temp
+        // Temp to test button call
         public void ExitTheGame()
         {
             Debug.Log("Exiting the game".Color(Color.red));

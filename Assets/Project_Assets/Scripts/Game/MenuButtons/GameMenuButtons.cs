@@ -8,6 +8,7 @@ using UnityEngine.Events;
 
 namespace Project_Assets.Scripts.Game.MenuButtons
 {
+    // TODO: Singleton
     public class GameMenuButtons : MonoBehaviour
     {
         public MenuButton[] MenuButtons = new MenuButton[12];

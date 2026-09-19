@@ -15,8 +15,6 @@ namespace Project_Assets.Scripts.Player
         private Vector3 m_cameraMoveDirection;
         private Vector3 m_mousePosition;
         private Vector3 m_playerPosition;
-
-        public ulong PlayerId;
         
         public Ray MouseRay 
         {
@@ -37,9 +35,8 @@ namespace Project_Assets.Scripts.Player
             SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetSceneByName("Game"));
         }
 
-        public void Initialize(PlayerInputs playerInputs, Transform startTransform, string teamTag)
+        public void Initialize(PlayerInputs playerInputs, Transform startTransform)
         {
-            gameObject.tag = teamTag;
             m_playerInputs = playerInputs;
             m_playerInputs.OnMovementEvent += SetCameraMoveDirection;
             m_playerInputs.OnCameraResetEvent += ResetCameraPosition;
