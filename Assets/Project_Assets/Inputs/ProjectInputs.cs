@@ -145,6 +145,15 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CameraSpeedUp"",
+                    ""type"": ""Button"",
+                    ""id"": ""2fd3a639-c103-4887-b2ca-09a33aab16b6"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -266,6 +275,28 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""CameraReset"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ba5d89f5-3974-48e2-8731-bc672b983d02"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraSpeedUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""35c68537-f934-4211-aead-5350d402d73f"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraSpeedUp"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -841,6 +872,7 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
         m_Player_LeftMouseClick = m_Player.FindAction("LeftMouseClick", throwIfNotFound: true);
         m_Player_MouseAxis = m_Player.FindAction("MouseAxis", throwIfNotFound: true);
         m_Player_CameraReset = m_Player.FindAction("CameraReset", throwIfNotFound: true);
+        m_Player_CameraSpeedUp = m_Player.FindAction("CameraSpeedUp", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -941,6 +973,7 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_LeftMouseClick;
     private readonly InputAction m_Player_MouseAxis;
     private readonly InputAction m_Player_CameraReset;
+    private readonly InputAction m_Player_CameraSpeedUp;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -976,6 +1009,10 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/CameraReset".
         /// </summary>
         public InputAction @CameraReset => m_Wrapper.m_Player_CameraReset;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/CameraSpeedUp".
+        /// </summary>
+        public InputAction @CameraSpeedUp => m_Wrapper.m_Player_CameraSpeedUp;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1020,6 +1057,9 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
             @CameraReset.started += instance.OnCameraReset;
             @CameraReset.performed += instance.OnCameraReset;
             @CameraReset.canceled += instance.OnCameraReset;
+            @CameraSpeedUp.started += instance.OnCameraSpeedUp;
+            @CameraSpeedUp.performed += instance.OnCameraSpeedUp;
+            @CameraSpeedUp.canceled += instance.OnCameraSpeedUp;
         }
 
         /// <summary>
@@ -1049,6 +1089,9 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
             @CameraReset.started -= instance.OnCameraReset;
             @CameraReset.performed -= instance.OnCameraReset;
             @CameraReset.canceled -= instance.OnCameraReset;
+            @CameraSpeedUp.started -= instance.OnCameraSpeedUp;
+            @CameraSpeedUp.performed -= instance.OnCameraSpeedUp;
+            @CameraSpeedUp.canceled -= instance.OnCameraSpeedUp;
         }
 
         /// <summary>
@@ -1350,6 +1393,13 @@ public partial class @ProjectInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnCameraReset(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "CameraSpeedUp" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCameraSpeedUp(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

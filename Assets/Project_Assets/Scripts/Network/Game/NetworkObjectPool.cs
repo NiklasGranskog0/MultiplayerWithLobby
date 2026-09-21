@@ -23,7 +23,7 @@ namespace Project_Assets.Scripts.Network.Game
 
         public override void OnNetworkSpawn()
         {
-            SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetSceneByName("Game"));    
+            SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());    
             InitializePool();   
         }
         

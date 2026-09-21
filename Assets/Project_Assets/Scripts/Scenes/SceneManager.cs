@@ -17,7 +17,7 @@ namespace Project_Assets.Scripts.Scenes
         [SerializeField] private LoadingScene m_defaultLoadingScreen;
         [SerializeField] private LoadingScene m_gameLoadingScreen;
         [SerializeField] private SceneGroupAsset m_sceneGroupAssets;
-        [SerializeField] private SceneGroupToLoad m_sceneGroupToLoad;
+        [SerializeField] private SceneGroupToLoad m_sceneGroupToLoad; // The first scene to load when starting the application
 
         private LoadingScene m_currentLoadingScreen { get; set; }
 

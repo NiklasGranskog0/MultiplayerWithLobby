@@ -3,6 +3,7 @@ using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Framework;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.UtilityExtensions.Serialization;
+using Project_Assets.Scripts.UtilityExtensions.Strings;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -54,7 +55,7 @@ namespace Project_Assets.Scripts.Game.MenuButtons
             menuButton.Callback = callback;
             menuButton.ButtonComponent.onClick.AddListener(action.Invoke);
             menuButton.ImageComponent.sprite = buttonImage;
-            menuButton.TextToolTip = buttonToolTip;
+            menuButton.TextToolTip = buttonToolTip + $" (Key: {shortcutKey})".Color(Color.darkGoldenRod);
             menuButton.HasToolTip = !string.IsNullOrEmpty(buttonToolTip);
             menuButton.ShortcutKey = shortcutKey;
             menuButton.ButtonObject.SetActive(true);

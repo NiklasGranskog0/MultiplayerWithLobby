@@ -36,6 +36,7 @@ namespace Project_Assets.Scripts.Game.UI
             m_playerInputs = playerInputs;
             m_playerCamera = playerCamera;
             m_teamTag = teamTag.ToString();
+            gameObject.tag = m_teamTag;
             
             m_playerInputs.OnLeftMouseClickEvent += OnClick;
 
@@ -50,14 +51,11 @@ namespace Project_Assets.Scripts.Game.UI
             m_selectedObjectName.text = defaultSelectedObject.Name;
             m_imageManager.LoadImage(defaultSelectedObject.ImageToLoad);
             defaultSelectedObject.SetGameMenuButtons();
-            
-            gameObject.SetActive(true);
         }
 
         private void Awake()
         {
-            SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetSceneByName("Game"));
-            gameObject.SetActive(false);
+            SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
         } 
         
         private void OnClick() => m_selectionRequest = true;

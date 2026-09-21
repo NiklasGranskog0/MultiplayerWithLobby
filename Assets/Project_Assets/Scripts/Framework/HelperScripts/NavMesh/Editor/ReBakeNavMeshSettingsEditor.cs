@@ -1,8 +1,7 @@
-using Project_Assets.Scripts.Framework.HelperScripts.NavMesh;
 using UnityEditor;
 using UnityEngine;
 
-namespace Project_Assets.Scripts.Framework_TempName.HelperScripts.NavMesh.Editor
+namespace Project_Assets.Scripts.Framework.HelperScripts.NavMesh.Editor
 {
     [CustomEditor(typeof(ReBakeNavMeshSettings))]
     public class ReBakeNavMeshSettingsEditor : UnityEditor.Editor
@@ -18,6 +17,20 @@ namespace Project_Assets.Scripts.Framework_TempName.HelperScripts.NavMesh.Editor
                 var settings = (ReBakeNavMeshSettings)target;
                 settings.ReBake();
 
+                EditorUtility.SetDirty(settings);
+            }
+
+            // if (GUILayout.Button("Add NavMesh to Layer"))
+            // {
+            //     var settings = (ReBakeNavMeshSettings)target;
+            //     settings.AddNavMeshToLayer();
+            //     EditorUtility.SetDirty(settings);
+            // }
+
+            if (GUILayout.Button("Remove Navmeshes"))
+            {
+                var settings = (ReBakeNavMeshSettings)target;
+                settings.RemoveNavMeshes();
                 EditorUtility.SetDirty(settings);
             }
         }

@@ -35,15 +35,22 @@ namespace Project_Assets.Scripts.Network.Game
             Spawn(unitType, spawnPoint, team);
         }
 
+        // TODO: Returning spawned objects to the pool when they are killed.
         private void Spawn(UnitType unitType, Vector3 spawnPoint, string team)
         {
             var prefab = m_unitTypeToPrefab.GetPrefabObject(unitType);
             var networkObject = NetworkObjectPool.Instance.GetNetworkObject(prefab, spawnPoint, Quaternion.identity);
-            
-            var unitBase = networkObject.GetComponent<UnitBase>();
-            unitBase.TeamNetworkVariable.Value = (FixedString32Bytes)team;
-            
-            networkObject.Spawn();
+
+            if (networkObject.TryGetComponent(out UnitBase unitBase))
+            {
+                unitBase.TeamNetworkVariable.Value = (FixedString32Bytes)team;
+                networkObject.Spawn();
+            }
+            else
+            {
+                Debug.LogError($"{networkObject.name} does not have a UnitBase component! {unitType}, returning it to the pool.");
+                NetworkObjectPool.Instance.ReturnNetworkObject(networkObject, prefab);
+            }
         }
     }
 }

@@ -25,5 +25,40 @@ namespace Project_Assets.Scripts.Framework.HelperScripts.NavMesh
                 navmesh.BuildNavMesh();
             }
         }
+        
+        public void AddNavMeshToLayer()
+        {
+            var allObjects = FindObjectsByType<GameObject>();
+            
+            foreach (var obj in allObjects)
+            {
+                if (obj.layer == LayerMask.NameToLayer("PlayerPlane")) continue;
+
+                if (obj.layer == LayerMask.NameToLayer("Ground"))
+                {
+                    if (!obj.TryGetComponent(out NavMeshSurface _))
+                    {
+                        var objNavmesh = obj.AddComponent<NavMeshSurface>();
+                        objNavmesh.layerMask = NavMeshLayer;
+                        objNavmesh.BuildNavMesh();
+                    }
+                }
+            }
+        }
+
+        public void RemoveNavMeshes()
+        {
+            var allObjects = FindObjectsByType<GameObject>();
+            
+            foreach (var obj in allObjects)
+            {
+                if (obj.layer == LayerMask.NameToLayer("PlayerPlane")) continue;
+
+                if (obj.layer == LayerMask.NameToLayer("Ground"))
+                {
+                    DestroyImmediate(obj.GetComponent<NavMeshSurface>());
+                }
+            }
+        }
     }
 }

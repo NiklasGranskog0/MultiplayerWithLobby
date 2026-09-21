@@ -6,5 +6,6 @@ namespace Project_Assets.Scripts.Enums
         Lobby,
         Game,
         MainMenu,
+        MapGrasslandsCopy,
     }
 }

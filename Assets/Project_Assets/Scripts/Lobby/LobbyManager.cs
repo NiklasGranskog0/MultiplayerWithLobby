@@ -101,7 +101,7 @@ namespace Project_Assets.Scripts.Lobby
                         {
                             OnSendLobbyPlayers?.Invoke(ActiveLobby);
                             EventSystem.gameObject.SetActive(false);
-                            var sceneEventType = await m_sceneManager.LoadSceneGroupByEnumNetwork(SceneGroupToLoad.Game);
+                            var sceneEventType = await m_sceneManager.LoadSceneGroupByEnumNetwork(SceneGroupToLoad.MapGrasslandsCopy);
                             await UpdatePlayerSceneEventLoadState(sceneEventType);
                             OnSendPlayerLoadState?.Invoke(NetworkManager.Singleton.LocalClientId.ToString(), sceneEventType);
                         }
@@ -478,7 +478,7 @@ namespace Project_Assets.Scripts.Lobby
                 OnSendLobbyPlayers?.Invoke(ActiveLobby);
                 
                 EventSystem.gameObject.SetActive(false);
-                var sceneEventType = await m_sceneManager.LoadSceneGroupByEnumNetwork(SceneGroupToLoad.Game);
+                var sceneEventType = await m_sceneManager.LoadSceneGroupByEnumNetwork(SceneGroupToLoad.MapGrasslandsCopy);
                 await UpdatePlayerSceneEventLoadState(sceneEventType);
                 OnSendPlayerLoadState?.Invoke(NetworkManager.Singleton.LocalClientId.ToString(), sceneEventType); // Could be null
             }

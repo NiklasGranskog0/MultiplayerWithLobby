@@ -1,6 +1,7 @@
 using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Framework;
 using Project_Assets.Scripts.Game;
+using Project_Assets.Scripts.Network.Game;
 using Project_Assets.Scripts.StateMachine.States;
 
 namespace Project_Assets.Scripts.Units.Types

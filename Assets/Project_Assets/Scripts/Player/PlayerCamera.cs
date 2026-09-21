@@ -1,3 +1,4 @@
+using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -32,14 +33,16 @@ namespace Project_Assets.Scripts.Player
         private void Awake()
         {
             // Camera object spawned in the Startup scene, so move it to the Game scene
-            SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetSceneByName("Game"));
+            SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
         }
 
-        public void Initialize(PlayerInputs playerInputs, Transform startTransform)
+        public void Initialize(PlayerInputs playerInputs, Transform startTransform, Team teamTag)
         {
+            gameObject.tag = teamTag.ToString();
             m_playerInputs = playerInputs;
             m_playerInputs.OnMovementEvent += SetCameraMoveDirection;
             m_playerInputs.OnCameraResetEvent += ResetCameraPosition;
+            m_playerInputs.OnCameraSpeedUpEvent += IncreaseCameraMoveSpeed;
 
             transform.rotation = Quaternion.Euler(-15f, -90f, 0);
             transform.position = startTransform.position;
@@ -56,6 +59,14 @@ namespace Project_Assets.Scripts.Player
         {
             m_cameraMoveDirection.x = -direction.y;
             m_cameraMoveDirection.z = direction.x;
+        }
+
+        private void IncreaseCameraMoveSpeed(bool isSpeedUp)
+        {
+            if (isSpeedUp)
+                m_cameraMoveSpeed += 10f;
+            else if (m_cameraMoveSpeed >= 25f)
+                m_cameraMoveSpeed -= 10f;
         }
 
         // Resets camera position to the player's position

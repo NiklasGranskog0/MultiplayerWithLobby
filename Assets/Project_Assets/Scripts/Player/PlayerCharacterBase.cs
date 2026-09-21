@@ -7,7 +7,6 @@ using Project_Assets.Scripts.UtilityExtensions.GameObjects;
 using Project_Assets.Scripts.UtilityExtensions.Strings;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 
 namespace Project_Assets.Scripts.Player
@@ -41,12 +40,13 @@ namespace Project_Assets.Scripts.Player
         private void Start()
         {
             // Moving the Player object to the Game scene
-            SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetSceneByName("Game"));
+            Debug.Log($"Player object moved to Game scene: {SceneManager.GetActiveScene().name}".Color(Color.green));
+            SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
 
             if (!IsOwner) return;
 
             m_playerMenuButtons.Initialize();
-            m_playerCameraComponent.Initialize(m_playerInputsComponent, m_cameraStartPosition);
+            m_playerCameraComponent.Initialize(m_playerInputsComponent, m_cameraStartPosition, PlayerTeam.Value);
             m_playerMovementComponent.Initialize(m_playerInputsComponent, m_playerCameraComponent);
             m_objectTargeterComponent.Initialize(m_playerInputsComponent, m_playerCameraComponent, this, 
                 PlayerTeam.Value);

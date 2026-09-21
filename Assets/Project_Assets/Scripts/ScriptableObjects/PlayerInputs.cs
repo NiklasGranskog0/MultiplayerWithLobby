@@ -15,6 +15,7 @@ namespace Project_Assets.Scripts.ScriptableObjects
         public event Action OnRightMouseClickEvent;
         public event Action OnLeftMouseClickEvent;
         public event Action OnCameraResetEvent;
+        public event Action<bool> OnCameraSpeedUpEvent;
 
         private void OnEnable()
         {
@@ -67,6 +68,15 @@ namespace Project_Assets.Scripts.ScriptableObjects
         {
             if (context.performed)
                 OnCameraResetEvent?.Invoke();
+        }
+
+        public void OnCameraSpeedUp(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                OnCameraSpeedUpEvent?.Invoke(true);
+            
+            if (context.canceled)
+                OnCameraSpeedUpEvent?.Invoke(false);
         }
     }
 }
