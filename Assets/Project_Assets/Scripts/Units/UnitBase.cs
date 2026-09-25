@@ -2,6 +2,7 @@ using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.Game.MenuButtons;
 using Project_Assets.Scripts.Interfaces;
+using Project_Assets.Scripts.ScriptableObjects;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace Project_Assets.Scripts.Units
     [RequireComponent(typeof(NavMeshAgent))]
     public abstract class UnitBase : NetworkBehaviour, ISelectionObject
     {
+        public UnitStats UnitStats;
         public NavMeshAgent Agent;
         public NetworkVariable<FixedString32Bytes> TeamNetworkVariable = new();
 

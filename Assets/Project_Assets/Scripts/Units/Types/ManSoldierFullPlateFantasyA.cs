@@ -1,6 +1,5 @@
 using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Framework;
-using Project_Assets.Scripts.Game;
 using Project_Assets.Scripts.Network.Game;
 using Project_Assets.Scripts.StateMachine.States;
 
@@ -23,7 +22,7 @@ namespace Project_Assets.Scripts.Units.Types
             // StateMachine.AddTransition(m_AttackUnit, m_MoveToEnemyBaseState, new FunctionPredicate(() => NoUnitInRange);
             // StateMachine.AddAnyTransition(m_Dead, new FunctionPredicate(() => Health <= 0f);
             
-            // StateMachine will not start if there is no transition
+            // StateMachine will not start & can't run if there is no transition
             StateMachine.SetState(m_unitMoveState);
         }
         

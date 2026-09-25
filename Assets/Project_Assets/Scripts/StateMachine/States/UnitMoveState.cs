@@ -57,15 +57,15 @@ namespace Project_Assets.Scripts.StateMachine.States
         private IEnumerator CheckDistanceLeft()
         {
             var currentDistance = (m_unit.transform.position - m_agent.destination).magnitude;
-            const float k_MaximumDistanceAway = 2f;
+            const float k_maximumDistanceAway = 2f;
         
-            while (currentDistance > k_MaximumDistanceAway)
+            while (currentDistance > k_maximumDistanceAway)
             {
                 currentDistance = (m_unit.transform.position - m_agent.destination).magnitude;
                 yield return null;
             }
             
-            if (currentDistance <= k_MaximumDistanceAway)
+            if (currentDistance <= k_maximumDistanceAway)
                 m_agent.isStopped = true;
             
             yield return null;
