@@ -22,7 +22,7 @@ namespace Project_Assets.Scripts.Lobby
 {
     public class LobbyManager : MonoBehaviour
     {
-        public Unity.Services.Lobbies.Models.Lobby ActiveLobby;
+        public Unity.Services.Lobbies.Models.Lobby ActiveLobby { get;  set; }
 
         [SerializeField] public LobbyHeartbeat Heartbeat;
         [SerializeField] public LobbyPoller Poller;
@@ -520,7 +520,7 @@ namespace Project_Assets.Scripts.Lobby
             // return s_statusReport;
         }
         
-        private async Task<StatusReport> UpdatePlayerSceneEventLoadState(SceneEventType sceneEventType)
+        private async Task UpdatePlayerSceneEventLoadState(SceneEventType sceneEventType)
         {
             try
             {
@@ -538,14 +538,15 @@ namespace Project_Assets.Scripts.Lobby
                 Debug.Log($"Updating player {AuthenticationService.Instance.PlayerId} sceneEventType to: {sceneEventType}".Color(Color.orange));
                 ActiveLobby = await LobbyService.Instance.UpdatePlayerAsync(ActiveLobby.Id, AuthenticationService.Instance.PlayerId, updatePlayerOptions);
                 
-                s_statusReport.MakeReport(true, $"Updated local player sceneEventType to: {sceneEventType}");
+                // s_statusReport.MakeReport(true, $"Updated local player sceneEventType to: {sceneEventType}");
             }
             catch (LobbyServiceException e)
             {
-                s_statusReport.MakeReport(false, $"Failed to update local player sceneEventType: {e.Message}");
+                Debug.LogError($"Failed to update local player sceneEventType: {e.Message}");
+                // s_statusReport.MakeReport(false, $"Failed to update local player sceneEventType: {e.Message}");
             }
             
-            return s_statusReport;
+            // return s_statusReport;
         }
 
         // TODO: If host leaves the lobby the Relay ends and disconnects the players.

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
@@ -12,7 +13,7 @@ namespace Project_Assets.Scripts.Authentication
 {
     public class PlayerAuthentication : MonoBehaviour
     {
-        public Unity.Services.Lobbies.Models.Player Player;
+        public Unity.Services.Lobbies.Models.Player Player { get; private set; }
         public string PlayerId { get; set; }
         public string PlayerName { get; set; }
 

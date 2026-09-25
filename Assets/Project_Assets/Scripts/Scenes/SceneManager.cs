@@ -12,7 +12,7 @@ namespace Project_Assets.Scripts.Scenes
     public class SceneManager : MonoBehaviour
     {
         private LoadingProgress m_loadingProgress;
-        [HideInInspector] public SceneGroupManager SceneGroupManager;
+        public SceneGroupManager SceneGroupManager { get; private set; }
 
         [SerializeField] private LoadingScene m_defaultLoadingScreen;
         [SerializeField] private LoadingScene m_gameLoadingScreen;

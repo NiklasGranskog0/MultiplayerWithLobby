@@ -8,8 +8,8 @@ namespace Project_Assets.Scripts.Lobby
     // Class to keep track of players in lobby that is connecting to the game
     public class PlayersInLobby : MonoBehaviour
     {
-        public Dictionary<string, Unity.Services.Lobbies.Models.Player> Players;
-        
+        public Dictionary<string, Unity.Services.Lobbies.Models.Player> Players { get; private set; }
+
         private void Awake()
         {
             Players = new Dictionary<string, Unity.Services.Lobbies.Models.Player>();
