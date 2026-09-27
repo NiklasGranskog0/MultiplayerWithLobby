@@ -7,7 +7,7 @@ using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace Project_Assets.Scripts.Network.Game
+namespace Project_Assets.Scripts.Singletons.NetworkSingletons.GameScene
 {
     public class PoolManager : NetworkSingleton<PoolManager>
     {

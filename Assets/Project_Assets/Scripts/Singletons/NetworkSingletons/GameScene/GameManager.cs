@@ -6,7 +6,7 @@ using Project_Assets.Scripts.UtilityExtensions.Strings;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Project_Assets.Scripts.Network.Game
+namespace Project_Assets.Scripts.Singletons.NetworkSingletons.GameScene
 {
     public class GameManager : NetworkSingleton<GameManager>
     {

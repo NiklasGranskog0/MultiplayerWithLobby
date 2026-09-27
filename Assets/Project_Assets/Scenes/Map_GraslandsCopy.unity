@@ -12008,6 +12008,7 @@ Terrain:
   m_AllowAutoConnect: 1
   m_EnableHeightmapRayTracing: 1
   m_EnableTreesAndDetailsRayTracing: 0
+  m_EnableHeightmapLODFrustumCulling: 1
   m_TreeMotionVectorModeOverride: 3
 --- !u!4 &788591034
 Transform:
@@ -32440,6 +32441,22 @@ PrefabInstance:
     - target: {fileID: 4339598062427070228, guid: b2f1a50172491db4bae9982f2a03eb92, type: 3}
       propertyPath: m_Name
       value: CastleLeft
+      objectReference: {fileID: 0}
+    - target: {fileID: 5389858572866255466, guid: b2f1a50172491db4bae9982f2a03eb92, type: 3}
+      propertyPath: m_objectMenuButtons.Array.data[0].Callback.m_methodName
+      value: SpawnUnit
+      objectReference: {fileID: 0}
+    - target: {fileID: 5389858572866255466, guid: b2f1a50172491db4bae9982f2a03eb92, type: 3}
+      propertyPath: m_objectMenuButtons.Array.data[0].Callback.m_parameters.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5389858572866255466, guid: b2f1a50172491db4bae9982f2a03eb92, type: 3}
+      propertyPath: m_objectMenuButtons.Array.data[0].Callback.m_parameters.Array.data[1].IntValue
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 5389858572866255466, guid: b2f1a50172491db4bae9982f2a03eb92, type: 3}
+      propertyPath: m_objectMenuButtons.Array.data[0].Callback.m_parameters.Array.data[0].UnitTypeValue
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

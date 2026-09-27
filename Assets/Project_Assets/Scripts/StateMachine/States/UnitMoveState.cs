@@ -2,6 +2,7 @@
 using Project_Assets.Scripts.UtilityExtensions.GameObjects;
 using Project_Assets.Scripts.Game;
 using Project_Assets.Scripts.Network.Game;
+using Project_Assets.Scripts.Singletons.NetworkSingletons.GameScene;
 using Project_Assets.Scripts.UtilityExtensions.NavMeshAgents;
 using Project_Assets.Scripts.UtilityExtensions.Strings;
 using Unity.Collections;

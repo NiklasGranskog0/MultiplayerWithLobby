@@ -1,6 +1,7 @@
 ﻿using Project_Assets.Scripts.Framework.UnityServiceLocator;
 using Project_Assets.Scripts.Game;
 using Project_Assets.Scripts.Network.Game;
+using Project_Assets.Scripts.Singletons.NetworkSingletons.GameScene;
 using Project_Assets.Scripts.UtilityExtensions.Strings;
 using Unity.Netcode;
 using UnityEngine;

@@ -1,10 +1,14 @@
 using Project_Assets.Scripts.Enums;
 using Project_Assets.Scripts.Framework;
 using Project_Assets.Scripts.Network.Game;
+using Project_Assets.Scripts.Singletons.NetworkSingletons.GameScene;
 using Project_Assets.Scripts.StateMachine.States;
 
 namespace Project_Assets.Scripts.Units.Types
 {
+    // TODO: Will probably rename this class and have it be used for all types of units
+    // TODO: this class will handle the state-machine states and the unit's unique stats will be from UnitStats. 
+    
     public class ManSoldierFullPlateFantasyA : UnitBase
     {
         private UnitMoveState m_unitMoveState;

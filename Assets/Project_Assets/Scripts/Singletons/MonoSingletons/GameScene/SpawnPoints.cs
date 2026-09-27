@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Project_Assets.Scripts.UtilityExtensions.Singletons;
 using UnityEngine;
 
-namespace Project_Assets.Scripts.Game
+namespace Project_Assets.Scripts.Singletons.MonoSingletons.GameScene
 {
     public class SpawnPoints : Singleton<SpawnPoints>
     {

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Project_Assets.Scripts.Framework.UnityServiceLocator;
-using Project_Assets.Scripts.Game;
 using Project_Assets.Scripts.Lobby;
 using Project_Assets.Scripts.Player;
+using Project_Assets.Scripts.Singletons.MonoSingletons.GameScene;
 using Project_Assets.Scripts.UtilityExtensions.GlobalConstants.Strings;
 using Project_Assets.Scripts.UtilityExtensions.NetworkExtensions;
 using Project_Assets.Scripts.UtilityExtensions.Strings;

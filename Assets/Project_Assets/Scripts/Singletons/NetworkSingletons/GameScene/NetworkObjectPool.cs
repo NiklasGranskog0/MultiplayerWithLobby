@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 
-namespace Project_Assets.Scripts.Network.Game
+namespace Project_Assets.Scripts.Singletons.NetworkSingletons.GameScene
 {
     public class NetworkObjectPool : NetworkSingleton<NetworkObjectPool>
     {
