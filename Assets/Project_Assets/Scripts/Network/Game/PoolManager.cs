@@ -43,8 +43,8 @@ namespace Project_Assets.Scripts.Network.Game
 
             if (networkObject.TryGetComponent(out UnitBase unitBase))
             {
-                unitBase.TeamNetworkVariable.Value = (FixedString32Bytes)team;
                 networkObject.Spawn();
+                unitBase.TeamNetworkVariable.Value = (FixedString32Bytes)team;
             }
             else
             {

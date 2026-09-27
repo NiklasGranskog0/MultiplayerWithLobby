@@ -29,7 +29,6 @@ namespace Project_Assets.Scripts.Units
         {
             base.OnNetworkSpawn();
 
-            ApplyTeamTag(TeamNetworkVariable.Value);
             TeamNetworkVariable.OnValueChanged += OnTeamValueChanged;
         }
 
