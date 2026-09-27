@@ -41,7 +41,7 @@ namespace Project_Assets.Scripts.Authentication
 
             AuthenticationService.Instance.SignedIn += () =>
             {
-                Debug.Log("Signed in as " + AuthenticationService.Instance.PlayerId);
+                InternalDebug.Log("Signed in as " + AuthenticationService.Instance.PlayerId);
             };
 
             if (!AuthenticationService.Instance.IsSignedIn)

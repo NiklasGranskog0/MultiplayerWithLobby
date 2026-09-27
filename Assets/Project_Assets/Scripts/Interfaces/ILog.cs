@@ -4,7 +4,7 @@ namespace Project_Assets.Scripts.Interfaces
     {
         public void Log()
         {
-            // Debug.Log($"Success: {Success} :  Message: {Message}");
+            // InternalDebug.Log($"Success: {Success} :  Message: {Message}");
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Project_Assets.Scripts.Singletons.NetworkSingletons.GameScene
 
         public async void StartGame()
         {
-            Debug.Log("GameManager StartGame".Color(Color.green));
+            InternalDebug.Log("GameManager StartGame".Color(Color.green));
 
             try
             {
@@ -39,7 +39,7 @@ namespace Project_Assets.Scripts.Singletons.NetworkSingletons.GameScene
             }
             catch (Exception e)
             {
-                Debug.Log($"GameManager StartGame Failed: {e.Message}".Color(Color.red));
+                InternalDebug.Log($"GameManager StartGame Failed: {e.Message}".Color(Color.red));
                 throw;
             }
         }

@@ -10,7 +10,7 @@ namespace Project_Assets.Scripts.Player
         // Temp to test button call
         public void ExitTheGame()
         {
-            Debug.Log("Exiting the game".Color(Color.red));
+            InternalDebug.Log("Exiting the game".Color(Color.red));
 
 #if UNITY_EDITOR
             EditorApplication.ExitPlaymode();

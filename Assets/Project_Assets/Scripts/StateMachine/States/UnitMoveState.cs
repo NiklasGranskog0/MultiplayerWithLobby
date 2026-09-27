@@ -40,7 +40,7 @@ namespace Project_Assets.Scripts.StateMachine.States
 
         public override void OnExit()
         {
-            Debug.Log("Exiting Move State".Color(Color.lightSalmon));    
+            InternalDebug.Log("Exiting Move State".Color(Color.lightSalmon));    
         }
         
         private void SetDestination()

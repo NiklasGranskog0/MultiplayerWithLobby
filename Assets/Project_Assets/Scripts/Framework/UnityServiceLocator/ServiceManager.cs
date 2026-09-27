@@ -33,7 +33,7 @@ namespace Project_Assets.Scripts.Framework.UnityServiceLocator
         public ServiceManager Register<T>(T service)
         {
             var type = typeof(T);
-            if (!m_services.TryAdd(type, service)) Debug.LogError($"Service {type} already registered");
+            if (!m_services.TryAdd(type, service)) InternalDebug.LogError($"Service {type} already registered");
             
             return this;
         }
@@ -42,7 +42,7 @@ namespace Project_Assets.Scripts.Framework.UnityServiceLocator
         {
             if (!type.IsInstanceOfType(service)) throw new ArgumentException($"Service {type} is not of type {type}");
 
-            if (!m_services.TryAdd(type, service)) Debug.LogError($"Service {type} already registered");
+            if (!m_services.TryAdd(type, service)) InternalDebug.LogError($"Service {type} already registered");
             
             return this;
         }

@@ -34,10 +34,10 @@ namespace Project_Assets.Scripts.Scenes
             SceneGroupManager = new SceneGroupManager();
 
             SceneGroupManager.OnSceneLoaded +=
-                sceneName => Debug.Log("SceneGroupManager OnSceneLoaded: " + sceneName);
+                sceneName => InternalDebug.Log("SceneGroupManager OnSceneLoaded: " + sceneName);
 
             SceneGroupManager.OnSceneUnloaded +=
-                sceneName => Debug.Log("SceneGroupManager OnSceneUnloaded: " + sceneName);
+                sceneName => InternalDebug.Log("SceneGroupManager OnSceneUnloaded: " + sceneName);
 
             SceneGroupManager.OnSceneGroupLoaded += FinishedLoading;
         }
@@ -59,7 +59,7 @@ namespace Project_Assets.Scripts.Scenes
         {
             ResetProgressSlider(m_currentLoadingScreen);
 
-            Debug.Log("SceneLoader: ".Color(Color.red) + $"Loading scene group {sceneGroup.ToString()}".Color(Color.red));
+            InternalDebug.Log("SceneLoader: ".Color(Color.red) + $"Loading scene group {sceneGroup.ToString()}".Color(Color.red));
             EnableLoadingCanvas(true);
 
             var sceneEventType = await SceneGroupManager.LoadScenesNetwork(m_sceneGroupAssets.SceneGroups[(int)sceneGroup], m_loadingProgress);
@@ -70,7 +70,7 @@ namespace Project_Assets.Scripts.Scenes
         {
             ResetProgressSlider(m_currentLoadingScreen);
 
-            Debug.Log("SceneLoader: ".Color(Color.red) + $"Loading scene group {sceneGroup.ToString()}".Color(Color.red));
+            InternalDebug.Log("SceneLoader: ".Color(Color.red) + $"Loading scene group {sceneGroup.ToString()}".Color(Color.red));
             EnableLoadingCanvas(true);
 
             await SceneGroupManager.LoadScenes(m_sceneGroupAssets.SceneGroups[(int)sceneGroup], m_loadingProgress);
@@ -96,7 +96,7 @@ namespace Project_Assets.Scripts.Scenes
         private void FinishedLoading()
         {
             EnableLoadingCanvas(false);
-            Debug.Log("SceneLoader: ".Color(Color.red) + "Finished Loading Scene Group".Color(Color.lightBlue));
+            InternalDebug.Log("SceneLoader: ".Color(Color.red) + "Finished Loading Scene Group".Color(Color.lightBlue));
         }
 
         private void EnableLoadingCanvas(bool enable)

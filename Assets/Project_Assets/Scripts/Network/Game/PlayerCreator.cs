@@ -20,7 +20,7 @@ namespace Project_Assets.Scripts.Network.Game
 
         public override void OnNetworkSpawn()
         {
-            Debug.Log("Player Creator OnNetworkSpawn".Color(Color.lightSalmon));
+            InternalDebug.Log("Player Creator OnNetworkSpawn".Color(Color.lightSalmon));
             m_spawnPoints = SpawnPoints.Instance.Points;
 
             // This is a list of all the players in the lobby, object will be null when lobby scene is unloaded.
@@ -29,7 +29,7 @@ namespace Project_Assets.Scripts.Network.Game
 
         public void CreatePlayers()
         {
-            Debug.Log("Player Creator CreatePlayers".Color(Color.lightSalmon));
+            InternalDebug.Log("Player Creator CreatePlayers".Color(Color.lightSalmon));
             SpawnPlayers();
         }
 
@@ -41,7 +41,7 @@ namespace Project_Assets.Scripts.Network.Game
                 var playerId = ulong.Parse(data[StringConstants.k_PlayerClientId].Value);
                 var teamNumber = int.Parse(data[StringConstants.k_PlayerTeam].Value); // 0 == team 1, 1 == team 2
 
-                Debug.Log(
+                InternalDebug.Log(
                     $"Player Creator SpawnPlayers: PlayerId: {playerId}, TeamNumber: {teamNumber}, " +
                     $"SpawnPoint: {m_spawnPoints[teamNumber]}, Team: {(Enums.Team)teamNumber}");
 
@@ -49,12 +49,12 @@ namespace Project_Assets.Scripts.Network.Game
                     m_spawnPoints[teamNumber].position,
                     playerId);
 
-                Debug.Log($"Player Creator Setting Team Tag: {(Enums.Team)teamNumber}");
+                InternalDebug.Log($"Player Creator Setting Team Tag: {(Enums.Team)teamNumber}");
                 var playerObject = playerNetworkObject.GetComponent<PlayerCharacterBase>();
                 playerObject.PlayerTeam.Value = (Enums.Team)teamNumber;
             }
 
-            Debug.Log("Player Creator SpawnPlayers: Done".Color(Color.lightSalmon));
+            InternalDebug.Log("Player Creator SpawnPlayers: Done".Color(Color.lightSalmon));
         }
     }
 }

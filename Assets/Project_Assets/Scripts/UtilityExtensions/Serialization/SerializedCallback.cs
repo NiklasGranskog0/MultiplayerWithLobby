@@ -30,7 +30,7 @@ namespace Project_Assets.Scripts.UtilityExtensions.Serialization
                 return (TReturn)Convert.ChangeType(result, typeof(TReturn));
             }
             
-            Debug.LogWarning($"Unable to invoke method {m_methodName} on {m_targetObject} with parameters {parameters}");
+            InternalDebug.LogWarning($"Unable to invoke method {m_methodName} on {m_targetObject} with parameters {parameters}");
             return default;
         }
 
@@ -54,7 +54,7 @@ namespace Project_Assets.Scripts.UtilityExtensions.Serialization
 
             if (m_targetObject == null || string.IsNullOrEmpty(m_methodName))
             {
-                Debug.LogWarning("Target object or method name is null, cannot rebuild delegate");
+                InternalDebug.LogWarning("Target object or method name is null, cannot rebuild delegate");
                 return;
             }
             
@@ -63,7 +63,7 @@ namespace Project_Assets.Scripts.UtilityExtensions.Serialization
 
             if (methodInfo == null)
             {
-                Debug.LogWarning($"Method {m_methodName} not found on {m_targetObject}");
+                InternalDebug.LogWarning($"Method {m_methodName} not found on {m_targetObject}");
                 return;
             }
 
@@ -71,7 +71,7 @@ namespace Project_Assets.Scripts.UtilityExtensions.Serialization
             
             if (m_parameters.Length != parameterTypes.Length)
             {
-                Debug.LogWarning($"Parameter mismatch for method {m_methodName}");
+                InternalDebug.LogWarning($"Parameter mismatch for method {m_methodName}");
                 return;
             }
 

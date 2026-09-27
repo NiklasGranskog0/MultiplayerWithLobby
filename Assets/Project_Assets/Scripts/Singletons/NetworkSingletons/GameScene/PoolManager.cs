@@ -48,7 +48,7 @@ namespace Project_Assets.Scripts.Singletons.NetworkSingletons.GameScene
             }
             else
             {
-                Debug.LogError($"{networkObject.name} does not have a UnitBase component! {unitType}, returning it to the pool.");
+                InternalDebug.LogError($"{networkObject.name} does not have a UnitBase component! {unitType}, returning it to the pool.");
                 NetworkObjectPool.Instance.ReturnNetworkObject(networkObject, prefab);
             }
         }

@@ -52,11 +52,11 @@ namespace Project_Assets.Scripts.Lobby
 
             if (task.Exception != null)
             {
-                Debug.LogError($"Heartbeat error: {task.Exception.Message}");
+                InternalDebug.LogError($"Heartbeat error: {task.Exception.Message}");
             }
             else
             {
-                Debug.Log("Heartbeat sent".Color(Color.cyan));
+                InternalDebug.Log("Heartbeat sent".Color(Color.cyan));
             }
         }
     }

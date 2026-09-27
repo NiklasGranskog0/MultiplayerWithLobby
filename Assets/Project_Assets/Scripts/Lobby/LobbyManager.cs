@@ -108,11 +108,11 @@ namespace Project_Assets.Scripts.Lobby
                     }
                 }
 
-                Debug.Log("LobbyUpdate".Color(Color.orange));
+                InternalDebug.Log("LobbyUpdate".Color(Color.orange));
             }
             catch (LobbyServiceException e)
             {
-                Debug.Log($"LobbyUpdate apply failed: {e.Message}".Color(Color.red));
+                InternalDebug.Log($"LobbyUpdate apply failed: {e.Message}".Color(Color.red));
             }
         }
 
@@ -228,7 +228,7 @@ namespace Project_Assets.Scripts.Lobby
             if (isHost && Heartbeat != null)
             {
                 Heartbeat.StopHeartBeat();
-                Debug.Log("Stopped heartbeat (was host)".Color(Color.red));
+                InternalDebug.Log("Stopped heartbeat (was host)".Color(Color.red));
             }
 
             Poller.StopLobbyPolling();
@@ -484,7 +484,7 @@ namespace Project_Assets.Scripts.Lobby
             }
             catch (LobbyServiceException e)
             {
-                Debug.Log($"Start game failed: {e.Message}");
+                InternalDebug.Log($"Start game failed: {e.Message}");
             }
         }
 
@@ -506,7 +506,7 @@ namespace Project_Assets.Scripts.Lobby
                     }
                 };
                 
-                Debug.Log($"Updating player {AuthenticationService.Instance.PlayerId} client ID to: {clientId}".Color(Color.orange));
+                InternalDebug.Log($"Updating player {AuthenticationService.Instance.PlayerId} client ID to: {clientId}".Color(Color.orange));
                 ActiveLobby = await LobbyService.Instance.UpdatePlayerAsync(ActiveLobby.Id, AuthenticationService.Instance.PlayerId, updatePlayerOptions);
                 OnLobbyPlayerUpdate?.Invoke(new LobbyEventArgs { Lobby = ActiveLobby });
                 
@@ -535,14 +535,14 @@ namespace Project_Assets.Scripts.Lobby
                     }
                 };
                 
-                Debug.Log($"Updating player {AuthenticationService.Instance.PlayerId} sceneEventType to: {sceneEventType}".Color(Color.orange));
+                InternalDebug.Log($"Updating player {AuthenticationService.Instance.PlayerId} sceneEventType to: {sceneEventType}".Color(Color.orange));
                 ActiveLobby = await LobbyService.Instance.UpdatePlayerAsync(ActiveLobby.Id, AuthenticationService.Instance.PlayerId, updatePlayerOptions);
                 
                 // s_statusReport.MakeReport(true, $"Updated local player sceneEventType to: {sceneEventType}");
             }
             catch (LobbyServiceException e)
             {
-                Debug.LogError($"Failed to update local player sceneEventType: {e.Message}");
+                InternalDebug.LogError($"Failed to update local player sceneEventType: {e.Message}");
                 // s_statusReport.MakeReport(false, $"Failed to update local player sceneEventType: {e.Message}");
             }
             

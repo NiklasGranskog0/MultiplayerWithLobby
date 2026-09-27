@@ -18,7 +18,7 @@ namespace Project_Assets.Scripts.Lobby
 
         public override void OnNetworkSpawn()
         {
-            Debug.Log("PlayersLoadState: OnNetworkSpawn".Color(Color.orange));
+            InternalDebug.Log("PlayersLoadState: OnNetworkSpawn".Color(Color.orange));
         }
 
         private void Start()
@@ -30,7 +30,7 @@ namespace Project_Assets.Scripts.Lobby
 
         private void OnSendPlayerLoadState(string playerId, SceneEventType loadState)
         {
-            Debug.Log($"PlayerClientId: {playerId},  LoadState: {loadState}".Color(Color.green));
+            InternalDebug.Log($"PlayerClientId: {playerId},  LoadState: {loadState}".Color(Color.green));
 
             if (!NetworkManager.IsHost)
             {
@@ -69,7 +69,7 @@ namespace Project_Assets.Scripts.Lobby
         private void StartGameRPC()
         {
             m_gameStarted = true;
-            Debug.Log("StartGameRPC".Color(Color.green));
+            InternalDebug.Log("StartGameRPC".Color(Color.green));
             GameManager.Instance.StartGame();
         }
     }

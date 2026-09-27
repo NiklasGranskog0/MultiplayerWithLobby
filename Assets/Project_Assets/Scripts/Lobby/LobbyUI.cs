@@ -95,20 +95,20 @@ namespace Project_Assets.Scripts.Lobby
         private void OnLobbyPlayerUpdate(LobbyEventArgs e)
         {
             UpdatePlayerList(e.Lobby);
-            Debug.Log("Populate Player List".Color(Color.cyan));
+            InternalDebug.Log("Populate Player List".Color(Color.cyan));
         }
 
         private void OnPlayerJoinedLobbyAsync(LobbyEventArgs obj)
         {
             m_panelSwitcher.SwitchPanel(LobbyPanel.Lobby);
             CurrentLobby = obj.Lobby;
-            Debug.Log("Player Joined Lobby".Color(Color.cyan));
+            InternalDebug.Log("Player Joined Lobby".Color(Color.cyan));
         }
 
         private void OnPlayerLeftLobbyAsync(LobbyEventArgs obj)
         {
             m_panelSwitcher.SwitchPanel(LobbyPanel.GamePanel);
-            Debug.Log($"Player Left; Lobby Id: {obj.Lobby.Id}");
+            InternalDebug.Log($"Player Left; Lobby Id: {obj.Lobby.Id}");
             m_availableGamesUI.CurrentSelectedLobby = null;
             m_availableGamesUI.GameNameText.text = string.Empty;
             CurrentLobby = null;
@@ -122,7 +122,7 @@ namespace Project_Assets.Scripts.Lobby
             
             if (lobby?.Players == null)
             {
-                Debug.LogWarning("Lobby players is null or empty".Color(Color.red));
+                InternalDebug.LogWarning("Lobby players is null or empty".Color(Color.red));
                 m_playerListItemContainer.ClearContainer();
                 return;
             }
@@ -186,7 +186,7 @@ namespace Project_Assets.Scripts.Lobby
 
         private void OnUpdateLobbyInfo(LobbyEventArgs lobbyEventArgs)
         {
-            Debug.Log("On Update Lobby Info".Color(Color.cyan));
+            InternalDebug.Log("On Update Lobby Info".Color(Color.cyan));
 
             m_lobbyInfo.GameName.text = lobbyEventArgs.Lobby.Data[StringConstants.k_GameName].Value;
             m_lobbyInfo.MaxPlayers.text = lobbyEventArgs.Lobby.Data[StringConstants.k_MaxPlayers].Value;

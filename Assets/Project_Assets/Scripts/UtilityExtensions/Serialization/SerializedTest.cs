@@ -10,7 +10,7 @@ namespace Project_Assets.Scripts.UtilityExtensions.Serialization
         private void Start()
         {
             var result = m_callback?.Invoke();
-            Debug.Log($"Callback result: {result}".Color(Color.lightSalmon));
+            InternalDebug.Log($"Callback result: {result}".Color(Color.lightSalmon));
         }
 
         public int MultiplyByTwo(int value)

@@ -12,7 +12,7 @@ namespace Project_Assets.Scripts.UtilityExtensions.NetworkExtensions
         {
             if (!prefab.TryGetComponent<NetworkObject>(out var networkObject))
             {
-                Debug.LogError($"NetworkObject not found on prefab: {prefab.name}");
+                InternalDebug.LogError($"NetworkObject not found on prefab: {prefab.name}");
                 return null;
             }
 

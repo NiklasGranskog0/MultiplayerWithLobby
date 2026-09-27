@@ -32,11 +32,11 @@ namespace Project_Assets.Scripts.Framework.UnityServiceLocator
         {
             if (s_global == this)
             {
-                Debug.LogWarning("ServiceLocator.ConfigureAsGlobal: Already configured as global", this);
+                InternalDebug.LogWarning("ServiceLocator.ConfigureAsGlobal: Already configured as global", this);
             }
             else if (s_global != null)
             {
-                Debug.LogError("ServiceLocator.ConfigureAsGlobal: Another ServiceLocator already configured as global",
+                InternalDebug.LogError("ServiceLocator.ConfigureAsGlobal: Another ServiceLocator already configured as global",
                     this);
             }
             else
@@ -51,7 +51,7 @@ namespace Project_Assets.Scripts.Framework.UnityServiceLocator
             var scene = gameObject.scene;
             if (s_sceneContainers.ContainsKey(scene))
             {
-                Debug.LogError(
+                InternalDebug.LogError(
                     "ServiceLocator.ConfigureForScene: Another ServiceLocator is already configured for this scene",
                     this);
                 return;
@@ -199,11 +199,11 @@ namespace Project_Assets.Scripts.Framework.UnityServiceLocator
             switch (level)
             {
                 case ServiceLevel.Global:
-                    Debug.Log(globalString + endString);
+                    InternalDebug.Log(globalString + endString);
                     break;
                 case ServiceLevel.Scene:
                 case ServiceLevel.Local:
-                    Debug.Log(localOrScene + endString);
+                    InternalDebug.Log(localOrScene + endString);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(level), level, null);

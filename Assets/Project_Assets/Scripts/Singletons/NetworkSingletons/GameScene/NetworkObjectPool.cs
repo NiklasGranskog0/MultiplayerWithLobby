@@ -45,7 +45,7 @@ namespace Project_Assets.Scripts.Singletons.NetworkSingletons.GameScene
                 var prewarmCount = m_pooledPrefabsList[i].PrewarmCount;
                 if (prewarmCount < 0)
                 {
-                    Debug.LogWarning(
+                    InternalDebug.LogWarning(
                         $"{nameof(NetworkObjectPool)}: Pooled prefab at index {i.ToString()} has a negative prewarm count! Making it not negative.");
                     var thisPooledPrefab = m_pooledPrefabsList[i];
                     thisPooledPrefab.PrewarmCount *= -1;
@@ -156,7 +156,7 @@ namespace Project_Assets.Scripts.Singletons.NetworkSingletons.GameScene
         /// </summary>
         private void InitializePool()
         {
-            Debug.Log("Initializing NetworkObjectPool".Color(Color.lightSalmon));
+            InternalDebug.Log("Initializing NetworkObjectPool".Color(Color.lightSalmon));
             
             if (m_hasInitialized) return;
             foreach (var configObject in m_pooledPrefabsList)
@@ -172,7 +172,7 @@ namespace Project_Assets.Scripts.Singletons.NetworkSingletons.GameScene
         /// </summary>
         private void ClearPool()
         {
-            Debug.Log("Clearing NetworkObjectPool".Color(Color.lightSalmon));
+            InternalDebug.Log("Clearing NetworkObjectPool".Color(Color.lightSalmon));
             
             foreach (var prefab in m_prefabs)
             {

@@ -40,7 +40,7 @@ namespace Project_Assets.Scripts.Player
         private void Start()
         {
             // Moving the Player object to the Game scene
-            Debug.Log($"Player object moved to Game scene: {SceneManager.GetActiveScene().name}".Color(Color.green));
+            InternalDebug.Log($"Player object moved to Game scene: {SceneManager.GetActiveScene().name}".Color(Color.green));
             SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
 
             if (!IsOwner) return;
